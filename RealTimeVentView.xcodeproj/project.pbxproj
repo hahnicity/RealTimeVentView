@@ -1,0 +1,528 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		37AC9DB922012D3E0048469E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DB822012D3E0048469E /* AppDelegate.swift */; };
+		37AC9DBB22012D3E0048469E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DBA22012D3E0048469E /* ViewController.swift */; };
+		37AC9DBE22012D3E0048469E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37AC9DBC22012D3E0048469E /* Main.storyboard */; };
+		37AC9DC022012D3E0048469E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 37AC9DBF22012D3E0048469E /* Assets.xcassets */; };
+		37AC9DC322012D3E0048469E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37AC9DC122012D3E0048469E /* LaunchScreen.storyboard */; };
+		37AC9DCE22012D3E0048469E /* RealTimeVentViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DCD22012D3E0048469E /* RealTimeVentViewTests.swift */; };
+		37AC9DD922012D3E0048469E /* RealTimeVentViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DD822012D3E0048469E /* RealTimeVentViewUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		37AC9DCA22012D3E0048469E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37AC9DAD22012D3E0048469E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37AC9DB422012D3E0048469E;
+			remoteInfo = RealTimeVentView;
+		};
+		37AC9DD522012D3E0048469E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37AC9DAD22012D3E0048469E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37AC9DB422012D3E0048469E;
+			remoteInfo = RealTimeVentView;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		37AC9DB522012D3E0048469E /* RealTimeVentView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealTimeVentView.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		37AC9DB822012D3E0048469E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		37AC9DBA22012D3E0048469E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		37AC9DBD22012D3E0048469E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		37AC9DBF22012D3E0048469E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		37AC9DC222012D3E0048469E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		37AC9DC422012D3E0048469E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		37AC9DC922012D3E0048469E /* RealTimeVentViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RealTimeVentViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		37AC9DCD22012D3E0048469E /* RealTimeVentViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealTimeVentViewTests.swift; sourceTree = "<group>"; };
+		37AC9DCF22012D3E0048469E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		37AC9DD422012D3E0048469E /* RealTimeVentViewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RealTimeVentViewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		37AC9DD822012D3E0048469E /* RealTimeVentViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealTimeVentViewUITests.swift; sourceTree = "<group>"; };
+		37AC9DDA22012D3E0048469E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		37AC9DB222012D3E0048469E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37AC9DC622012D3E0048469E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37AC9DD122012D3E0048469E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		37AC9DAC22012D3E0048469E = {
+			isa = PBXGroup;
+			children = (
+				37AC9DB722012D3E0048469E /* RealTimeVentView */,
+				37AC9DCC22012D3E0048469E /* RealTimeVentViewTests */,
+				37AC9DD722012D3E0048469E /* RealTimeVentViewUITests */,
+				37AC9DB622012D3E0048469E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		37AC9DB622012D3E0048469E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				37AC9DB522012D3E0048469E /* RealTimeVentView.app */,
+				37AC9DC922012D3E0048469E /* RealTimeVentViewTests.xctest */,
+				37AC9DD422012D3E0048469E /* RealTimeVentViewUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		37AC9DB722012D3E0048469E /* RealTimeVentView */ = {
+			isa = PBXGroup;
+			children = (
+				37AC9DB822012D3E0048469E /* AppDelegate.swift */,
+				37AC9DBA22012D3E0048469E /* ViewController.swift */,
+				37AC9DBC22012D3E0048469E /* Main.storyboard */,
+				37AC9DBF22012D3E0048469E /* Assets.xcassets */,
+				37AC9DC122012D3E0048469E /* LaunchScreen.storyboard */,
+				37AC9DC422012D3E0048469E /* Info.plist */,
+			);
+			path = RealTimeVentView;
+			sourceTree = "<group>";
+		};
+		37AC9DCC22012D3E0048469E /* RealTimeVentViewTests */ = {
+			isa = PBXGroup;
+			children = (
+				37AC9DCD22012D3E0048469E /* RealTimeVentViewTests.swift */,
+				37AC9DCF22012D3E0048469E /* Info.plist */,
+			);
+			path = RealTimeVentViewTests;
+			sourceTree = "<group>";
+		};
+		37AC9DD722012D3E0048469E /* RealTimeVentViewUITests */ = {
+			isa = PBXGroup;
+			children = (
+				37AC9DD822012D3E0048469E /* RealTimeVentViewUITests.swift */,
+				37AC9DDA22012D3E0048469E /* Info.plist */,
+			);
+			path = RealTimeVentViewUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		37AC9DB422012D3E0048469E /* RealTimeVentView */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 37AC9DDD22012D3E0048469E /* Build configuration list for PBXNativeTarget "RealTimeVentView" */;
+			buildPhases = (
+				37AC9DB122012D3E0048469E /* Sources */,
+				37AC9DB222012D3E0048469E /* Frameworks */,
+				37AC9DB322012D3E0048469E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RealTimeVentView;
+			productName = RealTimeVentView;
+			productReference = 37AC9DB522012D3E0048469E /* RealTimeVentView.app */;
+			productType = "com.apple.product-type.application";
+		};
+		37AC9DC822012D3E0048469E /* RealTimeVentViewTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 37AC9DE022012D3E0048469E /* Build configuration list for PBXNativeTarget "RealTimeVentViewTests" */;
+			buildPhases = (
+				37AC9DC522012D3E0048469E /* Sources */,
+				37AC9DC622012D3E0048469E /* Frameworks */,
+				37AC9DC722012D3E0048469E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				37AC9DCB22012D3E0048469E /* PBXTargetDependency */,
+			);
+			name = RealTimeVentViewTests;
+			productName = RealTimeVentViewTests;
+			productReference = 37AC9DC922012D3E0048469E /* RealTimeVentViewTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		37AC9DD322012D3E0048469E /* RealTimeVentViewUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 37AC9DE322012D3E0048469E /* Build configuration list for PBXNativeTarget "RealTimeVentViewUITests" */;
+			buildPhases = (
+				37AC9DD022012D3E0048469E /* Sources */,
+				37AC9DD122012D3E0048469E /* Frameworks */,
+				37AC9DD222012D3E0048469E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				37AC9DD622012D3E0048469E /* PBXTargetDependency */,
+			);
+			name = RealTimeVentViewUITests;
+			productName = RealTimeVentViewUITests;
+			productReference = 37AC9DD422012D3E0048469E /* RealTimeVentViewUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		37AC9DAD22012D3E0048469E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0820;
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = CCIL;
+				TargetAttributes = {
+					37AC9DB422012D3E0048469E = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
+					37AC9DC822012D3E0048469E = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 37AC9DB422012D3E0048469E;
+					};
+					37AC9DD322012D3E0048469E = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 37AC9DB422012D3E0048469E;
+					};
+				};
+			};
+			buildConfigurationList = 37AC9DB022012D3E0048469E /* Build configuration list for PBXProject "RealTimeVentView" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 37AC9DAC22012D3E0048469E;
+			productRefGroup = 37AC9DB622012D3E0048469E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				37AC9DB422012D3E0048469E /* RealTimeVentView */,
+				37AC9DC822012D3E0048469E /* RealTimeVentViewTests */,
+				37AC9DD322012D3E0048469E /* RealTimeVentViewUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		37AC9DB322012D3E0048469E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37AC9DC322012D3E0048469E /* LaunchScreen.storyboard in Resources */,
+				37AC9DC022012D3E0048469E /* Assets.xcassets in Resources */,
+				37AC9DBE22012D3E0048469E /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37AC9DC722012D3E0048469E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37AC9DD222012D3E0048469E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		37AC9DB122012D3E0048469E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37AC9DBB22012D3E0048469E /* ViewController.swift in Sources */,
+				37AC9DB922012D3E0048469E /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37AC9DC522012D3E0048469E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37AC9DCE22012D3E0048469E /* RealTimeVentViewTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37AC9DD022012D3E0048469E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37AC9DD922012D3E0048469E /* RealTimeVentViewUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		37AC9DCB22012D3E0048469E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37AC9DB422012D3E0048469E /* RealTimeVentView */;
+			targetProxy = 37AC9DCA22012D3E0048469E /* PBXContainerItemProxy */;
+		};
+		37AC9DD622012D3E0048469E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37AC9DB422012D3E0048469E /* RealTimeVentView */;
+			targetProxy = 37AC9DD522012D3E0048469E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		37AC9DBC22012D3E0048469E /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				37AC9DBD22012D3E0048469E /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		37AC9DC122012D3E0048469E /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				37AC9DC222012D3E0048469E /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		37AC9DDB22012D3E0048469E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		37AC9DDC22012D3E0048469E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		37AC9DDE22012D3E0048469E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = RealTimeVentView/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ccil.RealTimeVentView;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		37AC9DDF22012D3E0048469E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = RealTimeVentView/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ccil.RealTimeVentView;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		37AC9DE122012D3E0048469E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = RealTimeVentViewTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ccil.RealTimeVentViewTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RealTimeVentView.app/RealTimeVentView";
+			};
+			name = Debug;
+		};
+		37AC9DE222012D3E0048469E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = RealTimeVentViewTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ccil.RealTimeVentViewTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RealTimeVentView.app/RealTimeVentView";
+			};
+			name = Release;
+		};
+		37AC9DE422012D3E0048469E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				INFOPLIST_FILE = RealTimeVentViewUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ccil.RealTimeVentViewUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = RealTimeVentView;
+			};
+			name = Debug;
+		};
+		37AC9DE522012D3E0048469E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				INFOPLIST_FILE = RealTimeVentViewUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ccil.RealTimeVentViewUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = RealTimeVentView;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		37AC9DB022012D3E0048469E /* Build configuration list for PBXProject "RealTimeVentView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37AC9DDB22012D3E0048469E /* Debug */,
+				37AC9DDC22012D3E0048469E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		37AC9DDD22012D3E0048469E /* Build configuration list for PBXNativeTarget "RealTimeVentView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37AC9DDE22012D3E0048469E /* Debug */,
+				37AC9DDF22012D3E0048469E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		37AC9DE022012D3E0048469E /* Build configuration list for PBXNativeTarget "RealTimeVentViewTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37AC9DE122012D3E0048469E /* Debug */,
+				37AC9DE222012D3E0048469E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		37AC9DE322012D3E0048469E /* Build configuration list for PBXNativeTarget "RealTimeVentViewUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37AC9DE422012D3E0048469E /* Debug */,
+				37AC9DE522012D3E0048469E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 37AC9DAD22012D3E0048469E /* Project object */;
+}
