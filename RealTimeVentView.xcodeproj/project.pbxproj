@@ -7,13 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		028342BA9CA27D7690D2573C /* Pods_RealTimeVentView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFA4351A9C98CC2EC98494BC /* Pods_RealTimeVentView.framework */; };
 		37AC9DB922012D3E0048469E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DB822012D3E0048469E /* AppDelegate.swift */; };
-		37AC9DBB22012D3E0048469E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DBA22012D3E0048469E /* ViewController.swift */; };
+		37AC9DBB22012D3E0048469E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DBA22012D3E0048469E /* MainViewController.swift */; };
 		37AC9DBE22012D3E0048469E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37AC9DBC22012D3E0048469E /* Main.storyboard */; };
 		37AC9DC022012D3E0048469E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 37AC9DBF22012D3E0048469E /* Assets.xcassets */; };
 		37AC9DC322012D3E0048469E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37AC9DC122012D3E0048469E /* LaunchScreen.storyboard */; };
 		37AC9DCE22012D3E0048469E /* RealTimeVentViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DCD22012D3E0048469E /* RealTimeVentViewTests.swift */; };
 		37AC9DD922012D3E0048469E /* RealTimeVentViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DD822012D3E0048469E /* RealTimeVentViewUITests.swift */; };
+		A754B6532202373000CD1A74 /* sample.json in Resources */ = {isa = PBXBuildFile; fileRef = A754B6522202373000CD1A74 /* sample.json */; };
+		A754B6552202417100CD1A74 /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A754B6542202417100CD1A74 /* ChartViewController.swift */; };
+		A754B657220241CC00CD1A74 /* PatientModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A754B656220241CC00CD1A74 /* PatientModel.swift */; };
+		A754B6592202448E00CD1A74 /* sample2.json in Resources */ = {isa = PBXBuildFile; fileRef = A754B6582202448E00CD1A74 /* sample2.json */; };
+		A754B65B2202483C00CD1A74 /* PatientListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A754B65A2202483C00CD1A74 /* PatientListTableViewController.swift */; };
+		B8EA912B34A10E8DF98B5C06 /* Pods_RealTimeVentViewUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1987620A2B3BB6D084354849 /* Pods_RealTimeVentViewUITests.framework */; };
+		EFEECAB19E03CF044103065C /* Pods_RealTimeVentViewTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7219F4F592484036F11EEA2F /* Pods_RealTimeVentViewTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,9 +42,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0A2263EA28BC184410C3E34B /* Pods-RealTimeVentViewUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeVentViewUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RealTimeVentViewUITests/Pods-RealTimeVentViewUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		1987620A2B3BB6D084354849 /* Pods_RealTimeVentViewUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RealTimeVentViewUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2FFFF9C671B6B66818BA518A /* Pods-RealTimeVentView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeVentView.release.xcconfig"; path = "Pods/Target Support Files/Pods-RealTimeVentView/Pods-RealTimeVentView.release.xcconfig"; sourceTree = "<group>"; };
+		34FF52546D325D7EEAE5915E /* Pods-RealTimeVentView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeVentView.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RealTimeVentView/Pods-RealTimeVentView.debug.xcconfig"; sourceTree = "<group>"; };
 		37AC9DB522012D3E0048469E /* RealTimeVentView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealTimeVentView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37AC9DB822012D3E0048469E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		37AC9DBA22012D3E0048469E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		37AC9DBA22012D3E0048469E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		37AC9DBD22012D3E0048469E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		37AC9DBF22012D3E0048469E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		37AC9DC222012D3E0048469E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -47,6 +59,16 @@
 		37AC9DD422012D3E0048469E /* RealTimeVentViewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RealTimeVentViewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		37AC9DD822012D3E0048469E /* RealTimeVentViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealTimeVentViewUITests.swift; sourceTree = "<group>"; };
 		37AC9DDA22012D3E0048469E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		53E043399744E6440568C8ED /* Pods-RealTimeVentViewTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeVentViewTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RealTimeVentViewTests/Pods-RealTimeVentViewTests.debug.xcconfig"; sourceTree = "<group>"; };
+		7219F4F592484036F11EEA2F /* Pods_RealTimeVentViewTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RealTimeVentViewTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A7C5175102350E12448C7B5 /* Pods-RealTimeVentViewUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeVentViewUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RealTimeVentViewUITests/Pods-RealTimeVentViewUITests.release.xcconfig"; sourceTree = "<group>"; };
+		A754B6522202373000CD1A74 /* sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample.json; sourceTree = "<group>"; };
+		A754B6542202417100CD1A74 /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
+		A754B656220241CC00CD1A74 /* PatientModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientModel.swift; sourceTree = "<group>"; };
+		A754B6582202448E00CD1A74 /* sample2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample2.json; sourceTree = "<group>"; };
+		A754B65A2202483C00CD1A74 /* PatientListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientListTableViewController.swift; sourceTree = "<group>"; };
+		BFA4351A9C98CC2EC98494BC /* Pods_RealTimeVentView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RealTimeVentView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CBCE01799E51EF796CBBA89C /* Pods-RealTimeVentViewTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeVentViewTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RealTimeVentViewTests/Pods-RealTimeVentViewTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				028342BA9CA27D7690D2573C /* Pods_RealTimeVentView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EFEECAB19E03CF044103065C /* Pods_RealTimeVentViewTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,12 +92,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8EA912B34A10E8DF98B5C06 /* Pods_RealTimeVentViewUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		25BA522C69857E495BAF1794 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BFA4351A9C98CC2EC98494BC /* Pods_RealTimeVentView.framework */,
+				7219F4F592484036F11EEA2F /* Pods_RealTimeVentViewTests.framework */,
+				1987620A2B3BB6D084354849 /* Pods_RealTimeVentViewUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		37AC9DAC22012D3E0048469E = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +116,8 @@
 				37AC9DCC22012D3E0048469E /* RealTimeVentViewTests */,
 				37AC9DD722012D3E0048469E /* RealTimeVentViewUITests */,
 				37AC9DB622012D3E0048469E /* Products */,
+				42613F063C09CC2B6678B867 /* Pods */,
+				25BA522C69857E495BAF1794 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -97,12 +134,17 @@
 		37AC9DB722012D3E0048469E /* RealTimeVentView */ = {
 			isa = PBXGroup;
 			children = (
+				A754B6582202448E00CD1A74 /* sample2.json */,
+				A754B6522202373000CD1A74 /* sample.json */,
 				37AC9DB822012D3E0048469E /* AppDelegate.swift */,
-				37AC9DBA22012D3E0048469E /* ViewController.swift */,
+				37AC9DBA22012D3E0048469E /* MainViewController.swift */,
 				37AC9DBC22012D3E0048469E /* Main.storyboard */,
 				37AC9DBF22012D3E0048469E /* Assets.xcassets */,
 				37AC9DC122012D3E0048469E /* LaunchScreen.storyboard */,
 				37AC9DC422012D3E0048469E /* Info.plist */,
+				A754B6542202417100CD1A74 /* ChartViewController.swift */,
+				A754B656220241CC00CD1A74 /* PatientModel.swift */,
+				A754B65A2202483C00CD1A74 /* PatientListTableViewController.swift */,
 			);
 			path = RealTimeVentView;
 			sourceTree = "<group>";
@@ -125,6 +167,19 @@
 			path = RealTimeVentViewUITests;
 			sourceTree = "<group>";
 		};
+		42613F063C09CC2B6678B867 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				34FF52546D325D7EEAE5915E /* Pods-RealTimeVentView.debug.xcconfig */,
+				2FFFF9C671B6B66818BA518A /* Pods-RealTimeVentView.release.xcconfig */,
+				53E043399744E6440568C8ED /* Pods-RealTimeVentViewTests.debug.xcconfig */,
+				CBCE01799E51EF796CBBA89C /* Pods-RealTimeVentViewTests.release.xcconfig */,
+				0A2263EA28BC184410C3E34B /* Pods-RealTimeVentViewUITests.debug.xcconfig */,
+				7A7C5175102350E12448C7B5 /* Pods-RealTimeVentViewUITests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -132,9 +187,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 37AC9DDD22012D3E0048469E /* Build configuration list for PBXNativeTarget "RealTimeVentView" */;
 			buildPhases = (
+				FEE6BBBAC06F8C7C987802B0 /* [CP] Check Pods Manifest.lock */,
 				37AC9DB122012D3E0048469E /* Sources */,
 				37AC9DB222012D3E0048469E /* Frameworks */,
 				37AC9DB322012D3E0048469E /* Resources */,
+				3917362756B21A2052793541 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -149,6 +206,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 37AC9DE022012D3E0048469E /* Build configuration list for PBXNativeTarget "RealTimeVentViewTests" */;
 			buildPhases = (
+				9A47D7916A0714FF3D31963D /* [CP] Check Pods Manifest.lock */,
 				37AC9DC522012D3E0048469E /* Sources */,
 				37AC9DC622012D3E0048469E /* Frameworks */,
 				37AC9DC722012D3E0048469E /* Resources */,
@@ -167,6 +225,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 37AC9DE322012D3E0048469E /* Build configuration list for PBXNativeTarget "RealTimeVentViewUITests" */;
 			buildPhases = (
+				F6B656DE210B0D12CA25C6AD /* [CP] Check Pods Manifest.lock */,
 				37AC9DD022012D3E0048469E /* Sources */,
 				37AC9DD122012D3E0048469E /* Frameworks */,
 				37AC9DD222012D3E0048469E /* Resources */,
@@ -233,6 +292,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				37AC9DC322012D3E0048469E /* LaunchScreen.storyboard in Resources */,
+				A754B6592202448E00CD1A74 /* sample2.json in Resources */,
+				A754B6532202373000CD1A74 /* sample.json in Resources */,
 				37AC9DC022012D3E0048469E /* Assets.xcassets in Resources */,
 				37AC9DBE22012D3E0048469E /* Main.storyboard in Resources */,
 			);
@@ -254,13 +315,91 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		3917362756B21A2052793541 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-RealTimeVentView/Pods-RealTimeVentView-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RealTimeVentView/Pods-RealTimeVentView-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9A47D7916A0714FF3D31963D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RealTimeVentViewTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F6B656DE210B0D12CA25C6AD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RealTimeVentViewUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FEE6BBBAC06F8C7C987802B0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RealTimeVentView-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		37AC9DB122012D3E0048469E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				37AC9DBB22012D3E0048469E /* ViewController.swift in Sources */,
+				A754B65B2202483C00CD1A74 /* PatientListTableViewController.swift in Sources */,
+				37AC9DBB22012D3E0048469E /* MainViewController.swift in Sources */,
 				37AC9DB922012D3E0048469E /* AppDelegate.swift in Sources */,
+				A754B6552202417100CD1A74 /* ChartViewController.swift in Sources */,
+				A754B657220241CC00CD1A74 /* PatientModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,6 +549,7 @@
 		};
 		37AC9DDE22012D3E0048469E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 34FF52546D325D7EEAE5915E /* Pods-RealTimeVentView.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = RealTimeVentView/Info.plist;
@@ -422,6 +562,7 @@
 		};
 		37AC9DDF22012D3E0048469E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2FFFF9C671B6B66818BA518A /* Pods-RealTimeVentView.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = RealTimeVentView/Info.plist;
@@ -434,6 +575,7 @@
 		};
 		37AC9DE122012D3E0048469E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 53E043399744E6440568C8ED /* Pods-RealTimeVentViewTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -448,6 +590,7 @@
 		};
 		37AC9DE222012D3E0048469E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CBCE01799E51EF796CBBA89C /* Pods-RealTimeVentViewTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -462,6 +605,7 @@
 		};
 		37AC9DE422012D3E0048469E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0A2263EA28BC184410C3E34B /* Pods-RealTimeVentViewUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = RealTimeVentViewUITests/Info.plist;
@@ -475,6 +619,7 @@
 		};
 		37AC9DE522012D3E0048469E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7A7C5175102350E12448C7B5 /* Pods-RealTimeVentViewUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = RealTimeVentViewUITests/Info.plist;
@@ -505,6 +650,7 @@
 				37AC9DDF22012D3E0048469E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		37AC9DE022012D3E0048469E /* Build configuration list for PBXNativeTarget "RealTimeVentViewTests" */ = {
 			isa = XCConfigurationList;
@@ -513,6 +659,7 @@
 				37AC9DE222012D3E0048469E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		37AC9DE322012D3E0048469E /* Build configuration list for PBXNativeTarget "RealTimeVentViewUITests" */ = {
 			isa = XCConfigurationList;
@@ -521,6 +668,7 @@
 				37AC9DE522012D3E0048469E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
