@@ -15,6 +15,7 @@
 		37AC9DC322012D3E0048469E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37AC9DC122012D3E0048469E /* LaunchScreen.storyboard */; };
 		37AC9DCE22012D3E0048469E /* RealTimeVentViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DCD22012D3E0048469E /* RealTimeVentViewTests.swift */; };
 		37AC9DD922012D3E0048469E /* RealTimeVentViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DD822012D3E0048469E /* RealTimeVentViewUITests.swift */; };
+		A32B735E220500DF000AF69A /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32B735D220500DF000AF69A /* BalloonMarker.swift */; };
 		A754B6532202373000CD1A74 /* sample.json in Resources */ = {isa = PBXBuildFile; fileRef = A754B6522202373000CD1A74 /* sample.json */; };
 		A754B6552202417100CD1A74 /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A754B6542202417100CD1A74 /* ChartViewController.swift */; };
 		A754B657220241CC00CD1A74 /* PatientModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A754B656220241CC00CD1A74 /* PatientModel.swift */; };
@@ -62,6 +63,7 @@
 		53E043399744E6440568C8ED /* Pods-RealTimeVentViewTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeVentViewTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RealTimeVentViewTests/Pods-RealTimeVentViewTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7219F4F592484036F11EEA2F /* Pods_RealTimeVentViewTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RealTimeVentViewTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A7C5175102350E12448C7B5 /* Pods-RealTimeVentViewUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeVentViewUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RealTimeVentViewUITests/Pods-RealTimeVentViewUITests.release.xcconfig"; sourceTree = "<group>"; };
+		A32B735D220500DF000AF69A /* BalloonMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
 		A754B6522202373000CD1A74 /* sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample.json; sourceTree = "<group>"; };
 		A754B6542202417100CD1A74 /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
 		A754B656220241CC00CD1A74 /* PatientModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientModel.swift; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 		37AC9DB722012D3E0048469E /* RealTimeVentView */ = {
 			isa = PBXGroup;
 			children = (
+				A32B735D220500DF000AF69A /* BalloonMarker.swift */,
 				A754B6582202448E00CD1A74 /* sample2.json */,
 				A754B6522202373000CD1A74 /* sample.json */,
 				37AC9DB822012D3E0048469E /* AppDelegate.swift */,
@@ -400,6 +403,7 @@
 				37AC9DB922012D3E0048469E /* AppDelegate.swift in Sources */,
 				A754B6552202417100CD1A74 /* ChartViewController.swift in Sources */,
 				A754B657220241CC00CD1A74 /* PatientModel.swift in Sources */,
+				A32B735E220500DF000AF69A /* BalloonMarker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -556,7 +560,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ccil.RealTimeVentView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -569,7 +573,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ccil.RealTimeVentView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};

@@ -9,7 +9,11 @@
 import UIKit
 import Charts
 
-class ChartViewController: UIViewController {
+enum DataIndex: Int {
+    case flow = 0, pressure = 1
+}
+
+class ChartViewController: UIViewController, ChartViewDelegate {
 
     var patient: PatientModel = PatientModel()
     
@@ -20,10 +24,13 @@ class ChartViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.chartView.delegate = self
         self.navigationItem.title = patient.name
         
-        labelUpdate()
+        let spinner = showSpinner()
         chartUpdate()
+        labelUpdate()
+        removeSpinner(spinner)
         // Do any additional setup after loading the view.
     }
     
@@ -36,7 +43,8 @@ class ChartViewController: UIViewController {
     }
     
     func chartUpdate() {
-        let (flow, pressure) = patient.getFlowAndPressure()
+        patient.retrieveFlowAndPressure()
+        let flow = patient.flow, pressure = patient.pressure
         var flowChartData: [ChartDataEntry] = [], pressureChartData: [ChartDataEntry] = []
         for index in 0 ..< flow.count {
             flowChartData.append(ChartDataEntry(x: Double(index) / 50.0, y: flow[index]))
@@ -50,6 +58,62 @@ class ChartViewController: UIViewController {
         pressureLine.drawCirclesEnabled = false
         chartView.data = LineChartData(dataSets: [flowLine, pressureLine])
         
+        chartView.setVisibleXRangeMaximum(20)
+        chartView.moveViewToX(Double(max((chartView.lineData?.entryCount ?? 0) / 50 - 20, 0)))
+    }
+    
+    func loadAdditionalData() {
+        let flow = patient.flow, pressure = patient.pressure
+        for i in 0 ..< 1000 {
+            let _  = chartView.data?.getDataSetByIndex(DataIndex.flow.rawValue)?.addEntryOrdered(ChartDataEntry(x: Double(i) / 50.0, y: flow[i]))
+            let _ = chartView.data?.getDataSetByIndex(DataIndex.pressure.rawValue)?.addEntryOrdered(ChartDataEntry(x: Double(i) / 50.0, y: pressure[i]))
+        }
+        chartView.data?.notifyDataChanged()
+        chartView.notifyDataSetChanged()
+        chartView.setVisibleXRangeMaximum(20)
+        chartView.moveViewToX(20)
+        
+    }
+    
+    func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
+       //loadAdditionalData()
+        if chartView.marker == nil {
+            let marker = BalloonMarker(color: UIColor.gray, font: UIFont(name: "Helvetica", size: 14)!, textColor: UIColor.white, insets: UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0))
+            marker.minimumSize = CGSize(width: 100.0, height: 170.0)
+            marker.chartView = chartView
+            chartView.marker = marker
+        }
+        (chartView.marker as? BalloonMarker)?.data = patient
+        chartView.marker?.refreshContent(entry: entry, highlight: highlight)
+        
+        //legend[0].label = "Flow: \(flow)"
+        //legend[1].label = "Pressure \(pressure)"
+        
+        //legend[0].label = "Flow: \(patient.flow[entry.])"
+    }
+    /*
+     
+     */
+    
+    func showSpinner() -> UIView {
+        let spinner = UIView.init(frame: self.view.bounds)
+        spinner.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue:0.5, alpha: 0.5)
+        let activity = UIActivityIndicatorView.init(style: .whiteLarge)
+        activity.startAnimating()
+        activity.center = spinner.center
+        
+        DispatchQueue.main.async {
+            spinner.addSubview(activity)
+            self.view.addSubview(spinner)
+        }
+        
+        return spinner
+    }
+    
+    func removeSpinner(_ spinner: UIView) {
+        DispatchQueue.main.async {
+            spinner.removeFromSuperview()
+        }
     }
     
 
@@ -64,3 +128,4 @@ class ChartViewController: UIViewController {
     */
 
 }
+

@@ -30,6 +30,10 @@ class Storage {
 
 class PatientModel {
     var name: String
+    var json: [[String: Any]] = []
+    var flow: [Double] = []
+    var pressure: [Double] = []
+    var breathIndex: [Int] = []
     
     init() {
         self.name = ""
@@ -53,6 +57,7 @@ class PatientModel {
                 let data = try Data(contentsOf: url)
                 let object = try JSONSerialization.jsonObject(with: data)
                 if let json = object as? [[String: Any]] {
+                    self.json = json
                     return json
                 }
             } catch {
@@ -77,19 +82,35 @@ class PatientModel {
         return data
     }
     
-    func getFlowAndPressure() -> ([Double], [Double]) {
-        guard let json = getPatientData() else {
-            return ([], [])
+    func retrieveFlowAndPressure() {
+        if flow.count == 0 && pressure.count == 0 {
+            guard let json = getPatientData() else {
+                return
+            }
+            (flow, pressure, breathIndex) = parseJson(from: json)
         }
-        var flowData: [Double] = [], pressureData: [Double] = []
-        for breath in json {
+    }
+    
+    func addData(from json: [[String: Any]]) -> ([Double], [Double]) {
+        let (flowData, pressureData, breathIn) = parseJson(from: json)
+        flow = flowData + flow
+        pressure = pressureData + pressure
+        breathIndex = breathIn + breathIndex.map({ $0 + json.count })
+        
+        return (flowData, pressureData)
+    }
+    
+    func parseJson(from json: [[String: Any]]) -> ([Double], [Double], [Int]) {
+        var flowData: [Double] = [], pressureData: [Double] = [], breathIn: [Int] = []
+        for (index, breath) in json.enumerated() {
             guard let temp = breath["vwd"] as? [String: [Double]], let flowEntity = temp["flow"], let pressureEntity = temp["pressure"] else {
-                return ([], [])
+                return ([], [], [])
             }
             flowData += flowEntity
             pressureData += pressureEntity
+            breathIn += Array<Int>(repeating: index, count: flowEntity.count)
         }
-        
-        return (flowData, pressureData)
+        self.json += json
+        return (flowData, pressureData, breathIn)
     }
 }

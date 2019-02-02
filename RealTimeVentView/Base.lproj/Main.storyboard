@@ -174,16 +174,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fBa-6W-ugY" customClass="LineChartView" customModule="Charts">
-                                <rect key="frame" x="20" y="88" width="374" height="611"/>
+                                <rect key="frame" x="20" y="88" width="374" height="610"/>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TVi: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jZW-44-fWT">
-                                <rect key="frame" x="20" y="734" width="374" height="36"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TVi: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jZW-44-fWT">
+                                <rect key="frame" x="20" y="732.66666666666663" width="374" height="36.666666666666629"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TVe: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JZV-nU-qkr">
-                                <rect key="frame" x="20" y="785" width="374" height="36"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TVe: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JZV-nU-qkr">
+                                <rect key="frame" x="20" y="784.33333333333337" width="374" height="36.666666666666629"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -194,7 +194,9 @@
                             <constraint firstItem="fBa-6W-ugY" firstAttribute="top" secondItem="Fkn-GW-g3P" secondAttribute="bottom" id="5i7-En-deW"/>
                             <constraint firstItem="jZW-44-fWT" firstAttribute="width" secondItem="fBa-6W-ugY" secondAttribute="width" id="DAF-pR-mwe"/>
                             <constraint firstItem="jZW-44-fWT" firstAttribute="top" secondItem="fBa-6W-ugY" secondAttribute="bottom" multiplier="1.05" id="L89-U5-CCb"/>
+                            <constraint firstItem="jZW-44-fWT" firstAttribute="height" secondItem="fBa-6W-ugY" secondAttribute="height" multiplier="0.06" id="O44-in-oQq"/>
                             <constraint firstItem="jZW-44-fWT" firstAttribute="leading" secondItem="rtd-4O-Wzb" secondAttribute="leadingMargin" id="Pit-SK-om1"/>
+                            <constraint firstItem="JZV-nU-qkr" firstAttribute="height" secondItem="jZW-44-fWT" secondAttribute="height" id="Wnc-nq-uPN"/>
                             <constraint firstAttribute="trailingMargin" secondItem="JZV-nU-qkr" secondAttribute="trailing" id="aIu-RJ-DO6"/>
                             <constraint firstAttribute="trailingMargin" secondItem="fBa-6W-ugY" secondAttribute="trailing" id="cXe-FU-jOC"/>
                             <constraint firstItem="fBa-6W-ugY" firstAttribute="leading" secondItem="rtd-4O-Wzb" secondAttribute="leadingMargin" id="d7v-Ti-Zdc"/>
