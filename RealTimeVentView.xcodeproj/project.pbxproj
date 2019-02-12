@@ -16,6 +16,13 @@
 		37AC9DCE22012D3E0048469E /* RealTimeVentViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DCD22012D3E0048469E /* RealTimeVentViewTests.swift */; };
 		37AC9DD922012D3E0048469E /* RealTimeVentViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DD822012D3E0048469E /* RealTimeVentViewUITests.swift */; };
 		A32B735E220500DF000AF69A /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32B735D220500DF000AF69A /* BalloonMarker.swift */; };
+		A34A918F2211625E009F48FC /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34A918E2211625E009F48FC /* TextFieldTableViewCell.swift */; };
+		A34A91912211642C009F48FC /* EnrollTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34A91902211642C009F48FC /* EnrollTableViewController.swift */; };
+		A34A9193221169F1009F48FC /* PickerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34A9192221169F1009F48FC /* PickerTableViewCell.swift */; };
+		A34A919522116AA5009F48FC /* ButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34A919422116AA5009F48FC /* ButtonTableViewCell.swift */; };
+		A38D4F472211959F001A8B2D /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38D4F462211959F001A8B2D /* SwitchTableViewCell.swift */; };
+		A38D4F49221196CA001A8B2D /* AlertSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38D4F48221196CA001A8B2D /* AlertSettingsTableViewController.swift */; };
+		A39B1B4422127A9E00B855FA /* ConfigurationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39B1B4322127A9E00B855FA /* ConfigurationTableViewController.swift */; };
 		A754B6532202373000CD1A74 /* sample.json in Resources */ = {isa = PBXBuildFile; fileRef = A754B6522202373000CD1A74 /* sample.json */; };
 		A754B6552202417100CD1A74 /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A754B6542202417100CD1A74 /* ChartViewController.swift */; };
 		A754B657220241CC00CD1A74 /* PatientModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A754B656220241CC00CD1A74 /* PatientModel.swift */; };
@@ -64,6 +71,13 @@
 		7219F4F592484036F11EEA2F /* Pods_RealTimeVentViewTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RealTimeVentViewTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A7C5175102350E12448C7B5 /* Pods-RealTimeVentViewUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeVentViewUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RealTimeVentViewUITests/Pods-RealTimeVentViewUITests.release.xcconfig"; sourceTree = "<group>"; };
 		A32B735D220500DF000AF69A /* BalloonMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
+		A34A918E2211625E009F48FC /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
+		A34A91902211642C009F48FC /* EnrollTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollTableViewController.swift; sourceTree = "<group>"; };
+		A34A9192221169F1009F48FC /* PickerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerTableViewCell.swift; sourceTree = "<group>"; };
+		A34A919422116AA5009F48FC /* ButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonTableViewCell.swift; sourceTree = "<group>"; };
+		A38D4F462211959F001A8B2D /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
+		A38D4F48221196CA001A8B2D /* AlertSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertSettingsTableViewController.swift; sourceTree = "<group>"; };
+		A39B1B4322127A9E00B855FA /* ConfigurationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationTableViewController.swift; sourceTree = "<group>"; };
 		A754B6522202373000CD1A74 /* sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample.json; sourceTree = "<group>"; };
 		A754B6542202417100CD1A74 /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
 		A754B656220241CC00CD1A74 /* PatientModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientModel.swift; sourceTree = "<group>"; };
@@ -142,6 +156,13 @@
 				37AC9DB822012D3E0048469E /* AppDelegate.swift */,
 				37AC9DBA22012D3E0048469E /* MainViewController.swift */,
 				37AC9DBC22012D3E0048469E /* Main.storyboard */,
+				A39B1B4322127A9E00B855FA /* ConfigurationTableViewController.swift */,
+				A38D4F48221196CA001A8B2D /* AlertSettingsTableViewController.swift */,
+				A38D4F462211959F001A8B2D /* SwitchTableViewCell.swift */,
+				A34A919422116AA5009F48FC /* ButtonTableViewCell.swift */,
+				A34A91902211642C009F48FC /* EnrollTableViewController.swift */,
+				A34A9192221169F1009F48FC /* PickerTableViewCell.swift */,
+				A34A918E2211625E009F48FC /* TextFieldTableViewCell.swift */,
 				37AC9DBF22012D3E0048469E /* Assets.xcassets */,
 				37AC9DC122012D3E0048469E /* LaunchScreen.storyboard */,
 				37AC9DC422012D3E0048469E /* Info.plist */,
@@ -399,9 +420,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				A754B65B2202483C00CD1A74 /* PatientListTableViewController.swift in Sources */,
+				A38D4F49221196CA001A8B2D /* AlertSettingsTableViewController.swift in Sources */,
 				37AC9DBB22012D3E0048469E /* MainViewController.swift in Sources */,
+				A38D4F472211959F001A8B2D /* SwitchTableViewCell.swift in Sources */,
+				A34A918F2211625E009F48FC /* TextFieldTableViewCell.swift in Sources */,
 				37AC9DB922012D3E0048469E /* AppDelegate.swift in Sources */,
+				A34A9193221169F1009F48FC /* PickerTableViewCell.swift in Sources */,
 				A754B6552202417100CD1A74 /* ChartViewController.swift in Sources */,
+				A39B1B4422127A9E00B855FA /* ConfigurationTableViewController.swift in Sources */,
+				A34A91912211642C009F48FC /* EnrollTableViewController.swift in Sources */,
+				A34A919522116AA5009F48FC /* ButtonTableViewCell.swift in Sources */,
 				A754B657220241CC00CD1A74 /* PatientModel.swift in Sources */,
 				A32B735E220500DF000AF69A /* BalloonMarker.swift in Sources */,
 			);

@@ -8,8 +8,15 @@
 
 import UIKit
 
+enum AccessType {
+    case alert, view
+}
+
 class PatientListTableViewController: UITableViewController {
 
+    var accessType: AccessType = .view
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -29,23 +36,33 @@ class PatientListTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return Storage.enrolled.count
+        return Storage.enrolledName.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "patientCell") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "patientCell")
         
-        cell.textLabel?.text = Storage.enrolled[indexPath.row]
+        cell.textLabel?.text = Storage.enrolledName[indexPath.row]
 
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "chartViewController") as! ChartViewController
-        viewController.patient = PatientModel(withName: Storage.enrolled[indexPath.row])
-        self.navigationController?.pushViewController(viewController, animated: true)
+        
+        if accessType == .view {
+            let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "chartViewController") as! ChartViewController
+            viewController.patient = PatientModel(withName: Storage.enrolledName[indexPath.row])
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
+        if accessType == .alert {
+            let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "alertSettingsTableViewController") as! AlertSettingsTableViewController
+            viewController.patient = PatientModel(withName: Storage.enrolledName[indexPath.row])
+            viewController.index = indexPath.row
+            viewController.accessType = .main
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
     }
  
 

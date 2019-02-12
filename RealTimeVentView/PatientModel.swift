@@ -9,12 +9,12 @@
 import Foundation
 
 class Storage {
-    static var enrolled: [String] {
+    static var enrolledName: [String] {
         get {
-            return UserDefaults.standard.array(forKey: "enrolled") as? [String] ?? []
+            return UserDefaults.standard.array(forKey: "enrolledName") as? [String] ?? []
         }
         set(e) {
-            UserDefaults.standard.set(e, forKey: "enrolled")
+            UserDefaults.standard.set(e, forKey: "enrolledName")
         }
     }
     
@@ -24,6 +24,87 @@ class Storage {
         }
         set(dnb) {
             UserDefaults.standard.set(dnb, forKey: "defaultNumBreaths")
+        }
+    }
+    
+    static var defaultAlertBSA: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "defaultAlertBSA")
+        }
+        set(defaultAlertBSA) {
+            UserDefaults.standard.set(defaultAlertBSA, forKey: "defaultAlertBSA")
+        }
+    }
+    
+    static var alertBSA: [Bool] {
+        get {
+            return UserDefaults.standard.array(forKey: "alertBSA") as? [Bool] ?? []
+        }
+        set(alertBSA) {
+            UserDefaults.standard.set(alertBSA, forKey: "alertBSA")
+        }
+    }
+    
+    static var defaultThresholdBSA: Int {
+        get {
+            return UserDefaults.standard.integer(forKey: "defaultThresholdBSA")
+        }
+        set(defaultThresholdBSA) {
+            UserDefaults.standard.set(defaultThresholdBSA, forKey: "defaultThresholdBSA")
+        }
+    }
+    
+    static var thresholdBSA: [Int] {
+        get {
+            return UserDefaults.standard.array(forKey: "thresholdBSA") as? [Int] ?? []
+        }
+        set(thresholdBSA) {
+            UserDefaults.standard.set(thresholdBSA, forKey: "thresholdBSA")
+        }
+    }
+    
+    static var defaultAlertDTA: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "defaultAlertDTA")
+        }
+        set(defaultAlertDTA) {
+            UserDefaults.standard.set(defaultAlertDTA, forKey: "defaultAlertDTA")
+        }
+    }
+    
+    static var alertDTA: [Bool] {
+        get {
+            return UserDefaults.standard.array(forKey: "alertDTA") as? [Bool] ?? []
+        }
+        set(alertDTA) {
+            UserDefaults.standard.set(alertDTA, forKey: "alertDTA")
+        }
+    }
+    
+    static var defaultThresholdDTA: Int {
+        get {
+            return UserDefaults.standard.integer(forKey: "defaultThresholdDTA")
+        }
+        set(defaultThresholdDTA) {
+            UserDefaults.standard.set(defaultThresholdDTA, forKey: "defaultThresholdDTA")
+        }
+    }
+    
+    static var thresholdDTA: [Int] {
+        get {
+            return UserDefaults.standard.array(forKey: "thresholdDTA") as? [Int] ?? []
+        }
+        set(thresholdDTA) {
+            UserDefaults.standard.set(thresholdDTA, forKey: "thresholdDTA")
+        }
+    }
+    
+    static var updateInterval: Int {
+        get {
+            return UserDefaults.standard.integer(forKey: "updateInterval")
+        }
+        set(updateInterval) {
+            UserDefaults.standard.set(updateInterval, forKey: "updateInterval")
         }
     }
 }
