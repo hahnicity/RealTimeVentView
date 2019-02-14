@@ -107,10 +107,60 @@ class Storage {
             UserDefaults.standard.set(updateInterval, forKey: "updateInterval")
         }
     }
+    
+    static var loadTimeFrame: Int {
+        get {
+            return UserDefaults.standard.integer(forKey: "loadTimeFrame")
+        }
+        set(updateInterval) {
+            UserDefaults.standard.set(updateInterval, forKey: "loadTimeFrame")
+        }
+    }
+    
+    static var patients: [[String: String]] {
+        get {
+            return UserDefaults.standard.array(forKey: "patients") as? [[String: String]] ?? []
+        }
+        set(patients) {
+            UserDefaults.standard.set(patients, forKey: "patients")
+        }
+    }
+    
+    static var alerts: [[String: Any]] {
+        get {
+            return UserDefaults.standard.array(forKey: "alerts") as? [[String: Any]] ?? []
+        }
+        set(alerts) {
+            UserDefaults.standard.set(alerts, forKey: "alerts")
+        }
+    }
+    
+    static var defaultAlert: [String: Any] {
+        get {
+            return UserDefaults.standard.dictionary(forKey: "defaultAlert") ?? ["alertDTA": true, "thresholdDTA": 20, "alertBSA": true, "thresholdBSA": 20]
+        }
+        set(defaultAlert) {
+            UserDefaults.standard.set(defaultAlert, forKey: "defaultAlert")
+        }
+    }
 }
 
 class PatientModel {
     var name: String
+    var age: Int
+    var sex: String
+    var height: Int
+    
+    var rpi: String {
+        get {
+            let regex = try! NSRegularExpression(pattern: "rpi[0-9]+$", options: [.anchorsMatchLines, .caseInsensitive])
+            if let range = regex.firstMatch(in: name, options: [], range: NSRange(location: 0, length: name.count))?.range {
+                return (name as NSString).substring(with: range)
+            }
+            return ""
+        }
+    }
+    
     var json: [[String: Any]] = []
     var flow: [Double] = []
     var pressure: [Double] = []
@@ -118,10 +168,31 @@ class PatientModel {
     
     init() {
         self.name = ""
+        self.age = 0
+        self.sex = ""
+        self.height = 0
     }
     
-    init(withName name: String) {
+    init(withName name: String, age: Int, sex: String, height: Int) {
         self.name = name
+        self.age = age
+        self.sex = sex
+        self.height = height
+    }
+    
+    init?(at index: Int) {
+        let patient = Storage.patients[index]
+        guard let name = patient["name"], let age_str = patient["age"], let age = Int(age_str), let sex = patient["sex"], let height_str = patient["height"], let height = Int(height_str) else {
+            return nil
+        }
+        self.name = name
+        self.age = age
+        self.sex = sex
+        self.height = height
+    }
+    
+    func store() {
+        Storage.patients.append(["name": name, "age": "\(age)", "sex": sex, "height": "\(height)"])
     }
     
     func getPatientData() -> [[String: Any]]? {
