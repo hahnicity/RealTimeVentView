@@ -23,11 +23,13 @@ class AlertSettingsTableViewController: UITableViewController, ButtonTableViewCe
     var cellTitles = ["Alert for DTA", "DTA Threshold Past Hour", "", "Alert for BSA", "BSA Threshold Past Hour", "", ""]
     var index = 0
     var patient = PatientModel()
+    var alertSetting = AlertModel()
     var accessType: AlertAccessType = .main
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        alertSetting = AlertModel(at: index)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -66,9 +68,9 @@ class AlertSettingsTableViewController: UITableViewController, ButtonTableViewCe
             cell.textLabel?.text = cellTitles[indexPath.row]
             switch(indexPath.row) {
             case 0:
-                cell.alertSwitch.isOn = Storage.alertDTA[index]
+                cell.alertSwitch.isOn = alertSetting.alertDTA
             case 3:
-                cell.alertSwitch.isOn = Storage.alertBSA[index]
+                cell.alertSwitch.isOn = alertSetting.alertBSA
             default: ()
             }
             return cell
@@ -77,9 +79,9 @@ class AlertSettingsTableViewController: UITableViewController, ButtonTableViewCe
             let cell = (tableView.dequeueReusableCell(withIdentifier: "textFieldCell") ?? UITableViewCell(style: .default, reuseIdentifier: "textFieldCell")) as! TextFieldTableViewCell
             switch(indexPath.row) {
             case 2:
-                cell.textField.text = "\(Storage.thresholdDTA[index])"
+                cell.textField.text = "\(alertSetting.thresholdDTA)"
             case 5:
-                cell.textField.text = "\(Storage.thresholdBSA[index])"
+                cell.textField.text = "\(alertSetting.thresholdBSA)"
             default: ()
             }
             return cell
@@ -106,10 +108,20 @@ class AlertSettingsTableViewController: UITableViewController, ButtonTableViewCe
             return
         }
         
-        Storage.alertDTA[index] = dtaOn
-        Storage.thresholdDTA[index] = Int(dta)!
-        Storage.alertBSA[index] = bsaOn
-        Storage.thresholdBSA[index] = Int(bsa)!
+        let lock = NSLock()
+        alertSetting = AlertModel(withAlertDTA: dtaOn, thresholdDTA: Int(dta)!, alertBSA: bsaOn, thresholdBSA: Int(bsa)!)
+        lock.lock()
+        alertSetting.update(for: patient, at: index) { (data, error) in
+            if let error = error {
+                self.showAlert(withTitle: "Alert Update Error", message: error.localizedDescription)
+                lock.unlock()
+                return
+            }
+            lock.unlock()
+        }
+        
+        lock.lock()
+        lock.unlock()
         
         if accessType == .main {
             self.navigationController?.popToRootViewController(animated: true)
@@ -117,6 +129,7 @@ class AlertSettingsTableViewController: UITableViewController, ButtonTableViewCe
         if accessType == .enroll {
             let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "chartViewController") as! ChartViewController
             viewController.patient = patient
+            viewController.accessType = .enroll
             self.navigationController?.pushViewController(viewController, animated: true)
         }
     }

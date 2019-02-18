@@ -18,10 +18,12 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
     var alertCellTypes: [AlertSettingType] = [.alertSwitch, .label, .textField, .alertSwitch, .label, .textField, .button]
     var alertCellTitles = ["Alert for DTA", "DTA Threshold Past Hour", "", "Alert for BSA", "BSA Threshold Past Hour", "", ""]
     
-    var configCellTypes: [ConfigType] = [.label, .textField]
-    var configCellTitles = ["Update Interval (seconds)", ""]
+    var configCellTypes: [ConfigType] = [.label, .textField, .label, .textField]
+    var configCellTitles = ["Load Time Frame (minutes)", "", "Update Interval (seconds)", ""]
     
     var sectionHeaders = ["App Configuration", "Default Alert Settings"]
+    
+    var defaultAlert = AlertModel()
     
     
     override func viewDidLoad() {
@@ -88,6 +90,8 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
             let cell = (tableView.dequeueReusableCell(withIdentifier: "textFieldCell") ?? UITableViewCell(style: .default, reuseIdentifier: "textFieldCell")) as! TextFieldTableViewCell
             switch(indexPath.row) {
             case 1:
+                cell.textField.text = "\(Storage.loadTimeFrame)"
+            case 3:
                 cell.textField.text = "\(Storage.updateInterval)"
             default: ()
             }
@@ -113,9 +117,9 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
             cell.textLabel?.text = alertCellTitles[indexPath.row]
             switch(indexPath.row) {
             case 0:
-                cell.alertSwitch.isOn = Storage.defaultAlertDTA
+                cell.alertSwitch.isOn = defaultAlert.alertDTA
             case 3:
-                cell.alertSwitch.isOn = Storage.defaultAlertBSA
+                cell.alertSwitch.isOn = defaultAlert.alertBSA
             default: ()
             }
             return cell
@@ -124,9 +128,9 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
             let cell = (tableView.dequeueReusableCell(withIdentifier: "textFieldCell") ?? UITableViewCell(style: .default, reuseIdentifier: "textFieldCell")) as! TextFieldTableViewCell
             switch(indexPath.row) {
             case 2:
-                cell.textField.text = "\(Storage.defaultThresholdDTA)"
+                cell.textField.text = "\(defaultAlert.thresholdDTA)"
             case 5:
-                cell.textField.text = "\(Storage.defaultThresholdBSA)"
+                cell.textField.text = "\(defaultAlert.thresholdBSA)"
             default: ()
             }
             return cell
@@ -134,7 +138,8 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
     }
     
     func submitForm() {
-        guard let updateInterval = (tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TextFieldTableViewCell)?.textField.text,
+        guard let loadTimeFrame = (tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TextFieldTableViewCell)?.textField.text,
+            let updateInterval = (tableView.cellForRow(at: IndexPath(row: 3, section: 0)) as? TextFieldTableViewCell)?.textField.text,
             let dtaOn = (tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as? SwitchTableViewCell)?.alertSwitch.isOn,
             let dta = (tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as? TextFieldTableViewCell)?.textField.text,
             let bsaOn = (tableView.cellForRow(at: IndexPath(row: 3, section: 1)) as? SwitchTableViewCell)?.alertSwitch.isOn,
@@ -143,15 +148,13 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
                 return
         }
         
-        if hasAppConfigError(withUpdateInterval: updateInterval) || hasDefaultSettingsError(withDTA: dta, BSA: bsa) {
+        if hasAppConfigError(withLoadTimeFrame: loadTimeFrame, updateInterval: updateInterval) || hasDefaultSettingsError(withDTA: dta, BSA: bsa) {
             return
         }
         
+        Storage.loadTimeFrame = Int(loadTimeFrame)!
         Storage.updateInterval = Int(updateInterval)!
-        Storage.defaultAlertDTA = dtaOn
-        Storage.defaultThresholdDTA = Int(dta)!
-        Storage.defaultAlertBSA = bsaOn
-        Storage.defaultThresholdBSA = Int(bsa)!
+        Storage.defaultAlert = AlertModel(withAlertDTA: dtaOn, thresholdDTA: Int(dta)!, alertBSA: bsaOn, thresholdBSA: Int(bsa)!).json
         
         self.navigationController?.popToRootViewController(animated: true)
     }
@@ -188,7 +191,23 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
         return false
     }
     
-    func hasAppConfigError(withUpdateInterval updateInterval: String) -> Bool {
+    func hasAppConfigError(withLoadTimeFrame loadTimeFrame: String, updateInterval: String) -> Bool {
+        
+        if loadTimeFrame.count == 0 {
+            showAlert(withTitle: "App Configuration Error", message: "Please enter the time frame of the data load.")
+            return true
+        }
+        
+        guard let temp_ltf = Int(loadTimeFrame) else {
+            showAlert(withTitle: "App Configuration Error", message: "The time frame should be a nonzero number.")
+            return true
+        }
+        
+        if temp_ltf == 0 {
+            showAlert(withTitle: "App Configuration Error", message: "The time frame should be a nonzero number.")
+            return true
+        }
+        
         if updateInterval.count == 0 {
             showAlert(withTitle: "App Configuration Error", message: "Please enter the time interval of the view update.")
             return true

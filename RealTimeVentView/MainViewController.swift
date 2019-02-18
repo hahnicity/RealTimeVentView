@@ -23,6 +23,7 @@ class MainViewController: UIViewController {
         }
         
         if Storage.updateInterval == 0 {
+            Storage.loadTimeFrame = 5
             Storage.updateInterval = 5
             Storage.defaultAlertDTA = true
             Storage.defaultThresholdDTA = 20

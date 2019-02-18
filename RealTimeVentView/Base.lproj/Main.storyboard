@@ -70,6 +70,9 @@
                                             <nil key="textColor"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                             <textInputTraits key="textInputTraits"/>
+                                            <connections>
+                                                <action selector="textChanged:" destination="pra-7l-Wq7" eventType="editingChanged" id="49U-jG-42i"/>
+                                            </connections>
                                         </textField>
                                     </subviews>
                                     <constraints>
@@ -468,10 +471,17 @@
                             <constraint firstItem="JZV-nU-qkr" firstAttribute="width" secondItem="jZW-44-fWT" secondAttribute="width" id="xHG-gU-Fat"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Title" id="MtQ-5G-z9L"/>
+                    <navigationItem key="navigationItem" title="Title" id="MtQ-5G-z9L">
+                        <barButtonItem key="rightBarButtonItem" title="Return" id="EFd-gl-ufh">
+                            <connections>
+                                <action selector="returnPressed:" destination="5Bi-08-VWU" id="VLt-oX-scw"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="chartView" destination="fBa-6W-ugY" id="DeU-3Y-f4N"/>
+                        <outlet property="returnButton" destination="EFd-gl-ufh" id="JSz-rX-iQq"/>
                         <outlet property="tveLabel" destination="JZV-nU-qkr" id="1BL-ZO-OR9"/>
                         <outlet property="tviLabel" destination="jZW-44-fWT" id="lik-WG-zly"/>
                     </connections>

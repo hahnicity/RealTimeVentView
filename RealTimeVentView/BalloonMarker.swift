@@ -188,7 +188,7 @@ open class BalloonMarker: MarkerImage
             return
         }
         let index = t1 + t2 + 1
-        guard let temp = data.json[data.breathIndex[index]]["breath_meta"] as? [String: Double], let etime = temp["e_time"], let itime = temp["i_time"], let peep = temp["peep"], let tvei = temp["tve_tvi_ratio"], let tve = temp["tve"], let tvi = temp["tvi"]  else {
+        guard let temp = data.json[data.breathIndex[index]]["breath_meta"] as? [String: Any], let etime = temp["e_time"] as? Double, let itime = temp["i_time"] as? Double, let peep = temp["peep"] as? Double, let tvei = temp["tve_tvi_ratio"] as? Double, let tve = temp["tve"] as? Double, let tvi = temp["tvi"] as? Double else {
             print("Error parsing json while displaying marker")
             return
         }

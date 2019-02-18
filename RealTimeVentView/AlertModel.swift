@@ -13,6 +13,11 @@ class AlertModel {
     var thresholdDTA: Int
     var alertBSA: Bool
     var thresholdBSA: Int
+    var json: [String: Any] {
+        get {
+            return ["alertDTA": alertDTA, "thresholdDTA": thresholdDTA, "alertBSA": alertBSA, "thresholdBSA": thresholdBSA]
+        }
+    }
     
     init() {
         let setting = Storage.defaultAlert
@@ -38,7 +43,13 @@ class AlertModel {
         self.init(withAlertDTA: adta, thresholdDTA: tdta, alertBSA: absa, thresholdBSA: tbsa)
     }
     
-    func store() {
+    func store(for patient: PatientModel, completion: @escaping CompletionAPI) {
         Storage.alerts.append(["alertDTA": alertDTA, "thresholdDTA": thresholdDTA, "alertBSA": alertBSA, "thresholdBSA": thresholdBSA])
+        ServerModel.shared.setAlertSettings(forPatient: patient.name, alertDTA: alertDTA, thresholdDTA: thresholdDTA, alertBSA: alertBSA, thresholdBSA: thresholdBSA, completion: completion)
+    }
+    
+    func update(for patient: PatientModel, at index: Int, completion: @escaping CompletionAPI) {
+        Storage.alerts[index] = self.json
+        ServerModel.shared.setAlertSettings(forPatient: patient.name, alertDTA: alertDTA, thresholdDTA: thresholdDTA, alertBSA: alertBSA, thresholdBSA: thresholdBSA, completion: completion)
     }
 }

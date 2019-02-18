@@ -8,154 +8,22 @@
 
 import Foundation
 
-class Storage {
-    static var enrolledName: [String] {
-        get {
-            return UserDefaults.standard.array(forKey: "enrolledName") as? [String] ?? []
-        }
-        set(e) {
-            UserDefaults.standard.set(e, forKey: "enrolledName")
-        }
-    }
-    
-    static var defaultNumBreaths: Int {
-        get {
-            return UserDefaults.standard.integer(forKey: "defaultNumBreaths")
-        }
-        set(dnb) {
-            UserDefaults.standard.set(dnb, forKey: "defaultNumBreaths")
-        }
-    }
-    
-    static var defaultAlertBSA: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: "defaultAlertBSA")
-        }
-        set(defaultAlertBSA) {
-            UserDefaults.standard.set(defaultAlertBSA, forKey: "defaultAlertBSA")
-        }
-    }
-    
-    static var alertBSA: [Bool] {
-        get {
-            return UserDefaults.standard.array(forKey: "alertBSA") as? [Bool] ?? []
-        }
-        set(alertBSA) {
-            UserDefaults.standard.set(alertBSA, forKey: "alertBSA")
-        }
-    }
-    
-    static var defaultThresholdBSA: Int {
-        get {
-            return UserDefaults.standard.integer(forKey: "defaultThresholdBSA")
-        }
-        set(defaultThresholdBSA) {
-            UserDefaults.standard.set(defaultThresholdBSA, forKey: "defaultThresholdBSA")
-        }
-    }
-    
-    static var thresholdBSA: [Int] {
-        get {
-            return UserDefaults.standard.array(forKey: "thresholdBSA") as? [Int] ?? []
-        }
-        set(thresholdBSA) {
-            UserDefaults.standard.set(thresholdBSA, forKey: "thresholdBSA")
-        }
-    }
-    
-    static var defaultAlertDTA: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: "defaultAlertDTA")
-        }
-        set(defaultAlertDTA) {
-            UserDefaults.standard.set(defaultAlertDTA, forKey: "defaultAlertDTA")
-        }
-    }
-    
-    static var alertDTA: [Bool] {
-        get {
-            return UserDefaults.standard.array(forKey: "alertDTA") as? [Bool] ?? []
-        }
-        set(alertDTA) {
-            UserDefaults.standard.set(alertDTA, forKey: "alertDTA")
-        }
-    }
-    
-    static var defaultThresholdDTA: Int {
-        get {
-            return UserDefaults.standard.integer(forKey: "defaultThresholdDTA")
-        }
-        set(defaultThresholdDTA) {
-            UserDefaults.standard.set(defaultThresholdDTA, forKey: "defaultThresholdDTA")
-        }
-    }
-    
-    static var thresholdDTA: [Int] {
-        get {
-            return UserDefaults.standard.array(forKey: "thresholdDTA") as? [Int] ?? []
-        }
-        set(thresholdDTA) {
-            UserDefaults.standard.set(thresholdDTA, forKey: "thresholdDTA")
-        }
-    }
-    
-    static var updateInterval: Int {
-        get {
-            return UserDefaults.standard.integer(forKey: "updateInterval")
-        }
-        set(updateInterval) {
-            UserDefaults.standard.set(updateInterval, forKey: "updateInterval")
-        }
-    }
-    
-    static var loadTimeFrame: Int {
-        get {
-            return UserDefaults.standard.integer(forKey: "loadTimeFrame")
-        }
-        set(updateInterval) {
-            UserDefaults.standard.set(updateInterval, forKey: "loadTimeFrame")
-        }
-    }
-    
-    static var patients: [[String: String]] {
-        get {
-            return UserDefaults.standard.array(forKey: "patients") as? [[String: String]] ?? []
-        }
-        set(patients) {
-            UserDefaults.standard.set(patients, forKey: "patients")
-        }
-    }
-    
-    static var alerts: [[String: Any]] {
-        get {
-            return UserDefaults.standard.array(forKey: "alerts") as? [[String: Any]] ?? []
-        }
-        set(alerts) {
-            UserDefaults.standard.set(alerts, forKey: "alerts")
-        }
-    }
-    
-    static var defaultAlert: [String: Any] {
-        get {
-            return UserDefaults.standard.dictionary(forKey: "defaultAlert") ?? ["alertDTA": true, "thresholdDTA": 20, "alertBSA": true, "thresholdBSA": 20]
-        }
-        set(defaultAlert) {
-            UserDefaults.standard.set(defaultAlert, forKey: "defaultAlert")
-        }
-    }
-}
+
+
+typealias CompletionUpdate = ([Double], [Double], [Double], Error?) -> ()
 
 class PatientModel {
     var name: String
     var age: Int
     var sex: String
     var height: Int
+    static let SAMPLE_RATE: Double = 0.02
     
     var rpi: String {
         get {
-            let regex = try! NSRegularExpression(pattern: "rpi[0-9]+$", options: [.anchorsMatchLines, .caseInsensitive])
-            if let range = regex.firstMatch(in: name, options: [], range: NSRange(location: 0, length: name.count))?.range {
-                return (name as NSString).substring(with: range)
+            let regex = try! NSRegularExpression(pattern: "[0-9]+$", options: [.anchorsMatchLines, .caseInsensitive])
+            if let range = regex.firstMatch(in: name, options: [], range: NSRange(location: 0, length: name.count))?.range, let num = Int((name as NSString).substring(with: range)) {
+                return "rpi\(num)"
             }
             return ""
         }
@@ -165,9 +33,19 @@ class PatientModel {
     var flow: [Double] = []
     var pressure: [Double] = []
     var breathIndex: [Int] = []
+    var refDate: Date? = nil
+    var offsets: [Double] = []
+    var sizeOfLastLoad = 0
     
     init() {
         self.name = ""
+        self.age = 0
+        self.sex = ""
+        self.height = 0
+    }
+    
+    init(withName name: String) {
+        self.name = name
         self.age = 0
         self.sex = ""
         self.height = 0
@@ -180,9 +58,8 @@ class PatientModel {
         self.height = height
     }
     
-    init?(at index: Int) {
-        let patient = Storage.patients[index]
-        guard let name = patient["name"], let age_str = patient["age"], let age = Int(age_str), let sex = patient["sex"], let height_str = patient["height"], let height = Int(height_str) else {
+    init?(with json: [String: String]) {
+        guard let name = json["name"], let age_str = json["age"], let age = Int(age_str), let sex = json["sex"], let height_str = json["height"], let height = Int(height_str) else {
             return nil
         }
         self.name = name
@@ -191,17 +68,137 @@ class PatientModel {
         self.height = height
     }
     
-    func store() {
-        Storage.patients.append(["name": name, "age": "\(age)", "sex": sex, "height": "\(height)"])
+    convenience init?(at index: Int) {
+        self.init(with: Storage.patients[index])
     }
     
-    func getPatientData() -> [[String: Any]]? {
-        let file = name == "Patient A" ? "sample" : "sample2"
-        if let json = getJson(Named: file) {
-            return json
-        }
-        return nil
+    
+    func store(completion: @escaping CompletionAPI) {
+        Storage.patients.append(["name": name, "age": "\(age)", "sex": sex, "height": "\(height)"])
+        ServerModel.shared.enrollPatient(withName: name, rpi: rpi, height: height, sex: sex, age: age, completion: completion)
     }
+    
+    func loadBreaths(completion: @escaping CompletionUpdate) {
+        print(Date())
+        print(Date(timeIntervalSinceNow: TimeInterval(-60 * Storage.loadTimeFrame)))
+        ServerModel.shared.getBreaths(forPatient: name, startTime: Date(timeIntervalSinceNow: TimeInterval(-60 * Storage.loadTimeFrame)), endTime: Date()) { (data, error) in
+            switch((data, error)) {
+            case(.some(let data), .none):
+                do {
+                    let object = try JSONSerialization.jsonObject(with: data)
+                    guard let json = object as? [[String: Any]] else {
+                        print("Some error regarding breath json")
+                        return
+                    }
+                    let (newFlow, newPressure, newIndex, newOffsets) = self.parseBreathJSON(json)
+                    self.flow = newFlow
+                    self.pressure = newPressure
+                    self.breathIndex = newIndex
+                    self.json = json
+                    self.offsets = newOffsets
+                    completion(newFlow, newPressure, newOffsets, nil)
+                } catch {
+                    print("\(error)")
+                }
+            case(.none, .some(let error)):
+                completion([], [], [], error)
+            default: ()
+            }
+        }
+    }
+    
+    func loadPastBreaths(completion: @escaping CompletionUpdate) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss zz"
+        //print((json[0]["breath_meta"] as? [String: Any])?["abs_bs"])
+        guard let first = json[0]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String, let lastDate = dateFormatter.date(from: date) else {
+            print("Error getting the last date")
+            return
+        }
+        
+        ServerModel.shared.getBreaths(forPatient: name, startTime: Date(timeInterval: TimeInterval(-60 * Storage.loadTimeFrame), since: lastDate), endTime: Date(timeInterval: -1, since: lastDate)) { (data, error) in
+            switch((data, error)) {
+            case(.some(let data), .none):
+                do {
+                    let object = try JSONSerialization.jsonObject(with: data)
+                    guard let json = object as? [[String: Any]] else {
+                        print("Some error regarding breath json")
+                        return
+                    }
+                    let (newFlow, newPressure, newIndex, newOffsets) = self.parseBreathJSON(json)
+                    self.flow = newFlow + self.flow
+                    self.pressure = newPressure + self.pressure
+                    self.breathIndex = newIndex + self.breathIndex
+                    self.json = json + self.json
+                    self.offsets = newOffsets + self.offsets
+                    completion(newFlow, newPressure, newOffsets, nil)
+                } catch {
+                    print("\(error)")
+                }
+            case(.none, .some(let error)):
+                completion([], [], [], error)
+            default: ()
+            }
+        }
+    }
+    
+    func loadNewBreaths(completion: @escaping CompletionUpdate) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss zz"
+        guard let first = json[json.count - 1]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String, let lastDate = dateFormatter.date(from: date) else {
+            print("Error getting the last date")
+            return
+        }
+        
+        ServerModel.shared.getBreaths(forPatient: name, startTime: Date(timeInterval: 1, since: lastDate), endTime: Date()) { (data, error) in
+            switch((data, error)) {
+            case(.some(let data), .none):
+                do {
+                    let object = try JSONSerialization.jsonObject(with: data)
+                    guard let json = object as? [[String: Any]] else {
+                        print("Some error regarding breath json")
+                        return
+                    }
+                    let (newFlow, newPressure, newIndex, newOffsets) = self.parseBreathJSON(json)
+                    self.flow = self.flow + newFlow
+                    self.pressure = self.pressure + newPressure
+                    self.breathIndex = self.breathIndex + newIndex
+                    self.json = self.json + json
+                    self.offsets = self.offsets + newOffsets
+                    completion(newFlow, newPressure, newOffsets, nil)
+                } catch {
+                    print("\(error)")
+                }
+            case(.none, .some(let error)):
+                completion([], [], [], error)
+            default: ()
+            }
+        }
+    }
+    
+    func parseBreathJSON(_ json: [[String: Any]]) -> ([Double], [Double], [Int], [Double]) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss zz"
+        if refDate == nil {
+            if let first = json[0]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String {
+                refDate = dateFormatter.date(from: date)
+            }
+        }
+        
+        var flowData: [Double] = [], pressureData: [Double] = [], indexData: [Int] = [], offsets: [Double] = []
+        for (index, breath) in json.enumerated() {
+            if let temp = breath["vwd"] as? [String: [Double]], let flowSet = temp["flow"], let pressureSet = temp["pressure"], let date = (breath["breath_meta"] as? [String: Any])?["abs_bs"] as? String {
+                flowData += flowSet
+                pressureData += pressureSet
+                indexData += Array<Int>(repeating: index, count: flowSet.count)
+                let base = dateFormatter.date(from: date)!.timeIntervalSince(refDate!)
+                offsets += Array<Double>(stride(from: 0.0, to: Double(flowSet.count) * PatientModel.SAMPLE_RATE, by: PatientModel.SAMPLE_RATE)).map({ $0 + base })
+            }
+        }
+        return (flowData, pressureData, indexData, offsets)
+    }
+    
+    
     
     func getJson(Named filename: String) -> [[String: Any]]? {
         if let url = Bundle.main.url(forResource: filename, withExtension: "json") {
@@ -220,9 +217,6 @@ class PatientModel {
     }
     
     func getAllData(ofType field: String) -> [Double] {
-        guard let json = getPatientData() else {
-            return []
-        }
         var data: [Double] = []
         for breath in json {
             guard let entity = (breath["breath_meta"] as? [String: Any])?[field] as? Double else {
@@ -232,15 +226,6 @@ class PatientModel {
         }
         
         return data
-    }
-    
-    func retrieveFlowAndPressure() {
-        if flow.count == 0 && pressure.count == 0 {
-            guard let json = getPatientData() else {
-                return
-            }
-            (flow, pressure, breathIndex) = parseJson(from: json)
-        }
     }
     
     func addData(from json: [[String: Any]]) -> ([Double], [Double]) {
