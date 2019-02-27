@@ -19,16 +19,7 @@ class PatientModel {
     var height: Int
     static let SAMPLE_RATE: Double = 0.02
     
-    var rpi: String {
-        get {
-            let regex = try! NSRegularExpression(pattern: "[0-9]+$", options: [.anchorsMatchLines, .caseInsensitive])
-            if let range = regex.firstMatch(in: name, options: [], range: NSRange(location: 0, length: name.count))?.range, let num = Int((name as NSString).substring(with: range)) {
-                return "rpi\(num)"
-            }
-            return ""
-        }
-    }
-    
+    var rpi: String    
     var json: [[String: Any]] = []
     var flow: [Double] = []
     var pressure: [Double] = []
@@ -42,13 +33,7 @@ class PatientModel {
         self.age = 0
         self.sex = ""
         self.height = 0
-    }
-    
-    init(withName name: String) {
-        self.name = name
-        self.age = 0
-        self.sex = ""
-        self.height = 0
+        self.rpi = ""
     }
     
     init(withName name: String, age: Int, sex: String, height: Int) {
@@ -56,25 +41,62 @@ class PatientModel {
         self.age = age
         self.sex = sex
         self.height = height
+        self.rpi = PatientModel.getDefaultRPi(forPatient: name)
     }
     
     init?(with json: [String: String]) {
-        guard let name = json["name"], let age_str = json["age"], let age = Int(age_str), let sex = json["sex"], let height_str = json["height"], let height = Int(height_str) else {
+        guard let name = json["name"], let age_str = json["age"], let age = Int(age_str), let sex = json["sex"], let height_str = json["height"], let height = Int(height_str), let rpi = json["rpi"] else {
             return nil
         }
         self.name = name
         self.age = age
         self.sex = sex
         self.height = height
+        self.rpi = rpi
     }
     
     convenience init?(at index: Int) {
         self.init(with: Storage.patients[index])
     }
     
+    static func removePatient(at index: Int, completion: @escaping CompletionAPI) {
+        ServerModel.shared.disassociatePatient(named: PatientModel(at: index)!.name) { (data, error) in
+            switch((data, error)) {
+            case(.some, .none):
+                Storage.patients.remove(at: index)
+                Storage.alerts.remove(at: index)
+                completion(data, nil)
+            case(.none, .some(let error)):
+                completion(nil, error)
+            default: ()
+            }
+        }
+    }
+    
+    static func getDefaultRPi(forPatient name: String) -> String {
+        let regex = try! NSRegularExpression(pattern: "[0-9]+$", options: [.anchorsMatchLines, .caseInsensitive])
+        if let range = regex.firstMatch(in: name, options: [], range: NSRange(location: 0, length: name.count))?.range, let num = Int((name as NSString).substring(with: range)) {
+            return "rpi\(num)"
+        }
+        return ""
+    }
+    
+    func updateRPi(to rpi: String, at index: Int, completion: @escaping CompletionAPI) {
+        ServerModel.shared.changeRPi(forPatient: name, to: rpi) { (data, error) in
+            switch((data, error)) {
+            case(.some, .none):
+                self.rpi = rpi
+                Storage.patients[index]["rpi"] = rpi
+                completion(data, nil)
+            case(.none, .some(let error)):
+                completion(nil, error)
+            default: ()
+            }
+        }
+    }
     
     func store(completion: @escaping CompletionAPI) {
-        Storage.patients.append(["name": name, "age": "\(age)", "sex": sex, "height": "\(height)"])
+        Storage.patients.append(["name": name, "age": "\(age)", "sex": sex, "height": "\(height)", "rpi": rpi])
         ServerModel.shared.enrollPatient(withName: name, rpi: rpi, height: height, sex: sex, age: age, completion: completion)
     }
     
@@ -162,7 +184,7 @@ class PatientModel {
                     let (newFlow, newPressure, newIndex, newOffsets) = self.parseBreathJSON(json)
                     self.flow = self.flow + newFlow
                     self.pressure = self.pressure + newPressure
-                    self.breathIndex = self.breathIndex + newIndex
+                    self.breathIndex = self.breathIndex + newIndex.map({ $0 + self.json.count })
                     self.json = self.json + json
                     self.offsets = self.offsets + newOffsets
                     completion(newFlow, newPressure, newOffsets, nil)
@@ -180,7 +202,7 @@ class PatientModel {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss zz"
         if refDate == nil {
-            if let first = json[0]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String {
+            if json.count > 0, let first = json[0]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String {
                 refDate = dateFormatter.date(from: date)
             }
         }
@@ -217,15 +239,12 @@ class PatientModel {
     }
     
     func getAllData(ofType field: String) -> [Double] {
-        var data: [Double] = []
-        for breath in json {
+        return json.compactMap { (breath) -> Double? in
             guard let entity = (breath["breath_meta"] as? [String: Any])?[field] as? Double else {
-                return []
+                return nil
             }
-            data.append(entity)
+            return entity
         }
-        
-        return data
     }
     
     func addData(from json: [[String: Any]]) -> ([Double], [Double]) {

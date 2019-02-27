@@ -7,9 +7,10 @@
 //
 
 import UIKit
+import UserNotifications
 
 enum ConfigType {
-    case label, textField
+    case label, textField, alertSwitch
 }
 
 class ConfigurationTableViewController: UITableViewController, ButtonTableViewCellDelegate {
@@ -18,8 +19,8 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
     var alertCellTypes: [AlertSettingType] = [.alertSwitch, .label, .textField, .alertSwitch, .label, .textField, .button]
     var alertCellTitles = ["Alert for DTA", "DTA Threshold Past Hour", "", "Alert for BSA", "BSA Threshold Past Hour", "", ""]
     
-    var configCellTypes: [ConfigType] = [.label, .textField, .label, .textField]
-    var configCellTitles = ["Load Time Frame (minutes)", "", "Update Interval (seconds)", ""]
+    var configCellTypes: [ConfigType] = [.label, .textField, .label, .textField, .alertSwitch]
+    var configCellTitles = ["Load Time Frame (minutes)", "", "Update Interval (seconds)", "", "Notifications"]
     
     var sectionHeaders = ["App Configuration", "Default Alert Settings"]
     
@@ -86,6 +87,12 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
             cell.detailTextLabel?.text = ""
             return cell
         }
+        else if configCellTypes[indexPath.row] == .alertSwitch {
+            let cell = (tableView.dequeueReusableCell(withIdentifier: "switchCell") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "switchCell")) as! SwitchTableViewCell
+            cell.textLabel?.text = configCellTitles[indexPath.row]
+            cell.alertSwitch.isOn = UIApplication.shared.isRegisteredForRemoteNotifications
+            return cell
+        }
         else {
             let cell = (tableView.dequeueReusableCell(withIdentifier: "textFieldCell") ?? UITableViewCell(style: .default, reuseIdentifier: "textFieldCell")) as! TextFieldTableViewCell
             switch(indexPath.row) {
@@ -140,6 +147,7 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
     func submitForm() {
         guard let loadTimeFrame = (tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TextFieldTableViewCell)?.textField.text,
             let updateInterval = (tableView.cellForRow(at: IndexPath(row: 3, section: 0)) as? TextFieldTableViewCell)?.textField.text,
+            let notificationOn = (tableView.cellForRow(at: IndexPath(row: 4, section: 0)) as? SwitchTableViewCell)?.alertSwitch.isOn,
             let dtaOn = (tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as? SwitchTableViewCell)?.alertSwitch.isOn,
             let dta = (tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as? TextFieldTableViewCell)?.textField.text,
             let bsaOn = (tableView.cellForRow(at: IndexPath(row: 3, section: 1)) as? SwitchTableViewCell)?.alertSwitch.isOn,
@@ -152,6 +160,32 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
             return
         }
         
+        let lock = NSLock()
+        lock.lock()
+        if !UIApplication.shared.isRegisteredForRemoteNotifications && notificationOn {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+                guard granted else {
+                    print("User notification permision not granted")
+                    lock.unlock()
+                    return
+                }
+                lock.unlock()
+                DispatchQueue.main.async {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
+                
+            }
+        }
+        else {
+            lock.unlock()
+        }
+        lock.lock()
+        
+        if UIApplication.shared.isRegisteredForRemoteNotifications && !notificationOn {
+            DispatchQueue.main.async {
+                UIApplication.shared.unregisterForRemoteNotifications()
+            }
+        }
         Storage.loadTimeFrame = Int(loadTimeFrame)!
         Storage.updateInterval = Int(updateInterval)!
         Storage.defaultAlert = AlertModel(withAlertDTA: dtaOn, thresholdDTA: Int(dta)!, alertBSA: bsaOn, thresholdBSA: Int(bsa)!).json

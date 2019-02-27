@@ -42,6 +42,24 @@ class ServerModel {
         serverAPI(at: "alert_settings", type: "POST", withParams: params, completion: completion)
     }
     
+    func registerDevice(forPatient name: String, withToken token: String, completion: @escaping CompletionAPI) {
+        let params = [name, token]
+        
+        serverAPI(at: "apn", type: "POST", withParams: params, completion: completion)
+    }
+    
+    func disassociatePatient(named name: String, completion: @escaping CompletionAPI) {
+        let params = [name]
+        
+        serverAPI(at: "disassociate", type: "POST", withParams: params, completion: completion)
+    }
+    
+    func changeRPi(forPatient name: String, to rpi: String, completion: @escaping CompletionAPI) {
+        let params = [name, rpi]
+        
+        serverAPI(at: "change_rpi", type: "POST", withParams: params, completion: completion)
+    }
+    
     private func serverAPI(at endPoint: String, type: String, withParams params: [String], completion: @escaping CompletionAPI) {
         var baseURL = "\(ip)/\(endPoint)"
         

@@ -22,13 +22,9 @@ class MainViewController: UIViewController {
             button.titleLabel?.adjustsFontSizeToFitWidth = true
         }
         
-        if Storage.updateInterval == 0 {
+        if Storage.loadTimeFrame == 0 {
             Storage.loadTimeFrame = 5
             Storage.updateInterval = 5
-            Storage.defaultAlertDTA = true
-            Storage.defaultThresholdDTA = 20
-            Storage.defaultAlertBSA = true
-            Storage.defaultThresholdBSA = 20
         }
         
         // Do any additional setup after loading the view, typically from a nib.

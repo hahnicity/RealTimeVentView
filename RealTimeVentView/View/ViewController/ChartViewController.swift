@@ -82,6 +82,15 @@ class ChartViewController: UIViewController, ChartViewDelegate {
                 return
             }
             
+            guard let refDate = self.patient.refDate, flow.count == 0 else {
+                print("No Data")
+                DispatchQueue.main.async {
+                    self.removeSpinner(spinner)
+                    self.updating = false
+                }
+                return
+            }
+            
             var flowChartData: [ChartDataEntry] = [], pressureChartData: [ChartDataEntry] = []
             for (offsetValue, (flowValue, pressureValue)) in zip(offsets, zip(flow, pressure)) {
                 flowChartData.append(ChartDataEntry(x: offsetValue, y: flowValue))
@@ -93,7 +102,7 @@ class ChartViewController: UIViewController, ChartViewDelegate {
             flowLine.drawCirclesEnabled = false
             pressureLine.colors = [UIColor.red]
             pressureLine.drawCirclesEnabled = false
-            self.chartView.xAxis.valueFormatter = TimeAxisValueFormatter(forDate: self.patient.refDate!)
+            self.chartView.xAxis.valueFormatter = TimeAxisValueFormatter(forDate: refDate)
             self.chartView.xAxis.granularity = ChartViewController.GRANULARITY
             DispatchQueue.main.async {
                 self.chartView.data = LineChartData(dataSets: [flowLine, pressureLine])
