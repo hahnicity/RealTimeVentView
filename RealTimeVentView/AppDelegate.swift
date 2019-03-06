@@ -8,6 +8,7 @@
 
 import UIKit
 import UserNotifications
+import SimulatorRemoteNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -17,8 +18,61 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         registerForPushNotifications()
+        #if DEBUG
+            application.listenForRemoteNotifications()
+        #endif
+        
+        if let notification = launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] as? [String: Any], let type = notification["type"] as? String {
+            if type == "feedback_push" {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss zz"
+                if let name = notification["patient"] as? String, let start = notification["start_time"] as? String, let startTime = dateFormatter.date(from: start), let end = notification["end_time"] as? String, let endTime = dateFormatter.date(from: end) {
+                    let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "feedbackViewController") as! FeedbackViewController
+                    viewController.patient = PatientModel.searchPatient(named: name)
+                    viewController.startTime = startTime
+                    viewController.endTime = endTime
+                    (self.window?.rootViewController as? UINavigationController)?.pushViewController(viewController, animated: true)
+                }
+            }
+            else if type == "threshold_push" {
+                if let name = notification["patient"] as? String {
+                    let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "chartViewController") as! ChartViewController
+                    viewController.patient = PatientModel.searchPatient(named: name)
+                    (self.window?.rootViewController as? UINavigationController)?.pushViewController(viewController, animated: true)
+                }
+            }
+        }
+        
         // Override point for customization after application launch.
         return true
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        print("notification received")
+        if let type = userInfo["type"] as? String {
+            if type == "feedback_push" {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss zz"
+                if let name = userInfo["patient"] as? String, let start = userInfo["start_time"] as? String, let startTime = dateFormatter.date(from: start), let end = userInfo["end_time"] as? String, let endTime = dateFormatter.date(from: end) {
+                    let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "feedbackViewController") as! FeedbackViewController
+                    viewController.patient = PatientModel.searchPatient(named: name)
+                    viewController.startTime = startTime
+                    viewController.endTime = endTime
+                    (self.window?.rootViewController as? UINavigationController)?.pushViewController(viewController, animated: true)
+                }
+            }
+            else if type == "threshold_push" {
+                if let name = userInfo["patient"] as? String {
+                    let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "chartViewController") as! ChartViewController
+                    viewController.patient = PatientModel.searchPatient(named: name)
+                    viewController.accessType = .enroll
+                    (self.window?.rootViewController as? UINavigationController)?.pushViewController(viewController, animated: true)
+                }
+            }
+        }
+        else {
+            completionHandler(.failed)
+        }
     }
     
     func registerForPushNotifications() {
@@ -46,6 +100,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Device token registration failed: \(error)")
     }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .sound, .badge])
+    }
+    
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

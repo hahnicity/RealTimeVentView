@@ -19,8 +19,8 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
     var alertCellTypes: [AlertSettingType] = [.alertSwitch, .label, .textField, .alertSwitch, .label, .textField, .button]
     var alertCellTitles = ["Alert for DTA", "DTA Threshold Past Hour", "", "Alert for BSA", "BSA Threshold Past Hour", "", ""]
     
-    var configCellTypes: [ConfigType] = [.label, .textField, .label, .textField, .alertSwitch]
-    var configCellTitles = ["Load Time Frame (minutes)", "", "Update Interval (seconds)", "", "Notifications"]
+    var configCellTypes: [ConfigType] = [.label, .textField, .label, .textField, .label, .textField, .alertSwitch]
+    var configCellTitles = ["Load Time Frame (minutes)", "", "Update Interval (seconds)", "", "Number of Breaths for Feedback", "", "Notifications"]
     
     var sectionHeaders = ["App Configuration", "Default Alert Settings"]
     
@@ -100,6 +100,8 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
                 cell.textField.text = "\(Storage.loadTimeFrame)"
             case 3:
                 cell.textField.text = "\(Storage.updateInterval)"
+            case 5:
+                cell.textField.text = "\(Storage.numFeedbackBreaths)"
             default: ()
             }
             return cell
@@ -145,9 +147,11 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
     }
     
     func submitForm() {
+        self.view.endEditing(true)
         guard let loadTimeFrame = (tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TextFieldTableViewCell)?.textField.text,
             let updateInterval = (tableView.cellForRow(at: IndexPath(row: 3, section: 0)) as? TextFieldTableViewCell)?.textField.text,
-            let notificationOn = (tableView.cellForRow(at: IndexPath(row: 4, section: 0)) as? SwitchTableViewCell)?.alertSwitch.isOn,
+            let numBreathFeedback = (tableView.cellForRow(at: IndexPath(row: 5, section: 0)) as? TextFieldTableViewCell)?.textField.text,
+            let notificationOn = (tableView.cellForRow(at: IndexPath(row: 6, section: 0)) as? SwitchTableViewCell)?.alertSwitch.isOn,
             let dtaOn = (tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as? SwitchTableViewCell)?.alertSwitch.isOn,
             let dta = (tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as? TextFieldTableViewCell)?.textField.text,
             let bsaOn = (tableView.cellForRow(at: IndexPath(row: 3, section: 1)) as? SwitchTableViewCell)?.alertSwitch.isOn,
@@ -156,7 +160,7 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
                 return
         }
         
-        if hasAppConfigError(withLoadTimeFrame: loadTimeFrame, updateInterval: updateInterval) || hasDefaultSettingsError(withDTA: dta, BSA: bsa) {
+        if hasAppConfigError(withLoadTimeFrame: loadTimeFrame, updateInterval: updateInterval, numBreathFeedback: numBreathFeedback) || hasDefaultSettingsError(withDTA: dta, BSA: bsa) {
             return
         }
         
@@ -188,6 +192,7 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
         }
         Storage.loadTimeFrame = Int(loadTimeFrame)!
         Storage.updateInterval = Int(updateInterval)!
+        Storage.numFeedbackBreaths = Int(numBreathFeedback)!
         Storage.defaultAlert = AlertModel(withAlertDTA: dtaOn, thresholdDTA: Int(dta)!, alertBSA: bsaOn, thresholdBSA: Int(bsa)!).json
         
         self.navigationController?.popToRootViewController(animated: true)
@@ -207,7 +212,7 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
             return true
         }
         
-        if temp_dta == 0 {
+        if temp_dta <= 0 {
             showAlert(withTitle: "Default Alert Settings Error", message: "The DTA threshold for the patient must be a nonzero number.")
             return true
         }
@@ -217,7 +222,7 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
             return true
         }
         
-        if temp_bsa == 0 {
+        if temp_bsa <= 0 {
             showAlert(withTitle: "Default Alert Settings Error", message: "The BSA threshold for the patient must be a nonzero number.")
             return true
         }
@@ -225,7 +230,7 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
         return false
     }
     
-    func hasAppConfigError(withLoadTimeFrame loadTimeFrame: String, updateInterval: String) -> Bool {
+    func hasAppConfigError(withLoadTimeFrame loadTimeFrame: String, updateInterval: String, numBreathFeedback: String) -> Bool {
         
         if loadTimeFrame.count == 0 {
             showAlert(withTitle: "App Configuration Error", message: "Please enter the time frame of the data load.")
@@ -237,7 +242,7 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
             return true
         }
         
-        if temp_ltf == 0 {
+        if temp_ltf <= 0 {
             showAlert(withTitle: "App Configuration Error", message: "The time frame should be a nonzero number.")
             return true
         }
@@ -252,8 +257,23 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
             return true
         }
         
-        if temp_ui == 0 {
+        if temp_ui <= 0 {
             showAlert(withTitle: "App Configuration Error", message: "The update interval should be a nonzero number.")
+            return true
+        }
+        
+        if numBreathFeedback.count == 0 {
+            showAlert(withTitle: "App Configuration Error", message: "Please enter the number of breaths for feedback.")
+            return true
+        }
+        
+        guard let temp_nbf = Int(numBreathFeedback) else {
+            showAlert(withTitle: "App Configuration Error", message: "The number of breath of feeback should be a nonzero number.")
+            return true
+        }
+        
+        if temp_nbf <= 0 {
+            showAlert(withTitle: "App Configuration Error", message: "The number of breath of feeback should be a nonzero number.")
             return true
         }
         

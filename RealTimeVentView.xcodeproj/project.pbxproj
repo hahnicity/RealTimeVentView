@@ -25,6 +25,7 @@
 		A38D4F472211959F001A8B2D /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38D4F462211959F001A8B2D /* SwitchTableViewCell.swift */; };
 		A38D4F49221196CA001A8B2D /* AlertSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38D4F48221196CA001A8B2D /* AlertSettingsTableViewController.swift */; };
 		A39B1B4422127A9E00B855FA /* ConfigurationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39B1B4322127A9E00B855FA /* ConfigurationTableViewController.swift */; };
+		A3EED178222C522800A79058 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3EED177222C522800A79058 /* FeedbackViewController.swift */; };
 		A3FC7FE92219622200D68BFA /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FC7FE82219622200D68BFA /* Storage.swift */; };
 		A754B6532202373000CD1A74 /* sample.json in Resources */ = {isa = PBXBuildFile; fileRef = A754B6522202373000CD1A74 /* sample.json */; };
 		A754B6552202417100CD1A74 /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A754B6542202417100CD1A74 /* ChartViewController.swift */; };
@@ -84,6 +85,7 @@
 		A38D4F462211959F001A8B2D /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		A38D4F48221196CA001A8B2D /* AlertSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertSettingsTableViewController.swift; sourceTree = "<group>"; };
 		A39B1B4322127A9E00B855FA /* ConfigurationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationTableViewController.swift; sourceTree = "<group>"; };
+		A3EED177222C522800A79058 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		A3FC7FE82219622200D68BFA /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		A754B6522202373000CD1A74 /* sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample.json; sourceTree = "<group>"; };
 		A754B6542202417100CD1A74 /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
@@ -230,8 +232,9 @@
 				A39B1B4322127A9E00B855FA /* ConfigurationTableViewController.swift */,
 				A38D4F48221196CA001A8B2D /* AlertSettingsTableViewController.swift */,
 				A34A91902211642C009F48FC /* EnrollTableViewController.swift */,
-				A754B6542202417100CD1A74 /* ChartViewController.swift */,
 				A754B65A2202483C00CD1A74 /* PatientListTableViewController.swift */,
+				A754B6542202417100CD1A74 /* ChartViewController.swift */,
+				A3EED177222C522800A79058 /* FeedbackViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -404,10 +407,12 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-RealTimeVentView/Pods-RealTimeVentView-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
+				"${BUILT_PRODUCTS_DIR}/SimulatorRemoteNotifications/SimulatorRemoteNotifications.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SimulatorRemoteNotifications.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -477,6 +482,7 @@
 			files = (
 				A754B65B2202483C00CD1A74 /* PatientListTableViewController.swift in Sources */,
 				A38D4F49221196CA001A8B2D /* AlertSettingsTableViewController.swift in Sources */,
+				A3EED178222C522800A79058 /* FeedbackViewController.swift in Sources */,
 				37AC9DBB22012D3E0048469E /* MainViewController.swift in Sources */,
 				A38D4F472211959F001A8B2D /* SwitchTableViewCell.swift in Sources */,
 				A389FC3822153C9A00A4D430 /* AlertModel.swift in Sources */,

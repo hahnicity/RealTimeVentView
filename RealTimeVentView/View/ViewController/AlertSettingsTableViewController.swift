@@ -148,7 +148,7 @@ class AlertSettingsTableViewController: UITableViewController, ButtonTableViewCe
             return true
         }
         
-        if temp_dta == 0 {
+        if temp_dta <= 0 {
             showAlert(withTitle: "Alert Settings Error", message: "The DTA threshold for the patient must be a nonzero number.")
             return true
         }
@@ -158,7 +158,7 @@ class AlertSettingsTableViewController: UITableViewController, ButtonTableViewCe
             return true
         }
         
-        if temp_bsa == 0 {
+        if temp_bsa <= 0 {
             showAlert(withTitle: "Alert Settings Error", message: "The BSA threshold for the patient must be a nonzero number.")
             return true
         }

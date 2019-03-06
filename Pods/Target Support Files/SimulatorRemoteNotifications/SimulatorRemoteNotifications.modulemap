@@ -1,0 +1,6 @@
+framework module SimulatorRemoteNotifications {
+  umbrella header "SimulatorRemoteNotifications-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -2,17 +2,21 @@ PODS:
   - Charts (3.2.0):
     - Charts/Core (= 3.2.0)
   - Charts/Core (3.2.0)
+  - SimulatorRemoteNotifications (0.0.3)
 
 DEPENDENCIES:
   - Charts
+  - SimulatorRemoteNotifications
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Charts
+    - SimulatorRemoteNotifications
 
 SPEC CHECKSUMS:
   Charts: 680c8328bd5e90cb14f67e00d2176f3113d19141
+  SimulatorRemoteNotifications: 1610643e0582b2af67bc254b071ace4077e8ef86
 
-PODFILE CHECKSUM: 3ac1358c6c383e080989c093d9f610fb8aef1637
+PODFILE CHECKSUM: 3541abfe44cdf692f457a903d08b4d006072d3c9
 
 COCOAPODS: 1.5.3

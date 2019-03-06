@@ -57,10 +57,15 @@ class ServerModel {
     func changeRPi(forPatient name: String, to rpi: String, completion: @escaping CompletionAPI) {
         let params = [name, rpi]
         
-        serverAPI(at: "change_rpi", type: "POST", withParams: params, completion: completion)
+        serverAPI(at: "change_rpi", type: "GET", withParams: params, completion: completion)
     }
     
-    private func serverAPI(at endPoint: String, type: String, withParams params: [String], completion: @escaping CompletionAPI) {
+    func feedback(with data: [String: Any], completion: @escaping CompletionAPI) {
+        serverAPI(at: "feedback", type: "POST", withParams: [], withData: data, completion: completion)
+    }
+    
+    
+    private func serverAPI(at endPoint: String, type: String, withParams params: [String], withData data: [String: Any] = [:], completion: @escaping CompletionAPI) {
         var baseURL = "\(ip)/\(endPoint)"
         
         for param in params.compactMap({ $0.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) }) {
@@ -76,10 +81,24 @@ class ServerModel {
         var request = URLRequest(url: url)
         request.httpMethod = type
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        session.dataTask(with: request) { (data, response, error) in
-            DispatchQueue.global(qos: .userInitiated).async {
-                completion(data, error)
+        if data.isEmpty {
+            session.dataTask(with: request) { (data, response, error) in
+                print(response)
+                DispatchQueue.global(qos: .userInitiated).async {
+                    completion(data, error)
+                }
+            }.resume()
+        }
+        else {
+            guard let body = try? JSONSerialization.data(withJSONObject: data) else {
+                return
             }
-        }.resume()
+            session.uploadTask(with: request, from: body) { (data, response, error) in
+                print(response)
+                DispatchQueue.global(qos: .userInitiated).async {
+                    completion(data, error)
+                }
+            }.resume()
+        }
     }
 }

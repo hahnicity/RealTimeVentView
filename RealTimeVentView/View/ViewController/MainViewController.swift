@@ -22,7 +22,8 @@ class MainViewController: UIViewController {
             button.titleLabel?.adjustsFontSizeToFitWidth = true
         }
         
-        if Storage.loadTimeFrame == 0 {
+        if Storage.numFeedbackBreaths == 0 {
+            Storage.numFeedbackBreaths = 10
             Storage.loadTimeFrame = 5
             Storage.updateInterval = 5
         }
@@ -52,6 +53,13 @@ class MainViewController: UIViewController {
         viewController.accessType = .alert
         self.navigationController?.pushViewController(viewController, animated: true)
     }
+    
+    @IBAction func testFeedbackPressed(_ sender: UIButton) {
+        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "feedbackViewController") as! FeedbackViewController
+        viewController.patient = PatientModel(at: 0)!
+        self.navigationController?.pushViewController(viewController, animated: true)
+    }
+    
     
     
     override func didReceiveMemoryWarning() {

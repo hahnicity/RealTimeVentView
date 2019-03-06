@@ -82,11 +82,17 @@ class ChartViewController: UIViewController, ChartViewDelegate {
                 return
             }
             
-            guard let refDate = self.patient.refDate, flow.count == 0 else {
+            guard let refDate = self.patient.refDate, flow.count > 0 else {
                 print("No Data")
                 DispatchQueue.main.async {
                     self.removeSpinner(spinner)
                     self.updating = false
+                    self.updateTimer = Timer.scheduledTimer(withTimeInterval: Double(Storage.updateInterval), repeats: true, block: { (timer) in
+                        if self.updating == false {
+                            self.updateChart()
+                        }
+                    })
+                    
                 }
                 return
             }

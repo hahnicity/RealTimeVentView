@@ -59,6 +59,15 @@ class PatientModel {
         self.init(with: Storage.patients[index])
     }
     
+    static func searchPatient(named name: String) -> PatientModel {
+        for patient in Storage.patients {
+            if let patientName = patient["name"], name == patientName, let patient = PatientModel(with: patient) {
+                return patient
+            }
+        }
+        return PatientModel()
+    }
+    
     static func removePatient(at index: Int, completion: @escaping CompletionAPI) {
         ServerModel.shared.disassociatePatient(named: PatientModel(at: index)!.name) { (data, error) in
             switch((data, error)) {
@@ -220,6 +229,47 @@ class PatientModel {
         return (flowData, pressureData, indexData, offsets)
     }
     
+    func loadBreaths(between startTime: Date, and endTime: Date, completion: @escaping CompletionUpdate) {
+        ServerModel.shared.getBreaths(forPatient: name, startTime: startTime, endTime: endTime) { (data, error) in
+            switch((data, error)) {
+            case(.some(let data), .none):
+                do {
+                    let object = try JSONSerialization.jsonObject(with: data)
+                    guard let json = object as? [[String: Any]] else {
+                        print("Some error regarding breath json")
+                        return
+                    }
+                    let (newFlow, newPressure, newIndex, newOffsets) = self.parseBreathJSON(json)
+                    self.flow = newFlow
+                    self.pressure = newPressure
+                    self.breathIndex = newIndex
+                    self.json = json
+                    self.offsets = newOffsets
+                    completion(newFlow, newPressure, newOffsets, nil)
+                } catch {
+                    print("\(error)")
+                }
+            case(.none, .some(let error)):
+                completion([], [], [], error)
+            default: ()
+            }
+        }
+    }
+    
+    func loadJSON(completion: @escaping CompletionUpdate) {
+        guard let json = getJson(Named: "sample2") else {
+            return
+        }
+        print("Num: \(json.count)")
+        let (newFlow, newPressure, newIndex, newOffsets) = self.parseBreathJSON(Array(json[0..<Storage.numFeedbackBreaths]))
+        print("Flows: \(newFlow.count)")
+        self.flow = newFlow
+        self.pressure = newPressure
+        self.breathIndex = newIndex
+        self.json = json
+        self.offsets = newOffsets
+        completion(newFlow, newPressure, newOffsets, nil)
+    }
     
     
     func getJson(Named filename: String) -> [[String: Any]]? {
@@ -245,6 +295,15 @@ class PatientModel {
             }
             return entity
         }
+    }
+    
+    func getBreathID() -> [Int] {
+        return json.compactMap({ (breath) -> Int? in
+            guard let entity = (breath["breath_meta"] as? [String: Any])?["vent_bn"] as? Int else {
+                return nil
+            }
+            return entity
+        })
     }
     
     func addData(from json: [[String: Any]]) -> ([Double], [Double]) {

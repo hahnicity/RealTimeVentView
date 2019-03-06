@@ -46,6 +46,15 @@ class Storage {
         }
     }
     
+    static var numFeedbackBreaths: Int {
+        get {
+            return UserDefaults.standard.integer(forKey: "numFeedbackBreaths")
+        }
+        set(numFeedbackBreaths) {
+            UserDefaults.standard.set(numFeedbackBreaths, forKey: "numFeedbackBreaths")
+        }
+    }
+    
     static var patients: [[String: String]] {
         get {
             return UserDefaults.standard.array(forKey: "patients") as? [[String: String]] ?? []

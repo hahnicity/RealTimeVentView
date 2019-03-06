@@ -216,7 +216,9 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="jKh-YE-Opm" firstAttribute="centerY" secondItem="qUj-Ta-mYH" secondAttribute="centerY" id="3qG-Rx-GOt"/>
+                                        <constraint firstItem="jKh-YE-Opm" firstAttribute="top" secondItem="qUj-Ta-mYH" secondAttribute="top" constant="6.3300000000000001" id="Fmq-0V-uyh"/>
                                         <constraint firstAttribute="trailing" secondItem="jKh-YE-Opm" secondAttribute="trailing" constant="20" id="QBJ-eh-of0"/>
+                                        <constraint firstAttribute="bottom" secondItem="jKh-YE-Opm" secondAttribute="bottom" constant="6.3300000000000001" id="Tlz-RI-MIW"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -393,7 +395,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-149" y="15"/>
+            <point key="canvasLocation" x="-149.27536231884059" y="14.732142857142856"/>
         </scene>
         <!--Select Patient-->
         <scene sceneID="xkx-Bh-Dn4">
@@ -489,6 +491,82 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sh3-iz-TVS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1262.3188405797102" y="14.732142857142856"/>
+        </scene>
+        <!--feedbackViewController-->
+        <scene sceneID="8oG-zo-TWo">
+            <objects>
+                <viewController storyboardIdentifier="feedbackViewController" title="feedbackViewController" id="qgJ-Ch-Qcq" customClass="FeedbackViewController" customModule="RealTimeVentView" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="l5T-h0-SjN"/>
+                        <viewControllerLayoutGuide type="bottom" id="dxi-Rp-K3S"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="I68-q1-1mw">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="chP-FZ-KWL" customClass="LineChartView" customModule="Charts">
+                                <rect key="frame" x="20" y="88" width="374" height="608"/>
+                            </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="UQm-RI-Xa8">
+                                <rect key="frame" x="20" y="704" width="374" height="158"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="breathCell" textLabel="0dg-Ri-5H4" detailTextLabel="A2a-dI-TtL" style="IBUITableViewCellStyleValue1" id="LGx-h1-VAs">
+                                        <rect key="frame" x="0.0" y="28" width="374" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LGx-h1-VAs" id="XJt-Io-5is">
+                                            <rect key="frame" x="0.0" y="0.0" width="374" height="43.666666666666664"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0dg-Ri-5H4">
+                                                    <rect key="frame" x="20.000000000000004" y="11.999999999999998" width="33.333333333333336" height="20.333333333333332"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="A2a-dI-TtL">
+                                                    <rect key="frame" x="310" y="11.999999999999998" width="44" height="20.333333333333332"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="UQm-RI-Xa8" firstAttribute="height" secondItem="chP-FZ-KWL" secondAttribute="height" multiplier="0.26" id="IgR-vZ-gXc"/>
+                            <constraint firstItem="chP-FZ-KWL" firstAttribute="leading" secondItem="I68-q1-1mw" secondAttribute="leadingMargin" id="IrL-bJ-5Q2"/>
+                            <constraint firstItem="chP-FZ-KWL" firstAttribute="trailing" secondItem="I68-q1-1mw" secondAttribute="trailingMargin" id="Jce-5t-l5y"/>
+                            <constraint firstItem="chP-FZ-KWL" firstAttribute="top" secondItem="l5T-h0-SjN" secondAttribute="bottom" id="TAc-Yy-uoL"/>
+                            <constraint firstItem="UQm-RI-Xa8" firstAttribute="trailing" secondItem="I68-q1-1mw" secondAttribute="trailingMargin" id="U4q-kq-hsf"/>
+                            <constraint firstItem="dxi-Rp-K3S" firstAttribute="top" secondItem="UQm-RI-Xa8" secondAttribute="bottom" id="XLe-Cr-ibx"/>
+                            <constraint firstItem="UQm-RI-Xa8" firstAttribute="top" secondItem="chP-FZ-KWL" secondAttribute="bottom" constant="8" id="k6p-bH-YGo"/>
+                            <constraint firstItem="UQm-RI-Xa8" firstAttribute="leading" secondItem="I68-q1-1mw" secondAttribute="leadingMargin" id="lnZ-JM-fJR"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Feedback" id="gc3-cn-95L">
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" title="Submit" id="OZU-EX-RpI">
+                            <connections>
+                                <action selector="submitPressed:" destination="qgJ-Ch-Qcq" id="CkX-iT-3EC"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="chartView" destination="chP-FZ-KWL" id="VRD-zs-ez0"/>
+                        <outlet property="submitButton" destination="OZU-EX-RpI" id="Wug-0n-rir"/>
+                        <outlet property="tableView" destination="UQm-RI-Xa8" id="fPw-Xr-MQp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7RL-ra-5Hs" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2005.7971014492755" y="14.732142857142856"/>
         </scene>
         <!--Configuration-->
         <scene sceneID="pjb-9M-97N">
