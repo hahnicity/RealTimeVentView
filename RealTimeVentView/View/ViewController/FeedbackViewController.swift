@@ -10,7 +10,7 @@ import UIKit
 import Charts
 
 enum Classification {
-    case dta, bsa, norm, none
+    case dta, bsa, tvv, norm, none
 }
 
 class FeedbackViewController: UIViewController, ChartViewDelegate, UITableViewDelegate, UITableViewDataSource {
@@ -46,6 +46,7 @@ class FeedbackViewController: UIViewController, ChartViewDelegate, UITableViewDe
             switch classification {
             case .dta: val.append("dta")
             case .bsa: val.append("bsa")
+            case .tvv: val.append("tvv")
             case .norm: val.append("norm")
             default: ()
             }
@@ -170,6 +171,8 @@ class FeedbackViewController: UIViewController, ChartViewDelegate, UITableViewDe
             cell.detailTextLabel?.text = "BSA"
         case .dta:
             cell.detailTextLabel?.text = "DTA"
+        case .tvv:
+            cell.detailTextLabel?.text = "TVV"
         case .norm:
             cell.detailTextLabel?.text = "Normal"
         case .none:
@@ -198,6 +201,12 @@ class FeedbackViewController: UIViewController, ChartViewDelegate, UITableViewDe
             self.chartView.highlightValue(nil, callDelegate: false)
             self.checkAllClassified()
         }
+        let tvv = UIAlertAction(title: "TVV", style: .default) { (action) in
+            self.classification[index] = .tvv
+            self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+            self.chartView.highlightValue(nil, callDelegate: false)
+            self.checkAllClassified()
+        }
         let norm = UIAlertAction(title: "Normal", style: .default) { (action) in
             self.classification[index] = .norm
             self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
@@ -209,6 +218,7 @@ class FeedbackViewController: UIViewController, ChartViewDelegate, UITableViewDe
         }
         alert.addAction(dta)
         alert.addAction(bsa)
+        alert.addAction(tvv)
         alert.addAction(norm)
         alert.addAction(cancel)
         

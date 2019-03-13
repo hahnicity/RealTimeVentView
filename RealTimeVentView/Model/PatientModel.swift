@@ -227,6 +227,7 @@ class PatientModel {
                 pressureData += pressureSet
                 indexData += Array<Int>(repeating: index, count: flowSet.count)
                 let base = dateFormatter.date(from: date)!.timeIntervalSince(refDate!)
+                // change sample rate around here
                 offsets += Array<Double>(stride(from: 0.0, to: Double(flowSet.count) * PatientModel.SAMPLE_RATE, by: PatientModel.SAMPLE_RATE)).map({ $0 + base })
             }
         }
