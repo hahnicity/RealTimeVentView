@@ -13,11 +13,11 @@ enum ConfigType {
     case label, textField, alertSwitch
 }
 
-class ConfigurationTableViewController: UITableViewController, ButtonTableViewCellDelegate {
+class ConfigurationTableViewController: UITableViewController, ButtonTableViewCellDelegate, SwitchTableViewCellDelegate, TextFieldTableViewCellDelegate {
     
 
-    var alertCellTypes: [AlertSettingType] = [.alertSwitch, .label, .textField, .alertSwitch, .label, .textField, .button]
-    var alertCellTitles = ["Alert for DTA", "DTA Threshold Past Hour", "", "Alert for BSA", "BSA Threshold Past Hour", "", ""]
+    var alertCellTypes: [AlertSettingType] = [.alertSwitch, .alertSwitch, .label, .textField, .alertSwitch, .label, .textField, .alertSwitch, .label, .textField, .button]
+    var alertCellTitles = ["Notification", "Alert for DTA", "DTA Threshold Past 10 Mins", "", "Alert for BSA", "BSA Threshold Past 10 Mins", "", "Alert for TVV", "TVV Threshold Past 10 Mins", "", ""]
     
     var configCellTypes: [ConfigType] = [.label, .textField, .label, .textField, .label, .textField, .alertSwitch]
     var configCellTitles = ["Load Time Frame (minutes)", "", "Update Interval (seconds)", "", "Number of Breaths for Feedback", "", "Notifications"]
@@ -26,12 +26,31 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
     
     var defaultAlert = AlertModel()
     
+    var loadTimeFrame = "\(Storage.loadTimeFrame)"
+    var updateInterval = "\(Storage.updateInterval)"
+    var numFeedbackBreaths = "\(Storage.numFeedbackBreaths)"
+    var notification = UIApplication.shared.isRegisteredForRemoteNotifications
+    var alertNotification = false
+    var alertDTA = false
+    var thresholdDTA = ""
+    var alertBSA = false
+    var thresholdBSA = ""
+    var alertTVV = false
+    var thresholdTVV = ""
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-
+        alertNotification = defaultAlert.notification
+        alertDTA = defaultAlert.alertDTA
+        thresholdDTA = "\(defaultAlert.thresholdDTA)"
+        alertBSA = defaultAlert.alertBSA
+        thresholdBSA = "\(defaultAlert.thresholdBSA)"
+        alertTVV = defaultAlert.alertTVV
+        thresholdTVV = "\(defaultAlert.thresholdTVV)"
+        tableView.reloadData()
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
@@ -91,6 +110,7 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
             let cell = (tableView.dequeueReusableCell(withIdentifier: "switchCell") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "switchCell")) as! SwitchTableViewCell
             cell.textLabel?.text = configCellTitles[indexPath.row]
             cell.alertSwitch.isOn = UIApplication.shared.isRegisteredForRemoteNotifications
+            cell.type = .notificationAll
             return cell
         }
         else {
@@ -98,10 +118,13 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
             switch(indexPath.row) {
             case 1:
                 cell.textField.text = "\(Storage.loadTimeFrame)"
+                cell.type = .loadTimeFrame
             case 3:
                 cell.textField.text = "\(Storage.updateInterval)"
+                cell.type = .updateInterval
             case 5:
                 cell.textField.text = "\(Storage.numFeedbackBreaths)"
+                cell.type = .numFeedbackBreaths
             default: ()
             }
             return cell
@@ -114,6 +137,20 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
             let cell = (tableView.dequeueReusableCell(withIdentifier: "labelCell") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "labelCell"))
             cell.textLabel?.text = alertCellTitles[indexPath.row]
             cell.detailTextLabel?.text = ""
+            
+            switch indexPath.row {
+            case 2:
+                cell.isUserInteractionEnabled = alertNotification && alertDTA
+                cell.textLabel?.isEnabled = alertNotification && alertDTA
+            case 5:
+                cell.isUserInteractionEnabled = alertNotification && alertBSA
+                cell.textLabel?.isEnabled = alertNotification && alertBSA
+            case 8:
+                cell.isUserInteractionEnabled = alertNotification && alertTVV
+                cell.textLabel?.isEnabled = alertNotification && alertTVV
+            default: ()
+            }
+ 
             return cell
         }
         else if alertCellTypes[indexPath.row] == .button {
@@ -124,49 +161,169 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
         else if alertCellTypes[indexPath.row] == .alertSwitch {
             let cell = (tableView.dequeueReusableCell(withIdentifier: "switchCell") ?? UITableViewCell(style: .default, reuseIdentifier: "switchCell")) as! SwitchTableViewCell
             cell.textLabel?.text = alertCellTitles[indexPath.row]
+            cell.delegate = self
             switch(indexPath.row) {
             case 0:
+                cell.alertSwitch.isOn = defaultAlert.notification
+                cell.type = .notification
+            case 1:
                 cell.alertSwitch.isOn = defaultAlert.alertDTA
-            case 3:
+                cell.isUserInteractionEnabled = alertNotification
+                cell.textLabel?.isEnabled = alertNotification
+                cell.alertSwitch.isEnabled = alertNotification
+                cell.type = .dta
+            case 4:
                 cell.alertSwitch.isOn = defaultAlert.alertBSA
+                cell.isUserInteractionEnabled = alertNotification
+                cell.textLabel?.isEnabled = alertNotification
+                cell.alertSwitch.isEnabled = alertNotification
+                cell.type = .bsa
+            case 7:
+                cell.alertSwitch.isOn = defaultAlert.alertTVV
+                cell.isUserInteractionEnabled = alertNotification
+                cell.textLabel?.isEnabled = alertNotification
+                cell.alertSwitch.isEnabled = alertNotification
+                cell.type = .tvv
             default: ()
             }
             return cell
         }
         else {
             let cell = (tableView.dequeueReusableCell(withIdentifier: "textFieldCell") ?? UITableViewCell(style: .default, reuseIdentifier: "textFieldCell")) as! TextFieldTableViewCell
+            cell.delegate = self
             switch(indexPath.row) {
-            case 2:
+            case 3:
                 cell.textField.text = "\(defaultAlert.thresholdDTA)"
-            case 5:
+                cell.isUserInteractionEnabled = alertDTA && alertNotification
+                cell.textLabel?.isEnabled = alertDTA && alertNotification
+                cell.textField.isEnabled = alertDTA && alertNotification
+                cell.type = .thresholdDTA
+            case 6:
                 cell.textField.text = "\(defaultAlert.thresholdBSA)"
+                cell.isUserInteractionEnabled = alertBSA && alertNotification
+                cell.textLabel?.isEnabled = alertBSA && alertNotification
+                cell.textField.isEnabled = alertBSA && alertNotification
+                cell.type = .thresholdBSA
+            case 9:
+                cell.textField.text = "\(defaultAlert.thresholdTVV)"
+                cell.isUserInteractionEnabled = alertTVV && alertNotification
+                cell.textLabel?.isEnabled = alertTVV && alertNotification
+                cell.textField.isEnabled = alertTVV && alertNotification
+                cell.type = .thresholdTVV
             default: ()
             }
             return cell
         }
     }
     
+    func enableCells(_ value: Bool) {
+        for index in 1 ..< alertCellTypes.count - 1 {
+            var new = value
+            if index < 4 {
+                new = alertDTA && value
+            }
+            else if index < 7 {
+                new = alertBSA && value
+            }
+            else if index < 10 {
+                new = alertTVV && value
+            }
+            let cell = tableView.cellForRow(at: IndexPath(row: index, section: 1))
+            cell?.isUserInteractionEnabled = value
+            if let cell = cell as? SwitchTableViewCell {
+                cell.textLabel?.isEnabled = value
+                cell.alertSwitch.isEnabled = value
+            }
+            else if let cell = cell as? TextFieldTableViewCell {
+                cell.textLabel?.isEnabled = new
+                cell.textField.isEnabled = new
+            }
+            else if let cell = cell {
+                cell.textLabel?.isEnabled = new
+            }
+        }
+    }
+
+    
+    func switchChanged(ofType type: SwitchType, to value: Bool) {
+        switch type {
+        case .notification:
+            enableCells(value)
+            alertNotification = value
+            tableView.beginUpdates()
+            tableView.endUpdates()
+        case .dta:
+            if let cell = tableView.cellForRow(at: IndexPath(row: 2, section: 1)) {
+                cell.isUserInteractionEnabled = value
+                cell.textLabel?.isEnabled = value
+            }
+            if let cell = tableView.cellForRow(at: IndexPath(row: 3, section: 1)) as? TextFieldTableViewCell {
+                cell.isUserInteractionEnabled = value
+                cell.textField.isEnabled = value
+            }
+            alertDTA = value
+            tableView.beginUpdates()
+            tableView.endUpdates()
+        case .bsa:
+            if let cell = tableView.cellForRow(at: IndexPath(row: 5, section: 1)) {
+                cell.isUserInteractionEnabled = value
+                cell.textLabel?.isEnabled = value
+            }
+            if let cell = tableView.cellForRow(at: IndexPath(row: 6, section: 1)) as? TextFieldTableViewCell {
+                cell.isUserInteractionEnabled = value
+                cell.textField.isEnabled = value
+            }
+            alertBSA = value
+            tableView.beginUpdates()
+            tableView.endUpdates()
+        case .tvv:
+            if let cell = tableView.cellForRow(at: IndexPath(row: 8, section: 1)) {
+                cell.textLabel?.isEnabled = value
+            }
+            if let cell = tableView.cellForRow(at: IndexPath(row: 9, section: 1)) as? TextFieldTableViewCell {
+                cell.isUserInteractionEnabled = value
+                cell.textField.isEnabled = value
+            }
+            alertTVV = value
+            tableView.beginUpdates()
+            tableView.endUpdates()
+        case .notificationAll:
+            notification = value
+        }
+    }
+    
+    func editingText(_ text: String) {
+        
+    }
+    
+    func textChanged(ofType type: TextFieldType, to value: String) {
+        print(value)
+        switch type {
+        case .loadTimeFrame:
+            loadTimeFrame = value
+        case .updateInterval:
+            updateInterval = value
+        case .numFeedbackBreaths:
+            numFeedbackBreaths = value
+        case .thresholdDTA:
+            thresholdDTA = value
+        case .thresholdBSA:
+            thresholdBSA = value
+        case .thresholdTVV:
+            thresholdTVV = value
+        }
+    }
+    
     func submitForm() {
         self.view.endEditing(true)
-        guard let loadTimeFrame = (tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TextFieldTableViewCell)?.textField.text,
-            let updateInterval = (tableView.cellForRow(at: IndexPath(row: 3, section: 0)) as? TextFieldTableViewCell)?.textField.text,
-            let numBreathFeedback = (tableView.cellForRow(at: IndexPath(row: 5, section: 0)) as? TextFieldTableViewCell)?.textField.text,
-            let notificationOn = (tableView.cellForRow(at: IndexPath(row: 6, section: 0)) as? SwitchTableViewCell)?.alertSwitch.isOn,
-            let dtaOn = (tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as? SwitchTableViewCell)?.alertSwitch.isOn,
-            let dta = (tableView.cellForRow(at: IndexPath(row: 2, section: 1)) as? TextFieldTableViewCell)?.textField.text,
-            let bsaOn = (tableView.cellForRow(at: IndexPath(row: 3, section: 1)) as? SwitchTableViewCell)?.alertSwitch.isOn,
-            let bsa = (tableView.cellForRow(at: IndexPath(row: 5, section: 1)) as? TextFieldTableViewCell)?.textField.text else {
-                print("Data Read Error")
-                return
-        }
         
-        if hasAppConfigError(withLoadTimeFrame: loadTimeFrame, updateInterval: updateInterval, numBreathFeedback: numBreathFeedback) || hasDefaultSettingsError(withDTA: dta, BSA: bsa) {
+        if hasAppConfigError(withLoadTimeFrame: loadTimeFrame, updateInterval: updateInterval, numBreathFeedback: numFeedbackBreaths) || hasDefaultSettingsError(withDTA: thresholdDTA, BSA: thresholdBSA, TVV: thresholdTVV) {
             return
         }
         
         let lock = NSLock()
         lock.lock()
-        if !UIApplication.shared.isRegisteredForRemoteNotifications && notificationOn {
+        if !UIApplication.shared.isRegisteredForRemoteNotifications && notification {
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
                 guard granted else {
                     print("User notification permision not granted")
@@ -185,45 +342,45 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
         }
         lock.lock()
         
-        if UIApplication.shared.isRegisteredForRemoteNotifications && !notificationOn {
+        if UIApplication.shared.isRegisteredForRemoteNotifications && !notification {
             DispatchQueue.main.async {
                 UIApplication.shared.unregisterForRemoteNotifications()
             }
         }
         Storage.loadTimeFrame = Int(loadTimeFrame)!
         Storage.updateInterval = Int(updateInterval)!
-        Storage.numFeedbackBreaths = Int(numBreathFeedback)!
-        Storage.defaultAlert = AlertModel(withAlertDTA: dtaOn, thresholdDTA: Int(dta)!, alertBSA: bsaOn, thresholdBSA: Int(bsa)!).json
+        Storage.numFeedbackBreaths = Int(numFeedbackBreaths)!
+        Storage.defaultAlert = AlertModel(withAlertDTA: alertDTA, thresholdDTA: Int(thresholdDTA)!, alertBSA: alertBSA, thresholdBSA: Int(thresholdBSA)!, alertTVV: alertTVV, thresholdTVV: Int(thresholdTVV)!, notification: alertNotification).json
         
         self.navigationController?.popToRootViewController(animated: true)
     }
     
-    func hasDefaultSettingsError(withDTA dta: String, BSA bsa: String) -> Bool {
+    func hasDefaultSettingsError(withDTA dta: String, BSA bsa: String, TVV tvv: String) -> Bool {
         if dta.count == 0 {
-            showAlert(withTitle: "Default Alert Settings Error", message: "Please enter the DTA thrshold for the patient.")
+            showAlert(withTitle: "Default Alert Settings Error", message: "Please enter the DTA threshold for the patient.")
             return true
         }
         if bsa.count == 0 {
-            showAlert(withTitle: "Default Alert Settings Error", message: "Please enter the BSA thrshold for the patient.")
+            showAlert(withTitle: "Default Alert Settings Error", message: "Please enter the BSA threshold for the patient.")
             return true
         }
-        guard let temp_dta = Int(dta) else {
-            showAlert(withTitle: "Default Alert Settings Error", message: "The DTA threshold for the patient must be a nonzero number.")
-            return true
-        }
-        
-        if temp_dta <= 0 {
-            showAlert(withTitle: "Default Alert Settings Error", message: "The DTA threshold for the patient must be a nonzero number.")
+        if tvv.count == 0 {
+            showAlert(withTitle: "Alert Settings Error", message: "Please enter the TVV threshold for the patient.")
             return true
         }
         
-        guard let temp_bsa = Int(bsa) else {
-            showAlert(withTitle: "Default Alert Settings Error", message: "The BSA threshold for the patient must be a nonzero number.")
+        guard let temp_dta = Int(dta), temp_dta > 0 else {
+            showAlert(withTitle: "Alert Settings Error", message: "The DTA threshold for the patient must be a nonzero number.")
             return true
         }
         
-        if temp_bsa <= 0 {
-            showAlert(withTitle: "Default Alert Settings Error", message: "The BSA threshold for the patient must be a nonzero number.")
+        guard let temp_bsa = Int(bsa), temp_bsa > 0 else {
+            showAlert(withTitle: "Alert Settings Error", message: "The BSA threshold for the patient must be a nonzero number.")
+            return true
+        }
+        
+        guard let temp_tvv = Int(tvv), temp_tvv > 0 else {
+            showAlert(withTitle: "Alert Settings Error", message: "The TVV threshold for the patient must be a nonzero number.")
             return true
         }
         

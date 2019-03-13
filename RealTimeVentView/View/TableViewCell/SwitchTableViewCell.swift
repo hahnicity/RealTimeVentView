@@ -8,9 +8,19 @@
 
 import UIKit
 
+enum SwitchType {
+    case notification, dta, bsa, tvv, notificationAll
+}
+
+protocol SwitchTableViewCellDelegate {
+    func switchChanged(ofType type: SwitchType, to value: Bool)
+}
+
 class SwitchTableViewCell: UITableViewCell {
 
     @IBOutlet weak var alertSwitch: UISwitch!
+    var type: SwitchType = .notification
+    var delegate: SwitchTableViewCellDelegate? = nil
     
     override func awakeFromNib() {
         super.awakeFromNib()        // Initialization code
@@ -21,5 +31,11 @@ class SwitchTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
+    @IBAction func switchChanged(_ sender: UISwitch) {
+        delegate?.switchChanged(ofType: type, to: sender.isOn)
+    }
+    
+    
 
 }

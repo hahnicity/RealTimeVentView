@@ -142,7 +142,7 @@ class PatientModel {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss zz"
         //print((json[0]["breath_meta"] as? [String: Any])?["abs_bs"])
-        guard let first = json[0]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String, let lastDate = dateFormatter.date(from: date) else {
+        guard json.count > 0, let first = json[0]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String, let lastDate = dateFormatter.date(from: date) else {
             print("Error getting the last date")
             return
         }
@@ -176,9 +176,13 @@ class PatientModel {
     func loadNewBreaths(completion: @escaping CompletionUpdate) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss zz"
-        guard let first = json[json.count - 1]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String, let lastDate = dateFormatter.date(from: date) else {
-            print("Error getting the last date")
-            return
+        var lastDate = Date(timeIntervalSinceNow: -TimeInterval(Storage.updateInterval))
+        if json.count > 0 {
+            guard let first = json[json.count - 1]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String, let l = dateFormatter.date(from: date) else {
+                print("Error getting the last date")
+                return
+            }
+            lastDate = l
         }
         
         ServerModel.shared.getBreaths(forPatient: name, startTime: Date(timeInterval: 1, since: lastDate), endTime: Date()) { (data, error) in
@@ -299,7 +303,7 @@ class PatientModel {
     
     func getBreathID() -> [Int] {
         return json.compactMap({ (breath) -> Int? in
-            guard let entity = (breath["breath_meta"] as? [String: Any])?["vent_bn"] as? Int else {
+            guard let entity = (breath["breath_meta"] as? [String: Any])?["id"] as? Int else {
                 return nil
             }
             return entity

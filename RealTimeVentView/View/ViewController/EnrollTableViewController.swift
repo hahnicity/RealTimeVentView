@@ -14,6 +14,7 @@ enum EnrollCellType {
 
 class EnrollTableViewController: UITableViewController, PickerTableViewCellDelegate, ButtonTableViewCellDelegate, TextFieldTableViewCellDelegate {
     
+    
     var cellTypes: [EnrollCellType] = [.label, .textField, .label, .textField, .label, .label, .textField, .label, .label, .button]
     var cellTitles = ["Name", "", "Age", "", "Sex", "Height (cm)", "", "Raspberry Pi #", "", ""]
     let sex = ["Male", "Female"]
@@ -145,6 +146,9 @@ class EnrollTableViewController: UITableViewController, PickerTableViewCellDeleg
             tableView.endUpdates()
             //tableView.reloadRows(at: [IndexPath(row: 8 + (pickerIndex == nil ? 0 : 1), section: 0)], with: .automatic)
         }
+    }
+    
+    func textChanged(ofType type: TextFieldType, to value: String) {
     }
     
     func submitForm() {

@@ -22,7 +22,9 @@ class ChartViewController: UIViewController, ChartViewDelegate {
     var patient: PatientModel = PatientModel()
     var accessType: ChartAccessType = .main
     var updating = false
+    var update = DispatchSemaphore(value: 1)
     var updateTimer = Timer()
+    var spinner = UIView()
     static let WINDOW_WIDTH = 30.0
     static let GRANULARITY = 10.0
     
@@ -52,7 +54,10 @@ class ChartViewController: UIViewController, ChartViewDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        updateTimer.invalidate()
+        DispatchQueue.main.async {
+            //self.updateTimer.invalidate()
+            self.updateTimer = Timer()
+        }
     }
     
     @IBAction func returnPressed(_ sender: UIBarButtonItem) {
@@ -63,8 +68,19 @@ class ChartViewController: UIViewController, ChartViewDelegate {
         if self.chartView.lowestVisibleX == chartView.data?.xMin && dX > 50 && !updating {
             print("Dragging Past Beginning")
             updating = true
-            chartView.isUserInteractionEnabled = false
-            loadPastData()
+            if self.update.wait(timeout: .now()) == .timedOut {
+                DispatchQueue.global(qos: .userInitiated).async {
+                    self.update.wait()
+                    DispatchQueue.main.async {
+                        chartView.isUserInteractionEnabled = false
+                    }
+                    self.loadPastData()
+                }
+            }
+            else {
+                chartView.isUserInteractionEnabled = false
+                self.loadPastData()
+            }
         }
     }
     
@@ -75,7 +91,7 @@ class ChartViewController: UIViewController, ChartViewDelegate {
     }
     
     func loadChart() {
-        let spinner = self.showSpinner()
+        self.showSpinner()
         patient.loadBreaths { (flow, pressure, offsets, error) in
             if let error = error {
                 self.showAlert(withTitle: "Chart Load Error", message: error.localizedDescription)
@@ -85,10 +101,10 @@ class ChartViewController: UIViewController, ChartViewDelegate {
             guard let refDate = self.patient.refDate, flow.count > 0 else {
                 print("No Data")
                 DispatchQueue.main.async {
-                    self.removeSpinner(spinner)
+                    self.removeSpinner(self.spinner)
                     self.updating = false
                     self.updateTimer = Timer.scheduledTimer(withTimeInterval: Double(Storage.updateInterval), repeats: true, block: { (timer) in
-                        if self.updating == false {
+                        if self.update.wait(timeout: .now()) == .success {
                             self.updateChart()
                         }
                     })
@@ -115,10 +131,10 @@ class ChartViewController: UIViewController, ChartViewDelegate {
                 self.chartView.setVisibleXRangeMaximum(ChartViewController.WINDOW_WIDTH)
                 self.chartView.moveViewToX(self.chartView.chartXMax)
                 self.labelUpdate()
-                self.removeSpinner(spinner)
+                self.removeSpinner(self.spinner)
                 self.updating = false
                 self.updateTimer = Timer.scheduledTimer(withTimeInterval: Double(Storage.updateInterval), repeats: true, block: { (timer) in
-                    if self.updating == false {
+                    if self.update.wait(timeout: .now()) == .success {
                         self.updateChart()
                     }
                 })
@@ -127,13 +143,16 @@ class ChartViewController: UIViewController, ChartViewDelegate {
     }
     
     func updateChart() {
+        updating = true
         patient.loadNewBreaths { (flow, pressure, offsets, error) in
             if let error = error {
                 self.showAlert(withTitle: "Chart Update Error", message: error.localizedDescription)
+                self.updating = false
                 return
             }
             
             if flow.count == 0 {
+                self.updating = false
                 return // no new update
             }
             
@@ -152,18 +171,33 @@ class ChartViewController: UIViewController, ChartViewDelegate {
                     self.chartView.moveViewToX(self.chartView.chartXMax)
                 }
                 self.updating = false
+                self.update.signal()
             }
         }
     }
     
     func loadPastData() {
-        let spinner = self.showSpinner()
+        self.showSpinner()
         patient.loadPastBreaths { (flow, pressure, offsets, error) in
             if let error = error {
+                self.removeSpinner(self.spinner)
                 self.showAlert(withTitle: "Past Data Load Error", message: error.localizedDescription)
+                self.updating = false
                 return
             }
             
+            guard flow.count > 0 else {
+                print("No Data")
+                DispatchQueue.main.async {
+                    self.removeSpinner(self.spinner)
+                    self.updating = false
+                }
+                return
+            }
+            
+            print("Loading \(flow.count) data")
+            print(offsets[0..<200])
+            print(offsets[flow.count-10..<flow.count])
             let xMin = self.chartView.chartXMin
             
             for (offsetValue, (flowValue, pressureValue)) in zip(offsets, zip(flow, pressure)) {
@@ -172,13 +206,15 @@ class ChartViewController: UIViewController, ChartViewDelegate {
             }
             
             DispatchQueue.main.async {
+                print("Now applying changes")
                 self.chartView.data?.notifyDataChanged()
                 self.chartView.notifyDataSetChanged()
                 self.chartView.setVisibleXRangeMaximum(ChartViewController.WINDOW_WIDTH)
                 self.chartView.moveViewToX(xMin)
                 self.chartView.isUserInteractionEnabled = true
-                self.removeSpinner(spinner)
+                self.removeSpinner(self.spinner)
                 self.updating = false
+                self.update.signal()
             }
         }
     }
@@ -198,19 +234,16 @@ class ChartViewController: UIViewController, ChartViewDelegate {
      
      */
     
-    func showSpinner() -> UIView {
-        let spinner = UIView.init(frame: self.view.bounds)
-        spinner.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue:0.5, alpha: 0.5)
-        let activity = UIActivityIndicatorView.init(style: .whiteLarge)
-        activity.startAnimating()
-        activity.center = spinner.center
-        
+    func showSpinner() {
         DispatchQueue.main.async {
-            spinner.addSubview(activity)
-            self.view.addSubview(spinner)
+            self.spinner = UIView.init(frame: self.view.bounds)
+            self.spinner.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue:0.5, alpha: 0.5)
+            let activity = UIActivityIndicatorView.init(style: .whiteLarge)
+            activity.startAnimating()
+            activity.center = self.spinner.center
+            self.spinner.addSubview(activity)
+            self.view.addSubview(self.spinner)
         }
-        
-        return spinner
     }
     
     func removeSpinner(_ spinner: UIView) {

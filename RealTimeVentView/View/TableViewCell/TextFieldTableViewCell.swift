@@ -8,8 +8,13 @@
 
 import UIKit
 
+enum TextFieldType {
+    case loadTimeFrame, updateInterval, numFeedbackBreaths, thresholdDTA, thresholdBSA, thresholdTVV
+}
+
 protocol TextFieldTableViewCellDelegate {
     func editingText(_ text: String)
+    func textChanged(ofType type: TextFieldType, to value: String)
 }
 
 class TextFieldTableViewCell: UITableViewCell, UITextFieldDelegate {
@@ -17,6 +22,7 @@ class TextFieldTableViewCell: UITableViewCell, UITextFieldDelegate {
     @IBOutlet weak var textField: UITextField!
     var suggestion = ""
     var delegate: TextFieldTableViewCellDelegate? = nil
+    var type: TextFieldType = .loadTimeFrame
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -26,6 +32,7 @@ class TextFieldTableViewCell: UITableViewCell, UITextFieldDelegate {
     
     @IBAction func textChanged(_ sender: UITextField) {
         delegate?.editingText(sender.text ?? "")
+        delegate?.textChanged(ofType: type, to: sender.text ?? "")
     }
     
     

@@ -190,6 +190,9 @@
                                             <nil key="textColor"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                             <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                            <connections>
+                                                <action selector="textChanged:" destination="h5U-1z-s0I" eventType="editingDidEnd" id="8Pw-5R-Gbh"/>
+                                            </connections>
                                         </textField>
                                     </subviews>
                                     <constraints>
@@ -212,6 +215,9 @@
                                     <subviews>
                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jKh-YE-Opm">
                                             <rect key="frame" x="345" y="6.3333333333333321" width="51" height="30.999999999999996"/>
+                                            <connections>
+                                                <action selector="switchChanged:" destination="49l-V2-7TG" eventType="valueChanged" id="VvL-Xs-35Y"/>
+                                            </connections>
                                         </switch>
                                     </subviews>
                                     <constraints>
@@ -613,6 +619,9 @@
                                             <nil key="textColor"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                             <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                            <connections>
+                                                <action selector="textChanged:" destination="sFe-NY-dJx" eventType="editingDidEnd" id="hlM-4T-aqW"/>
+                                            </connections>
                                         </textField>
                                     </subviews>
                                     <constraints>
@@ -635,10 +644,14 @@
                                     <subviews>
                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cBT-xs-mbY">
                                             <rect key="frame" x="345" y="6.3333333333333321" width="51" height="30.999999999999996"/>
+                                            <connections>
+                                                <action selector="switchChanged:" destination="ffp-ve-huV" eventType="valueChanged" id="yjS-bn-EsW"/>
+                                            </connections>
                                         </switch>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="cBT-xs-mbY" firstAttribute="centerY" secondItem="I3R-0f-8aH" secondAttribute="centerY" id="48j-8t-gy4"/>
+                                        <constraint firstItem="cBT-xs-mbY" firstAttribute="top" secondItem="I3R-0f-8aH" secondAttribute="top" constant="6.3300000000000001" id="9BR-0H-OmF"/>
+                                        <constraint firstAttribute="bottom" secondItem="cBT-xs-mbY" secondAttribute="bottom" constant="6.3300000000000001" id="oeE-qc-YVN"/>
                                         <constraint firstAttribute="trailing" secondItem="cBT-xs-mbY" secondAttribute="trailing" constant="20" id="wSp-hj-C14"/>
                                     </constraints>
                                 </tableViewCellContentView>

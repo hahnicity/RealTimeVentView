@@ -57,13 +57,24 @@ class ServerModel {
     func changeRPi(forPatient name: String, to rpi: String, completion: @escaping CompletionAPI) {
         let params = [name, rpi]
         
-        serverAPI(at: "change_rpi", type: "GET", withParams: params, completion: completion)
+        serverAPI(at: "change_rpi", type: "POST", withParams: params, completion: completion)
     }
     
     func feedback(with data: [String: Any], completion: @escaping CompletionAPI) {
         serverAPI(at: "feedback", type: "POST", withParams: [], withData: data, completion: completion)
     }
     
+    func setAlertSettings(for patient: PatientModel, to setting: AlertModel, completion: @escaping CompletionAPI) {
+        let json: [String: Any] = ["apn": Storage.deviceToken, "patient": patient.name, "alert_for_dta": setting.alertDTA, "dta_alert_freq": setting.thresholdDTA, "alert_for_bsa": setting.alertBSA, "bsa_alert_freq": setting.thresholdBSA, "alert_for_tvv": setting.alertTVV, "tvv_alert_freq": setting.thresholdTVV]
+        
+        serverAPI(at: "apn_settings", type: "POST", withParams: [], withData: json, completion: completion)
+    }
+    
+    func removeAlertSettings(for patient: PatientModel, completion: @escaping CompletionAPI) {
+        let json: [String: Any] = ["apn": Storage.deviceToken, "patient": patient.name]
+        
+        serverAPI(at: "apn_settings", type: "DELETE", withParams: [], withData: json, completion: completion)
+    }
     
     private func serverAPI(at endPoint: String, type: String, withParams params: [String], withData data: [String: Any] = [:], completion: @escaping CompletionAPI) {
         var baseURL = "\(ip)/\(endPoint)"
@@ -83,10 +94,7 @@ class ServerModel {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         if data.isEmpty {
             session.dataTask(with: request) { (data, response, error) in
-                print(response)
-                DispatchQueue.global(qos: .userInitiated).async {
-                    completion(data, error)
-                }
+                self.handleServerRessponse(data: data, response: response, error: error, completion: completion)
             }.resume()
         }
         else {
@@ -94,11 +102,26 @@ class ServerModel {
                 return
             }
             session.uploadTask(with: request, from: body) { (data, response, error) in
-                print(response)
-                DispatchQueue.global(qos: .userInitiated).async {
-                    completion(data, error)
-                }
+                self.handleServerRessponse(data: data, response: response, error: error, completion: completion)
             }.resume()
+        }
+    }
+    
+    func handleServerRessponse(data: Data?, response: URLResponse?, error: Error?, completion: @escaping CompletionAPI) {
+        print(response)
+        if let response = response as? HTTPURLResponse {
+            DispatchQueue.global(qos: .userInitiated).async {
+                if response.statusCode != 200 {
+                    completion(nil, NSError(domain: "HttpServerOperationErrorDomain", code: response.statusCode, userInfo: [NSLocalizedDescriptionKey: NSLocalizedString("Operation was not successful.", comment: "")]))
+                }
+                else {
+                    completion(data, nil)
+                }
+            }
+        }
+        else {
+            print("ERROR: BOTH DATA AND ERROR ARE NIL")
+            completion(nil, error)
         }
     }
 }

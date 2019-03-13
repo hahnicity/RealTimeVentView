@@ -40,15 +40,15 @@ class FeedbackViewController: UIViewController, ChartViewDelegate, UITableViewDe
     
     @IBAction func submitPressed(_ sender: UIBarButtonItem) {
         let id = patient.getBreathID()
-        let breaths = zip(id, classification).map { (id, classification) -> [String: Any] in
-            var val: [String: Any] = [:]
+        let breaths = zip(id, classification).map { (id, classification) -> [Any] in
+            var val: [Any] = []
+            val.append(id)
             switch classification {
-            case .dta: val["classification"] = "dta"
-            case .bsa: val["classification"] = "bsa"
-            case .norm: val["classification"] = "norm"
+            case .dta: val.append("dta")
+            case .bsa: val.append("bsa")
+            case .norm: val.append("norm")
             default: ()
             }
-            val["id"] = id
             return val
         }
         print(["patient": patient.name, "breaths": breaths])
