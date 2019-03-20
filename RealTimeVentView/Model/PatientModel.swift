@@ -213,7 +213,7 @@ class PatientModel {
     
     func parseBreathJSON(_ json: [[String: Any]]) -> ([Double], [Double], [Int], [Double]) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss zz"
+        dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss.SS zz"
         if refDate == nil {
             if json.count > 0, let first = json[0]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String {
                 refDate = dateFormatter.date(from: date)

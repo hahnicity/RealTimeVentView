@@ -93,6 +93,7 @@ class EnrollTableViewController: UITableViewController, PickerTableViewCellDeleg
             cellTypes.insert(.picker, at: pickerIndex!.row)
             cellTitles.insert("", at: pickerIndex!.row)
             tableView.insertRows(at: [pickerIndex!], with: .automatic)
+            tableView.cellForRow(at: indexPath)?.detailTextLabel?.text = tableView.cellForRow(at: indexPath)?.detailTextLabel?.text == "Not Specified" ? "Male" : tableView.cellForRow(at: indexPath)?.detailTextLabel?.text
         }
         
         /*
