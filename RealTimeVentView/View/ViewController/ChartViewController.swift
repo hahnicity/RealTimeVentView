@@ -25,8 +25,8 @@ class ChartViewController: UIViewController, ChartViewDelegate {
     var update = DispatchSemaphore(value: 1)
     var updateTimer = Timer()
     var spinner = UIView()
-    static let WINDOW_WIDTH = 30.0
-    static let GRANULARITY = 10.0
+    static let WINDOW_WIDTH = 20.0
+    static let GRANULARITY = 5.0
     
     @IBOutlet weak var chartView: LineChartView!
     
@@ -55,7 +55,7 @@ class ChartViewController: UIViewController, ChartViewDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         DispatchQueue.main.async {
-            //self.updateTimer.invalidate()
+            self.updateTimer.invalidate()
             self.updateTimer = Timer()
         }
     }
@@ -103,11 +103,14 @@ class ChartViewController: UIViewController, ChartViewDelegate {
                 DispatchQueue.main.async {
                     self.removeSpinner(self.spinner)
                     self.updating = false
+                    /*
                     self.updateTimer = Timer.scheduledTimer(withTimeInterval: Double(Storage.updateInterval), repeats: true, block: { (timer) in
+                        print("Crashed here")
                         if self.update.wait(timeout: .now()) == .success {
                             self.updateChart()
                         }
                     })
+                     */
                     
                 }
                 return
@@ -166,8 +169,10 @@ class ChartViewController: UIViewController, ChartViewDelegate {
             DispatchQueue.main.async {
                 self.chartView.data?.notifyDataChanged()
                 self.chartView.notifyDataSetChanged()
+                self.chartView.setVisibleXRangeMaximum(ChartViewController.WINDOW_WIDTH)
                 self.labelUpdate()
                 if self.chartView.highestVisibleX == xMax {
+                    print("Currently viewing the highest X")
                     self.chartView.moveViewToX(self.chartView.chartXMax)
                 }
                 self.updating = false
@@ -183,6 +188,7 @@ class ChartViewController: UIViewController, ChartViewDelegate {
                 self.removeSpinner(self.spinner)
                 self.showAlert(withTitle: "Past Data Load Error", message: error.localizedDescription)
                 self.updating = false
+                self.update.signal()
                 return
             }
             
@@ -223,7 +229,7 @@ class ChartViewController: UIViewController, ChartViewDelegate {
        //loadAdditionalData()
         if chartView.marker == nil {
             let marker = BalloonMarker(color: UIColor.gray, font: UIFont(name: "Helvetica", size: 14)!, textColor: UIColor.white, insets: UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0))
-            marker.minimumSize = CGSize(width: 100.0, height: 170.0)
+            marker.minimumSize = CGSize(width: 100.0, height: 180.0)
             marker.chartView = chartView
             chartView.marker = marker
         }

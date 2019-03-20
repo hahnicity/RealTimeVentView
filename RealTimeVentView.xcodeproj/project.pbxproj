@@ -330,13 +330,14 @@
 				TargetAttributes = {
 					37AC9DB422012D3E0048469E = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 6U8TL3WZL3;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
 							com.apple.Push = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -652,7 +653,8 @@
 			baseConfigurationReference = 34FF52546D325D7EEAE5915E /* Pods-RealTimeVentView.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_ENTITLEMENTS = RealTimeVentView/RealTimeVentView.entitlements;
+				DEVELOPMENT_TEAM = 6U8TL3WZL3;
 				INFOPLIST_FILE = RealTimeVentView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -667,7 +669,8 @@
 			baseConfigurationReference = 2FFFF9C671B6B66818BA518A /* Pods-RealTimeVentView.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_ENTITLEMENTS = RealTimeVentView/RealTimeVentView.entitlements;
+				DEVELOPMENT_TEAM = 6U8TL3WZL3;
 				INFOPLIST_FILE = RealTimeVentView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

@@ -189,7 +189,7 @@ open class BalloonMarker: MarkerImage
         }
         let index = t1 + t2 + 1
         print(data.breathIndex[index])
-        guard let temp = data.json[data.breathIndex[index]]["breath_meta"] as? [String: Any], let etime = temp["e_time"] as? Double, let itime = temp["i_time"] as? Double, let peep = temp["peep"] as? Double, let tvei = temp["tve_tvi_ratio"] as? Double, let tve = temp["tve"] as? Double, let tvi = temp["tvi"] as? Double, let c = data.json[data.breathIndex[index]]["classification"] as? [String: Int], let bsa = c["bs_1or2"], let dta = c["dbl_4"], let tvv = c["tvv"] else {
+        guard let temp = data.json[data.breathIndex[index]]["breath_meta"] as? [String: Any], let etime = temp["e_time"] as? Double, let itime = temp["i_time"] as? Double, let peep = temp["peep"] as? Double, let tvei = temp["tve_tvi_ratio"] as? Double, let tve = temp["tve"] as? Double, let tvi = temp["tvi"] as? Double, let c = data.json[data.breathIndex[index]]["classifications"] as? [String: Int], let bsa = c["bs_1or2"], let dta = c["dbl_4"], let tvv = c["tvv"] else {
             print("Error parsing json while displaying marker")
             return
         }
@@ -199,7 +199,6 @@ open class BalloonMarker: MarkerImage
         
         setLabel("""
             \(classification)
-            
             Flow: \(data.flow[index])
             Pressure: \(data.pressure[index])
             

@@ -146,7 +146,7 @@ class FeedbackViewController: UIViewController, ChartViewDelegate, UITableViewDe
         let index = t1 + t2 + 1
         if chartView.marker == nil {
             let marker = BalloonMarker(color: UIColor.gray, font: UIFont(name: "Helvetica", size: 14)!, textColor: UIColor.white, insets: UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0))
-            marker.minimumSize = CGSize(width: 100.0, height: 170.0)
+            marker.minimumSize = CGSize(width: 100.0, height: 180.0)
             marker.chartView = chartView
             chartView.marker = marker
         }
