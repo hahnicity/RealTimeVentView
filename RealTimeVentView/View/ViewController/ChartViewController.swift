@@ -66,7 +66,6 @@ class ChartViewController: UIViewController, ChartViewDelegate {
     
     func chartTranslated(_ chartView: ChartViewBase, dX: CGFloat, dY: CGFloat) {
         if self.chartView.lowestVisibleX == chartView.data?.xMin && dX > 50 && !updating {
-            print("Dragging Past Beginning")
             updating = true
             if self.update.wait(timeout: .now()) == .timedOut {
                 DispatchQueue.global(qos: .userInitiated).async {
@@ -196,6 +195,7 @@ class ChartViewController: UIViewController, ChartViewDelegate {
                 print("No Data")
                 DispatchQueue.main.async {
                     self.removeSpinner(self.spinner)
+                    self.chartView.isUserInteractionEnabled = true
                     self.updating = false
                 }
                 return

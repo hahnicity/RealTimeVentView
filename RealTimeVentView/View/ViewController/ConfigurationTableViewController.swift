@@ -111,6 +111,7 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
             cell.textLabel?.text = configCellTitles[indexPath.row]
             cell.alertSwitch.isOn = UIApplication.shared.isRegisteredForRemoteNotifications
             cell.type = .notificationAll
+            cell.delegate = self
             return cell
         }
         else {
@@ -323,7 +324,9 @@ class ConfigurationTableViewController: UITableViewController, ButtonTableViewCe
         
         let lock = NSLock()
         lock.lock()
+        print("\(UIApplication.shared.isRegisteredForRemoteNotifications) and \(notification)")
         if !UIApplication.shared.isRegisteredForRemoteNotifications && notification {
+            print("HERE")
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
                 guard granted else {
                     print("User notification permision not granted")

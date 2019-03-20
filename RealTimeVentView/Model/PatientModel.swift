@@ -239,7 +239,8 @@ class PatientModel {
                     }
                 }
                 else {
-                    if self.json.count > 0, let nextDate = (json[0]["breath_meta"] as? [String: Any])?["abs_bs"] as? String, let next = dateFormatter.date(from: nextDate), next.timeIntervalSince(refDate!) > base {
+                    if self.json.count > 0, let nextDate = (self.json[0]["breath_meta"] as? [String: Any])?["abs_bs"] as? String, let next = dateFormatter.date(from: nextDate), next.timeIntervalSince(refDate!) > base {
+                        print("\(next.timeIntervalSince(refDate!)) \(base)")
                         offsets += Array<Double>(stride(from: 0.0, to: next.timeIntervalSince(refDate!) - base, by: (next.timeIntervalSince(refDate!) - base) / Double(flowSet.count))).map({ $0 + base })
                     }
                     else {
