@@ -228,7 +228,24 @@ class PatientModel {
                 indexData += Array<Int>(repeating: index, count: flowSet.count)
                 let base = dateFormatter.date(from: date)!.timeIntervalSince(refDate!)
                 // change sample rate around here
-                offsets += Array<Double>(stride(from: 0.0, to: Double(flowSet.count) * PatientModel.SAMPLE_RATE, by: PatientModel.SAMPLE_RATE)).map({ $0 + base })
+                if index < json.count - 1 {
+                    if let nextDate = (json[index + 1]["breath_meta"] as? [String: Any])?["abs_bs"] as? String, let next = dateFormatter.date(from: nextDate) {
+                        if next.timeIntervalSince(refDate!) - base < PatientModel.SAMPLE_RATE * Double(flowSet.count) {
+                            offsets += Array<Double>(stride(from: 0.0, to: next.timeIntervalSince(refDate!) - base, by: (next.timeIntervalSince(refDate!) - base) / Double(flowSet.count))).map({ $0 + base })
+                        }
+                        else {
+                            offsets += Array<Double>(stride(from: 0.0, to: Double(flowSet.count) * PatientModel.SAMPLE_RATE, by: PatientModel.SAMPLE_RATE)).map({ $0 + base })
+                        }
+                    }
+                }
+                else {
+                    if self.json.count > 0, let nextDate = (json[0]["breath_meta"] as? [String: Any])?["abs_bs"] as? String, let next = dateFormatter.date(from: nextDate), next.timeIntervalSince(refDate!) > base {
+                        offsets += Array<Double>(stride(from: 0.0, to: next.timeIntervalSince(refDate!) - base, by: (next.timeIntervalSince(refDate!) - base) / Double(flowSet.count))).map({ $0 + base })
+                    }
+                    else {
+                        offsets += Array<Double>(stride(from: 0.0, to: Double(flowSet.count) * PatientModel.SAMPLE_RATE, by: PatientModel.SAMPLE_RATE)).map({ $0 + base })
+                    }
+                }
             }
         }
         return (flowData, pressureData, indexData, offsets)
