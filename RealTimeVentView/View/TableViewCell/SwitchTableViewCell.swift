@@ -18,6 +18,8 @@ protocol SwitchTableViewCellDelegate {
 
 class SwitchTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var title: UILabel!
+    
     @IBOutlet weak var alertSwitch: UISwitch!
     var type: SwitchType = .notification
     var delegate: SwitchTableViewCellDelegate? = nil

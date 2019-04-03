@@ -12,8 +12,7 @@ enum EnrollCellType {
     case label, textField, picker, button
 }
 
-class EnrollTableViewController: UITableViewController, PickerTableViewCellDelegate, ButtonTableViewCellDelegate, TextFieldTableViewCellDelegate {
-    
+class EnrollTableViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
     var cellTypes: [EnrollCellType] = [.label, .textField, .label, .textField, .label, .label, .textField, .label, .label, .button]
     var cellTitles = ["Name", "", "Age", "", "Sex", "Height (cm)", "", "Raspberry Pi #", "", ""]
@@ -21,9 +20,17 @@ class EnrollTableViewController: UITableViewController, PickerTableViewCellDeleg
     
     var pickerIndex: IndexPath?
     
+    @IBOutlet weak var nameTextField: UITextField!
+    @IBOutlet weak var ageTextField: UITextField!
+    @IBOutlet weak var sexLabel: UILabel!
+    @IBOutlet weak var sexPicker: UIPickerView!
+    @IBOutlet weak var heightTextField: UITextField!
+    @IBOutlet weak var rpiLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        sexPicker.dataSource = self
+        sexPicker.delegate = self
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -33,68 +40,14 @@ class EnrollTableViewController: UITableViewController, PickerTableViewCellDeleg
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return cellTypes.count
-    }
+    
 
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        if pickerIndex == indexPath {
-            let cell = (tableView.dequeueReusableCell(withIdentifier: "pickerCell") ?? UITableViewCell(style: .default, reuseIdentifier: "pickerCell")) as! PickerTableViewCell
-            
-            cell.delegate = self
-            return cell
-        }
-        else {
-            if cellTypes[indexPath.row] == .label {
-                let cell = (tableView.dequeueReusableCell(withIdentifier: "labelCell") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "labelCell"))
-                cell.textLabel?.text = cellTitles[indexPath.row]
-                cell.detailTextLabel?.text = ""
-                if cellTitles[indexPath.row] == "Sex" {
-                    cell.detailTextLabel?.text = "Not Specified"
-                }
-                return cell
-            }
-            else if cellTypes[indexPath.row] == .button {
-                let cell = (tableView.dequeueReusableCell(withIdentifier: "buttonCell") ?? UITableViewCell(style: .default, reuseIdentifier: "buttonCell")) as! ButtonTableViewCell
-                cell.delegate = self
-                return cell
-            }
-            else {
-                let cell = (tableView.dequeueReusableCell(withIdentifier: "textFieldCell") ?? UITableViewCell(style: .default, reuseIdentifier: "textFieldCell")) as! TextFieldTableViewCell
-                if indexPath.row == 1 {
-                    cell.delegate = self
-                }
-                return cell
-            }
-        }
-    }
+    
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         self.view.endEditing(true)
-        
-        if let index = pickerIndex {
-            tableView.cellForRow(at: IndexPath(row: index.row - 1, section: index.section))?.detailTextLabel?.text = sex[(tableView.cellForRow(at: index) as! PickerTableViewCell).index]
-            pickerIndex = nil
-            cellTypes.remove(at: index.row)
-            cellTitles.remove(at: index.row)
-            tableView.deleteRows(at: [index], with: .automatic)
-        }
-        else if cellTitles[indexPath.row] == "Sex" {
-            pickerIndex = IndexPath(row: indexPath.row + 1, section: indexPath.section)
-            cellTypes.insert(.picker, at: pickerIndex!.row)
-            cellTitles.insert("", at: pickerIndex!.row)
-            tableView.insertRows(at: [pickerIndex!], with: .automatic)
-            tableView.cellForRow(at: indexPath)?.detailTextLabel?.text = tableView.cellForRow(at: indexPath)?.detailTextLabel?.text == "Not Specified" ? "Male" : tableView.cellForRow(at: indexPath)?.detailTextLabel?.text
-        }
         
         /*
         if cellTitles[indexPath.row] == "Sex" {
@@ -133,31 +86,43 @@ class EnrollTableViewController: UITableViewController, PickerTableViewCellDeleg
         return ""
     }
     
-    func selectSex(atIndex index: Int) {
-        if let pickerIndex = pickerIndex {
-            let sexCellIndex = tableView.cellForRow(at: IndexPath(row: pickerIndex.row - 1, section: pickerIndex.section))
-            sexCellIndex?.detailTextLabel?.text = sex[index]
-        }
-    }
-    
-    func editingText(_ text: String) {
-        if let cell = tableView.cellForRow(at: IndexPath(row: 8 + (pickerIndex == nil ? 0 : 1), section: 0)) {
-            tableView.beginUpdates()
-            cell.textLabel?.text = getRPI(from: text)
-            tableView.endUpdates()
-            //tableView.reloadRows(at: [IndexPath(row: 8 + (pickerIndex == nil ? 0 : 1), section: 0)], with: .automatic)
-        }
-    }
     
     func textChanged(ofType type: TextFieldType, to value: String) {
     }
     
-    func submitForm() {
-        guard let name = (tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TextFieldTableViewCell)?.textField.text,
-            let age = (tableView.cellForRow(at: IndexPath(row: 3, section: 0)) as? TextFieldTableViewCell)?.textField.text,
-            let sex = tableView.cellForRow(at: IndexPath(row: 4, section: 0))?.detailTextLabel?.text,
-            let height = (tableView.cellForRow(at: IndexPath(row: 6 + (pickerIndex == nil ? 0 : 1), section: 0)) as? TextFieldTableViewCell)?.textField.text else {
-                print("Enroll form error")
+    @IBAction func textChanged(_ sender: UITextField) {
+        rpiLabel.text = getRPI(from: sender.text ?? "")
+        tableView.beginUpdates()
+        tableView.endUpdates()
+    }
+    
+    
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return sex.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return sex[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        sexLabel.text = sex[row]
+    }
+    
+    
+    @IBAction func submit(_ sender: UIBarButtonItem) {
+
+        self.view.endEditing(true)
+        guard let name = nameTextField.text,
+            let age = ageTextField.text,
+            let sex = sexLabel.text,
+            let height = heightTextField.text else {
+            print("Enroll form error")
             return
         }
         print("text: \(sex)")
