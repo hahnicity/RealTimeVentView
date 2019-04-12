@@ -10,6 +10,8 @@ import Foundation
 
 typealias CompletionAPI = (Data?, Error?) -> ()
 
+let SERVER_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SS"
+
 class ServerModel {
     static var shared: ServerModel = ServerModel()
     

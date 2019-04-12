@@ -8,6 +8,7 @@ target 'RealTimeVentView' do
   # Pods for RealTimeVentView
   pod 'Charts'
   pod 'SimulatorRemoteNotifications'
+  pod 'core-plo
 
   target 'RealTimeVentViewTests' do
     inherit! :search_paths

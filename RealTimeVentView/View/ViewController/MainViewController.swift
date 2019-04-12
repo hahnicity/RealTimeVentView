@@ -54,6 +54,13 @@ class MainViewController: UIViewController {
         self.navigationController?.pushViewController(viewController, animated: true)
     }
     
+    
+    @IBAction func test(_ sender: UIButton) {
+        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "chartViewController") as! ChartViewController
+        viewController.accessType = .main
+        self.navigationController?.pushViewController(viewController, animated: true)
+    }
+    
     @IBAction func testFeedbackPressed(_ sender: UIButton) {
         let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "feedbackViewController") as! FeedbackViewController
         viewController.patient = PatientModel(at: 0)!

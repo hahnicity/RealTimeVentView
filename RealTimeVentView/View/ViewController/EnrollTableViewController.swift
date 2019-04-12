@@ -206,6 +206,13 @@ class EnrollTableViewController: UITableViewController, UIPickerViewDelegate, UI
             return true
         }
         
+        for patientName in Storage.patients.compactMap({ $0["name"] }) {
+            if name == patientName {
+                showAlert(withTitle: "Submission Error", message: "There is a patient with the same name already.")
+                return true
+            }
+        }
+        
         return false
         
     }

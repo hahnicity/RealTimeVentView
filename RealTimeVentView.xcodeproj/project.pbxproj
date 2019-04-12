@@ -15,7 +15,11 @@
 		37AC9DC322012D3E0048469E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37AC9DC122012D3E0048469E /* LaunchScreen.storyboard */; };
 		37AC9DCE22012D3E0048469E /* RealTimeVentViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DCD22012D3E0048469E /* RealTimeVentViewTests.swift */; };
 		37AC9DD922012D3E0048469E /* RealTimeVentViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DD822012D3E0048469E /* RealTimeVentViewUITests.swift */; };
+		A31E9507225541F30027229D /* libCorePlot-CocoaTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A3354C582254A40100478EA6 /* libCorePlot-CocoaTouch.a */; };
 		A32B735E220500DF000AF69A /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32B735D220500DF000AF69A /* BalloonMarker.swift */; };
+		A33543472254489B00478EA6 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A33543462254489B00478EA6 /* QuartzCore.framework */; };
+		A3354349225448B000478EA6 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3354348225448AF00478EA6 /* Accelerate.framework */; };
+		A335434B2254689900478EA6 /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A335434A2254689900478EA6 /* ChartViewController.swift */; };
 		A34A918F2211625E009F48FC /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34A918E2211625E009F48FC /* TextFieldTableViewCell.swift */; };
 		A34A91912211642C009F48FC /* EnrollTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34A91902211642C009F48FC /* EnrollTableViewController.swift */; };
 		A34A9193221169F1009F48FC /* PickerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34A9192221169F1009F48FC /* PickerTableViewCell.swift */; };
@@ -25,10 +29,10 @@
 		A38D4F472211959F001A8B2D /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38D4F462211959F001A8B2D /* SwitchTableViewCell.swift */; };
 		A38D4F49221196CA001A8B2D /* AlertSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38D4F48221196CA001A8B2D /* AlertSettingsTableViewController.swift */; };
 		A39B1B4422127A9E00B855FA /* ConfigurationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39B1B4322127A9E00B855FA /* ConfigurationTableViewController.swift */; };
+		A3BC9B73225D2415004D4A08 /* sample3.json in Resources */ = {isa = PBXBuildFile; fileRef = A3BC9B72225D2415004D4A08 /* sample3.json */; };
 		A3EED178222C522800A79058 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3EED177222C522800A79058 /* FeedbackViewController.swift */; };
 		A3FC7FE92219622200D68BFA /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FC7FE82219622200D68BFA /* Storage.swift */; };
 		A754B6532202373000CD1A74 /* sample.json in Resources */ = {isa = PBXBuildFile; fileRef = A754B6522202373000CD1A74 /* sample.json */; };
-		A754B6552202417100CD1A74 /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A754B6542202417100CD1A74 /* ChartViewController.swift */; };
 		A754B657220241CC00CD1A74 /* PatientModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A754B656220241CC00CD1A74 /* PatientModel.swift */; };
 		A754B6592202448E00CD1A74 /* sample2.json in Resources */ = {isa = PBXBuildFile; fileRef = A754B6582202448E00CD1A74 /* sample2.json */; };
 		A754B65B2202483C00CD1A74 /* PatientListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A754B65A2202483C00CD1A74 /* PatientListTableViewController.swift */; };
@@ -50,6 +54,69 @@
 			proxyType = 1;
 			remoteGlobalIDString = 37AC9DB422012D3E0048469E;
 			remoteInfo = RealTimeVentView;
+		};
+		A31E94F8225541E60027229D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3354C3F2254A40000478EA6 /* CorePlot.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C38A09B91A4619A900D45436;
+			remoteInfo = "CorePlot-CocoaTouch";
+		};
+		A3354C4F2254A40100478EA6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3354C3F2254A40000478EA6 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = "CorePlot Mac";
+		};
+		A3354C512254A40100478EA6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3354C3F2254A40000478EA6 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0730F600109492D800E95162;
+			remoteInfo = "UnitTests Mac";
+		};
+		A3354C532254A40100478EA6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3354C3F2254A40000478EA6 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C38A09781A46185200D45436;
+			remoteInfo = "CorePlot iOS";
+		};
+		A3354C552254A40100478EA6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3354C3F2254A40000478EA6 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C38A09821A46185300D45436;
+			remoteInfo = "UnitTests iOS";
+		};
+		A3354C572254A40100478EA6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3354C3F2254A40000478EA6 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C38A09BA1A4619A900D45436;
+			remoteInfo = "CorePlot-CocoaTouch";
+		};
+		A3354C592254A40100478EA6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3354C3F2254A40000478EA6 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C38A09C41A4619A900D45436;
+			remoteInfo = "CorePlot-CocoaTouchTests";
+		};
+		A3354C5B2254A40100478EA6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3354C3F2254A40000478EA6 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C37EA6921BC83F2A0091C8F7;
+			remoteInfo = "CorePlot tvOS";
+		};
+		A3354C5D2254A40100478EA6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3354C3F2254A40000478EA6 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C37EA6B71BC83F2D0091C8F7;
+			remoteInfo = "UnitTests tvOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -75,6 +142,11 @@
 		7219F4F592484036F11EEA2F /* Pods_RealTimeVentViewTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RealTimeVentViewTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A7C5175102350E12448C7B5 /* Pods-RealTimeVentViewUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeVentViewUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RealTimeVentViewUITests/Pods-RealTimeVentViewUITests.release.xcconfig"; sourceTree = "<group>"; };
 		A32B735D220500DF000AF69A /* BalloonMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
+		A33543462254489B00478EA6 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		A3354348225448AF00478EA6 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		A335434A2254689900478EA6 /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
+		A33543B22254A39500478EA6 /* RealTimeVentView-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RealTimeVentView-Bridging-Header.h"; sourceTree = "<group>"; };
+		A3354C3F2254A40000478EA6 /* CorePlot.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CorePlot.xcodeproj; path = "core-plot/framework/CorePlot.xcodeproj"; sourceTree = "<group>"; };
 		A34A918E2211625E009F48FC /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
 		A34A91902211642C009F48FC /* EnrollTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollTableViewController.swift; sourceTree = "<group>"; };
 		A34A9192221169F1009F48FC /* PickerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerTableViewCell.swift; sourceTree = "<group>"; };
@@ -85,10 +157,10 @@
 		A38D4F462211959F001A8B2D /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		A38D4F48221196CA001A8B2D /* AlertSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertSettingsTableViewController.swift; sourceTree = "<group>"; };
 		A39B1B4322127A9E00B855FA /* ConfigurationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationTableViewController.swift; sourceTree = "<group>"; };
+		A3BC9B72225D2415004D4A08 /* sample3.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = sample3.json; sourceTree = "<group>"; };
 		A3EED177222C522800A79058 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		A3FC7FE82219622200D68BFA /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		A754B6522202373000CD1A74 /* sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample.json; sourceTree = "<group>"; };
-		A754B6542202417100CD1A74 /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
 		A754B656220241CC00CD1A74 /* PatientModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientModel.swift; sourceTree = "<group>"; };
 		A754B6582202448E00CD1A74 /* sample2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample2.json; sourceTree = "<group>"; };
 		A754B65A2202483C00CD1A74 /* PatientListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientListTableViewController.swift; sourceTree = "<group>"; };
@@ -101,6 +173,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A31E9507225541F30027229D /* libCorePlot-CocoaTouch.a in Frameworks */,
+				A3354349225448B000478EA6 /* Accelerate.framework in Frameworks */,
+				A33543472254489B00478EA6 /* QuartzCore.framework in Frameworks */,
 				028342BA9CA27D7690D2573C /* Pods_RealTimeVentView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -127,6 +202,8 @@
 		25BA522C69857E495BAF1794 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A3354348225448AF00478EA6 /* Accelerate.framework */,
+				A33543462254489B00478EA6 /* QuartzCore.framework */,
 				BFA4351A9C98CC2EC98494BC /* Pods_RealTimeVentView.framework */,
 				7219F4F592484036F11EEA2F /* Pods_RealTimeVentViewTests.framework */,
 				1987620A2B3BB6D084354849 /* Pods_RealTimeVentViewUITests.framework */,
@@ -137,6 +214,7 @@
 		37AC9DAC22012D3E0048469E = {
 			isa = PBXGroup;
 			children = (
+				A3354C3F2254A40000478EA6 /* CorePlot.xcodeproj */,
 				37AC9DB722012D3E0048469E /* RealTimeVentView */,
 				37AC9DCC22012D3E0048469E /* RealTimeVentViewTests */,
 				37AC9DD722012D3E0048469E /* RealTimeVentViewUITests */,
@@ -159,6 +237,7 @@
 		37AC9DB722012D3E0048469E /* RealTimeVentView */ = {
 			isa = PBXGroup;
 			children = (
+				A33543B22254A39500478EA6 /* RealTimeVentView-Bridging-Header.h */,
 				A3730E97221E467100302F84 /* View */,
 				A3730E96221E463900302F84 /* Model */,
 				37AC9DB822012D3E0048469E /* AppDelegate.swift */,
@@ -169,6 +248,7 @@
 				37AC9DC422012D3E0048469E /* Info.plist */,
 				A3730E95221E11CC00302F84 /* RealTimeVentView.entitlements */,
 				A754B6582202448E00CD1A74 /* sample2.json */,
+				A3BC9B72225D2415004D4A08 /* sample3.json */,
 				A754B6522202373000CD1A74 /* sample.json */,
 			);
 			path = RealTimeVentView;
@@ -205,6 +285,21 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		A3354C402254A40000478EA6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A3354C502254A40100478EA6 /* CorePlot.framework */,
+				A3354C522254A40100478EA6 /* UnitTests.xctest */,
+				A3354C542254A40100478EA6 /* CorePlot.framework */,
+				A3354C562254A40100478EA6 /* UnitTests iOS.xctest */,
+				A3354C582254A40100478EA6 /* libCorePlot-CocoaTouch.a */,
+				A3354C5A2254A40100478EA6 /* CorePlot-CocoaTouchTests.xctest */,
+				A3354C5C2254A40100478EA6 /* CorePlot.framework */,
+				A3354C5E2254A40100478EA6 /* UnitTests tvOS.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		A3730E96221E463900302F84 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -233,7 +328,7 @@
 				A38D4F48221196CA001A8B2D /* AlertSettingsTableViewController.swift */,
 				A34A91902211642C009F48FC /* EnrollTableViewController.swift */,
 				A754B65A2202483C00CD1A74 /* PatientListTableViewController.swift */,
-				A754B6542202417100CD1A74 /* ChartViewController.swift */,
+				A335434A2254689900478EA6 /* ChartViewController.swift */,
 				A3EED177222C522800A79058 /* FeedbackViewController.swift */,
 			);
 			path = ViewController;
@@ -274,6 +369,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				A31E94F9225541E60027229D /* PBXTargetDependency */,
 			);
 			name = RealTimeVentView;
 			productName = RealTimeVentView;
@@ -358,12 +454,19 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
 			mainGroup = 37AC9DAC22012D3E0048469E;
 			productRefGroup = 37AC9DB622012D3E0048469E /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = A3354C402254A40000478EA6 /* Products */;
+					ProjectRef = A3354C3F2254A40000478EA6 /* CorePlot.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				37AC9DB422012D3E0048469E /* RealTimeVentView */,
@@ -372,6 +475,65 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		A3354C502254A40100478EA6 /* CorePlot.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CorePlot.framework;
+			remoteRef = A3354C4F2254A40100478EA6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A3354C522254A40100478EA6 /* UnitTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = UnitTests.xctest;
+			remoteRef = A3354C512254A40100478EA6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A3354C542254A40100478EA6 /* CorePlot.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CorePlot.framework;
+			remoteRef = A3354C532254A40100478EA6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A3354C562254A40100478EA6 /* UnitTests iOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "UnitTests iOS.xctest";
+			remoteRef = A3354C552254A40100478EA6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A3354C582254A40100478EA6 /* libCorePlot-CocoaTouch.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libCorePlot-CocoaTouch.a";
+			remoteRef = A3354C572254A40100478EA6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A3354C5A2254A40100478EA6 /* CorePlot-CocoaTouchTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "CorePlot-CocoaTouchTests.xctest";
+			remoteRef = A3354C592254A40100478EA6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A3354C5C2254A40100478EA6 /* CorePlot.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CorePlot.framework;
+			remoteRef = A3354C5B2254A40100478EA6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A3354C5E2254A40100478EA6 /* UnitTests tvOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "UnitTests tvOS.xctest";
+			remoteRef = A3354C5D2254A40100478EA6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		37AC9DB322012D3E0048469E /* Resources */ = {
@@ -383,6 +545,7 @@
 				A754B6532202373000CD1A74 /* sample.json in Resources */,
 				37AC9DC022012D3E0048469E /* Assets.xcassets in Resources */,
 				37AC9DBE22012D3E0048469E /* Main.storyboard in Resources */,
+				A3BC9B73225D2415004D4A08 /* sample3.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -487,13 +650,13 @@
 				A754B65B2202483C00CD1A74 /* PatientListTableViewController.swift in Sources */,
 				A38D4F49221196CA001A8B2D /* AlertSettingsTableViewController.swift in Sources */,
 				A3EED178222C522800A79058 /* FeedbackViewController.swift in Sources */,
+				A335434B2254689900478EA6 /* ChartViewController.swift in Sources */,
 				37AC9DBB22012D3E0048469E /* MainViewController.swift in Sources */,
 				A38D4F472211959F001A8B2D /* SwitchTableViewCell.swift in Sources */,
 				A389FC3822153C9A00A4D430 /* AlertModel.swift in Sources */,
 				A34A918F2211625E009F48FC /* TextFieldTableViewCell.swift in Sources */,
 				37AC9DB922012D3E0048469E /* AppDelegate.swift in Sources */,
 				A34A9193221169F1009F48FC /* PickerTableViewCell.swift in Sources */,
-				A754B6552202417100CD1A74 /* ChartViewController.swift in Sources */,
 				A39B1B4422127A9E00B855FA /* ConfigurationTableViewController.swift in Sources */,
 				A34A91912211642C009F48FC /* EnrollTableViewController.swift in Sources */,
 				A34A919522116AA5009F48FC /* ButtonTableViewCell.swift in Sources */,
@@ -532,6 +695,11 @@
 			isa = PBXTargetDependency;
 			target = 37AC9DB422012D3E0048469E /* RealTimeVentView */;
 			targetProxy = 37AC9DD522012D3E0048469E /* PBXContainerItemProxy */;
+		};
+		A31E94F9225541E60027229D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "CorePlot-CocoaTouch";
+			targetProxy = A31E94F8225541E60027229D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -654,11 +822,35 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 5C55DFVYJ8;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/core-plot/build/Debug-iphonesimulator",
+				);
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/core-plot/framework\"",
+					"\"$(SRCROOT)/core-plot/framework/Source\"",
+					"\"$(SRCROOT)/core-plot/framework/iPhoneOnly\"",
+				);
 				INFOPLIST_FILE = RealTimeVentView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/RealTimeVentView",
+					"$(PROJECT_DIR)/core-plot/build/Debug-iphonesimulator",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-l\"ObjC\"",
+					"-framework",
+					"\"Charts\"",
+					"-framework",
+					"\"SimulatorRemoteNotifications\"",
+					"-all_load",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ccil.RealTimeVentVie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "RealTimeVentView/RealTimeVentView-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
@@ -669,11 +861,35 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 5C55DFVYJ8;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/core-plot/build/Debug-iphonesimulator",
+				);
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/core-plot/framework\"",
+					"\"$(SRCROOT)/core-plot/framework/Source\"",
+					"\"$(SRCROOT)/core-plot/framework/iPhoneOnly\"",
+				);
 				INFOPLIST_FILE = RealTimeVentView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/RealTimeVentView",
+					"$(PROJECT_DIR)/core-plot/build/Debug-iphonesimulator",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-l\"ObjC\"",
+					"-framework",
+					"\"Charts\"",
+					"-framework",
+					"\"SimulatorRemoteNotifications\"",
+					"-all_load",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ccil.RealTimeVentVie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "RealTimeVentView/RealTimeVentView-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
