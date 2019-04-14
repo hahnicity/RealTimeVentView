@@ -140,7 +140,7 @@ class PatientModel {
     
     func loadPastBreaths(completion: @escaping CompletionUpdate) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss zz"
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSS"
         //print((json[0]["breath_meta"] as? [String: Any])?["abs_bs"])
         guard json.count > 0, let first = json[0]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String, let lastDate = dateFormatter.date(from: date) else {
             print("Error getting the last date")
@@ -175,7 +175,7 @@ class PatientModel {
     
     func loadNewBreaths(completion: @escaping CompletionUpdate) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss zz"
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSS"
         var lastDate = Date(timeIntervalSinceNow: -TimeInterval(Storage.updateInterval))
         if json.count > 0 {
             guard let first = json[json.count - 1]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String, let l = dateFormatter.date(from: date) else {
@@ -213,7 +213,7 @@ class PatientModel {
     
     func parseBreathJSON(_ json: [[String: Any]]) -> ([Double], [Double], [Int], [Double]) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss.SS zz"
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSS"
         if refDate == nil {
             if json.count > 0, let first = json[0]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String {
                 refDate = dateFormatter.date(from: date)
