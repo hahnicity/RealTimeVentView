@@ -146,6 +146,7 @@ class PatientModel {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = SERVER_DATE_FORMAT
         dateFormatter.timeZone = TimeZone(abbreviation: "GMT")!
+
         //print((json[0]["breath_meta"] as? [String: Any])?["abs_bs"])
         guard json.count > 0, let first = json[0]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String, let lastDate = dateFormatter.date(from: date) else {
             print("Error getting the last date")
@@ -184,6 +185,7 @@ class PatientModel {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = SERVER_DATE_FORMAT
         dateFormatter.timeZone = TimeZone(abbreviation: "GMT")!
+
         var lastDate = Date(timeIntervalSinceNow: -TimeInterval(Storage.updateInterval))
         if json.count > 0 {
             guard let first = json[json.count - 1]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String, let l = dateFormatter.date(from: date) else {
@@ -225,6 +227,7 @@ class PatientModel {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = SERVER_DATE_FORMAT
         dateFormatter.timeZone = TimeZone(abbreviation: "GMT")!
+
         if refDate == nil {
             if json.count > 0, let first = json[0]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String {
                 refDate = dateFormatter.date(from: date)
