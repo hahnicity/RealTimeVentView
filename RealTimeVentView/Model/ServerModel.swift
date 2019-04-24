@@ -10,6 +10,24 @@ import Foundation
 
 typealias CompletionAPI = (Data?, Error?) -> ()
 
+let SERVER_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SS"
+let SERVER_TIMEZONE = "GMT"
+let PACKET_METADATA = "breath_meta"
+let PACKET_CLASSIFICATION = "classifications"
+let PACKET_WAVE_DATA = "vwd"
+let PACKET_TIMESTAMP = "abs_bs"
+let PACKET_E_TIME = "e_time"
+let PACKET_I_TIME = "i_time"
+let PACKET_PEEP = "peep"
+let PACKET_TVE_TVI_RATIO = "tve_tvi_ratio"
+let PACKET_TVE = "tve"
+let PACKET_TVI = "tvi"
+let PACKET_BSA = "bs_1or2"
+let PACKET_DTA = "dbl_4"
+let PACKET_TVV = "tvv"
+let PACKET_FLOW = "flow"
+let PACKET_PRESSURE = "pressure"
+
 class ServerModel {
     static var shared: ServerModel = ServerModel()
     

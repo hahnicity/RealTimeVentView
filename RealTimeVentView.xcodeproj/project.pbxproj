@@ -85,6 +85,7 @@
 		A38D4F462211959F001A8B2D /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		A38D4F48221196CA001A8B2D /* AlertSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertSettingsTableViewController.swift; sourceTree = "<group>"; };
 		A39B1B4322127A9E00B855FA /* ConfigurationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationTableViewController.swift; sourceTree = "<group>"; };
+		A3B614852270FE7C00C83E4F /* RealTimeVentView-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RealTimeVentView-Bridging-Header.h"; sourceTree = "<group>"; };
 		A3EED177222C522800A79058 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		A3FC7FE82219622200D68BFA /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		A754B6522202373000CD1A74 /* sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample.json; sourceTree = "<group>"; };
@@ -170,6 +171,7 @@
 				A3730E95221E11CC00302F84 /* RealTimeVentView.entitlements */,
 				A754B6582202448E00CD1A74 /* sample2.json */,
 				A754B6522202373000CD1A74 /* sample.json */,
+				A3B614852270FE7C00C83E4F /* RealTimeVentView-Bridging-Header.h */,
 			);
 			path = RealTimeVentView;
 			sourceTree = "<group>";
@@ -358,6 +360,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -409,18 +412,20 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-RealTimeVentView/Pods-RealTimeVentView-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-RealTimeVentView/Pods-RealTimeVentView-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
+				"${BUILT_PRODUCTS_DIR}/CorePlot/CorePlot.framework",
 				"${BUILT_PRODUCTS_DIR}/SimulatorRemoteNotifications/SimulatorRemoteNotifications.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CorePlot.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SimulatorRemoteNotifications.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RealTimeVentView/Pods-RealTimeVentView-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RealTimeVentView/Pods-RealTimeVentView-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9A47D7916A0714FF3D31963D /* [CP] Check Pods Manifest.lock */ = {

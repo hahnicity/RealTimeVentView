@@ -1,44 +1,35 @@
 //
-//  ChartViewController.swift
+//  ChartsViewController.swift
 //  RealTimeVentView
 //
-//  Created by Tony Woo on 1/30/19.
+//  Created by user149673 on 4/2/19.
 //  Copyright © 2019 CCIL. All rights reserved.
 //
 
 import UIKit
-import Charts
-
-enum DataIndex: Int {
-    case flow = 0, pressure = 1
-}
+import CorePlot
 
 enum ChartAccessType {
     case main, enroll
 }
 
-class ChartViewController: UIViewController, ChartViewDelegate {
+class ChartViewController: UIViewController {
 
-    var patient: PatientModel = PatientModel()
-    var accessType: ChartAccessType = .main
-    var updating = false
-    var update = DispatchSemaphore(value: 1)
-    var updateTimer = Timer()
-    var spinner = UIView()
-    static let WINDOW_WIDTH = 20.0
-    static let GRANULARITY = 5.0
-    
-    @IBOutlet weak var chartView: LineChartView!
-    
-    
-    @IBOutlet weak var returnButton: UIBarButtonItem!
+    @IBOutlet weak var hostView: CPTGraphHostingView!
     @IBOutlet weak var tviLabel: UILabel!
     @IBOutlet weak var tveLabel: UILabel!
+    
+    
+    var marker: CPTPlotSpaceAnnotation? = nil
+    var patient: PatientModel = PatientModel()
+    var accessType: ChartAccessType = .main
+    var spinner: UIView = UIView()
+    var plotsToDraw = 0
+    var updateTimer = Timer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.chartView.delegate = self
         self.navigationItem.title = patient.name
         
         switch accessType {
@@ -47,8 +38,7 @@ class ChartViewController: UIViewController, ChartViewDelegate {
         case .enroll:
             self.navigationItem.hidesBackButton = true
         }
-        
-        loadChart()
+        initPlot()
         // Do any additional setup after loading the view.
     }
     
@@ -60,201 +50,264 @@ class ChartViewController: UIViewController, ChartViewDelegate {
         }
     }
     
-    @IBAction func returnPressed(_ sender: UIBarButtonItem) {
-        self.navigationController?.popToRootViewController(animated: true)
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
     }
     
-    func chartTranslated(_ chartView: ChartViewBase, dX: CGFloat, dY: CGFloat) {
-        if self.chartView.lowestVisibleX == chartView.data?.xMin && dX > 50 && !updating {
-            updating = true
-            if self.update.wait(timeout: .now()) == .timedOut {
-                DispatchQueue.global(qos: .userInitiated).async {
-                    self.update.wait()
-                    DispatchQueue.main.async {
-                        chartView.isUserInteractionEnabled = false
-                    }
-                    self.loadPastData()
-                }
-            }
-            else {
-                chartView.isUserInteractionEnabled = false
-                self.loadPastData()
-            }
+    func initPlot() {
+        let spinner = showSpinner()
+        let graph = CPTXYGraph(frame: hostView.bounds)
+        hostView.hostedGraph = graph
+        hostView.isUserInteractionEnabled = false
+        graph.paddingLeft = 0.0
+        graph.paddingTop = 0.0
+        graph.paddingRight = 0.0
+        graph.paddingBottom = 0.0
+        
+        graph.plotAreaFrame?.paddingLeft = 40.0
+        graph.plotAreaFrame?.paddingRight = 0.0
+        graph.plotAreaFrame?.paddingTop = 10.0
+        graph.plotAreaFrame?.paddingBottom = 25.0
+        
+        let plotSpace = graph.defaultPlotSpace as! CPTXYPlotSpace
+        plotSpace.allowsUserInteraction = true
+        plotSpace.yRange = CPTPlotRange(location: -100.0, length: 200.0)
+        //plotSpace.allowsMomentumX = true
+        plotSpace.delegate = self
+        
+        
+        let axisSet = graph.axisSet as! CPTXYAxisSet
+        
+        
+        if let x = axisSet.xAxis, let y = axisSet.yAxis {
+            x.majorIntervalLength   = Int(truncating: plotSpace.xRange.length) / 4 as NSNumber
+            x.minorTicksPerInterval = 4
+            x.axisConstraints = CPTConstraints(lowerOffset: 0.0)
+            
+            y.majorIntervalLength   = 50.0
+            y.minorTicksPerInterval = 4
+            y.axisConstraints = CPTConstraints(lowerOffset: 0.0)
+            
+            axisSet.axes = [x, y]
         }
-    }
-    
-    func labelUpdate() {
-        let tvi = patient.getAllData(ofType: "tvi"), tve = patient.getAllData(ofType: "tve")
-        tviLabel.text = "TVi: \(tvi[tvi.count - 1])"
-        tveLabel.text = "TVe: \(tve[tve.count - 1])"
-    }
-    
-    func loadChart() {
-        self.showSpinner()
-        patient.loadBreaths { (flow, pressure, offsets, error) in
+        
+        let flowChart = CPTScatterPlot()
+        flowChart.delegate = self
+        flowChart.dataSource = self
+        flowChart.identifier = NSString(string: "flow")
+        flowChart.showLabels = false
+        
+        let flowLine = CPTMutableLineStyle()
+        flowLine.lineWidth = 1.0
+        flowLine.lineColor = .blue()
+        flowChart.dataLineStyle = flowLine
+        
+        let pressureChart = CPTScatterPlot()
+        pressureChart.delegate = self
+        pressureChart.dataSource = self
+        pressureChart.identifier = NSString(string: "pressure")
+        pressureChart.showLabels = false
+        
+        let pressureLine = CPTMutableLineStyle()
+        pressureLine.lineWidth = 1.0
+        pressureLine.lineColor = .red()
+        pressureChart.dataLineStyle = pressureLine
+        
+        let asyncChart = CPTScatterPlot()
+        asyncChart.delegate = self
+        asyncChart.dataSource = self
+        asyncChart.identifier = NSString(string: "async")
+        asyncChart.dataLineStyle = nil
+        
+        graph.add(flowChart)
+        graph.add(pressureChart)
+        graph.add(asyncChart)
+        
+        graph.legend = CPTLegend(plots: [flowChart, pressureChart])
+        graph.legendDisplacement = CGPoint(x: 0.0, y: -20.0)
+        
+        let markerTextStyle = CPTMutableTextStyle()
+        markerTextStyle.color = .white()
+        markerTextStyle.fontName = "Helvetica"
+        markerTextStyle.fontSize = 14.0
+        
+        let markerTextLayer = CPTTextLayer(text: "", style: markerTextStyle)
+        markerTextLayer.fill = CPTFill(color: .gray())
+        markerTextLayer.cornerRadius = 10.0
+        markerTextLayer.paddingTop = 5.0
+        markerTextLayer.paddingBottom = 5.0
+        markerTextLayer.paddingLeft = 5.0
+        markerTextLayer.paddingRight = 5.0
+        markerTextLayer.isHidden = true
+        
+        let marker = CPTPlotSpaceAnnotation(plotSpace: plotSpace, anchorPlotPoint: [0, 0])
+        marker.contentLayer = markerTextLayer
+        graph.addAnnotation(marker)
+        self.marker = marker
+        
+        patient.loadBreaths { (_, _, off, error) in
             if let error = error {
+                self.removeSpinner(spinner)
+                DispatchQueue.main.async {
+                    self.hostView.isUserInteractionEnabled = true
+                }
                 self.showAlert(withTitle: "Chart Load Error", message: error.localizedDescription)
                 return
             }
-            
-            guard let refDate = self.patient.refDate, flow.count > 0 else {
-                print("No Data")
+            if off.count == 0 {
+                self.removeSpinner(spinner)
                 DispatchQueue.main.async {
-                    self.removeSpinner(self.spinner)
-                    self.updating = false
-                    /*
-                    self.updateTimer = Timer.scheduledTimer(withTimeInterval: Double(Storage.updateInterval), repeats: true, block: { (timer) in
-                        print("Crashed here")
-                        if self.update.wait(timeout: .now()) == .success {
-                            self.updateChart()
-                        }
-                    })
-                     */
-                    
+                    self.hostView.isUserInteractionEnabled = true
                 }
                 return
             }
-            
-            var flowChartData: [ChartDataEntry] = [], pressureChartData: [ChartDataEntry] = []
-            for (offsetValue, (flowValue, pressureValue)) in zip(offsets, zip(flow, pressure)) {
-                flowChartData.append(ChartDataEntry(x: offsetValue, y: flowValue))
-                pressureChartData.append(ChartDataEntry(x: offsetValue, y: pressureValue))
+            if let x = axisSet.xAxis {
+                print("Format x")
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "HH:mm:ss"
+                let timeFormatter = CPTTimeFormatter(dateFormatter: dateFormatter)
+                timeFormatter.referenceDate = self.patient.refDate
+                x.labelFormatter = timeFormatter
+                x.relabel()
             }
+            print("Adding graphs")
             
-            let flowLine = LineChartDataSet(values: flowChartData, label: "Flow"), pressureLine = LineChartDataSet(values: pressureChartData, label: "Pressure")
-            flowLine.colors = [UIColor.blue]
-            flowLine.drawCirclesEnabled = false
-            pressureLine.colors = [UIColor.red]
-            pressureLine.drawCirclesEnabled = false
-            self.chartView.xAxis.valueFormatter = TimeAxisValueFormatter(forDate: refDate)
-            self.chartView.xAxis.granularity = ChartViewController.GRANULARITY
+            plotSpace.globalXRange = CPTPlotRange(location: NSNumber(value: self.patient.offsets[0]), length: NSNumber(value: self.patient.offsets[self.patient.offsets.count - 1] - self.patient.offsets[0]))
+            plotSpace.xRange = CPTPlotRange(location: NSNumber(value: self.patient.offsets[self.patient.offsets.count - 1] - 30.0), length: NSNumber(value: 30.0))
+            self.plotsToDraw = 3
+            graph.reloadData()
             DispatchQueue.main.async {
-                self.chartView.data = LineChartData(dataSets: [flowLine, pressureLine])
-                self.chartView.setVisibleXRangeMaximum(ChartViewController.WINDOW_WIDTH)
-                self.chartView.moveViewToX(self.chartView.chartXMax)
-                self.labelUpdate()
-                self.removeSpinner(self.spinner)
-                self.updating = false
-                self.updateTimer = Timer.scheduledTimer(withTimeInterval: Double(Storage.updateInterval), repeats: true, block: { (timer) in
-                    if self.update.wait(timeout: .now()) == .success {
-                        self.updateChart()
-                    }
+                self.updateLabel()
+                self.hostView.isUserInteractionEnabled = true
+                self.removeSpinner(spinner)
+                axisSet.xAxis?.relabel()
+                
+                self.updateTimer = Timer.scheduledTimer(withTimeInterval: Double(Storage.updateInterval), repeats: false, block: { (timer) in
+                    self.timer()
                 })
+                
             }
         }
+        
     }
     
-    func updateChart() {
-        updating = true
-        patient.loadNewBreaths { (flow, pressure, offsets, error) in
-            if let error = error {
-                self.showAlert(withTitle: "Chart Update Error", message: error.localizedDescription)
-                self.updating = false
-                return
-            }
-            
-            if flow.count == 0 {
-                self.updating = false
-                return // no new update
-            }
-            
-            let xMax = self.chartView.chartXMax
-            
-            for (offsetValue, (flowValue, pressureValue)) in zip(offsets, zip(flow, pressure)) {
-                let _ = self.chartView.lineData?.getDataSetByLabel("Flow", ignorecase: false)?.addEntry(ChartDataEntry(x: offsetValue, y: flowValue))
-                let _ = self.chartView.lineData?.getDataSetByLabel("Pressure", ignorecase: false)?.addEntry(ChartDataEntry(x: offsetValue, y: pressureValue))
-            }
-            
-            DispatchQueue.main.async {
-                self.chartView.data?.notifyDataChanged()
-                self.chartView.notifyDataSetChanged()
-                self.chartView.setVisibleXRangeMaximum(ChartViewController.WINDOW_WIDTH)
-                self.labelUpdate()
-                if self.chartView.highestVisibleX == xMax {
-                    print("Currently viewing the highest X")
-                    self.chartView.moveViewToX(self.chartView.chartXMax)
-                }
-                self.updating = false
-                self.update.signal()
-            }
+    func updateLabel() {
+        if let temp = patient.json.last?["breath_meta"] as? [String: Any], let tvi = temp["tvi"] as? Double, let tve = temp["tve"] as? Double {
+            tviLabel.text = "TVi: \(tvi)"
+            tveLabel.text = "TVe: \(tve)"
         }
     }
     
     func loadPastData() {
-        self.showSpinner()
-        patient.loadPastBreaths { (flow, pressure, offsets, error) in
+        hostView.isUserInteractionEnabled = false
+        let spinner = self.showSpinner()
+        patient.loadPastBreaths { (_, _, off, error) in
             if let error = error {
-                self.removeSpinner(self.spinner)
-                self.showAlert(withTitle: "Past Data Load Error", message: error.localizedDescription)
-                self.updating = false
-                self.update.signal()
+                self.removeSpinner(spinner)
+                DispatchQueue.main.async {
+                    self.hostView.isUserInteractionEnabled = true
+                }
+                self.showAlert(withTitle: "Chart Load Error", message: error.localizedDescription)
                 return
             }
-            
-            guard flow.count > 0 else {
-                print("No Data")
+            if off.count == 0 {
+                self.removeSpinner(spinner)
                 DispatchQueue.main.async {
-                    self.removeSpinner(self.spinner)
-                    self.chartView.isUserInteractionEnabled = true
-                    self.updating = false
+                    self.hostView.isUserInteractionEnabled = true
                 }
                 return
             }
-            
-            print("Loading \(flow.count) data")
-            print(offsets[0..<200])
-            print(offsets[flow.count-10..<flow.count])
-            let xMin = self.chartView.chartXMin
-            
-            for (offsetValue, (flowValue, pressureValue)) in zip(offsets, zip(flow, pressure)) {
-                let _ = self.chartView.lineData?.getDataSetByLabel("Flow", ignorecase: false)?.addEntryOrdered(ChartDataEntry(x: offsetValue, y: flowValue))
-                let _ = self.chartView.lineData?.getDataSetByLabel("Pressure", ignorecase: false)?.addEntryOrdered(ChartDataEntry(x: offsetValue, y: pressureValue))
-            }
-            
+            self.hostView.hostedGraph?.reloadData()
             DispatchQueue.main.async {
-                print("Now applying changes")
-                self.chartView.data?.notifyDataChanged()
-                self.chartView.notifyDataSetChanged()
-                self.chartView.setVisibleXRangeMaximum(ChartViewController.WINDOW_WIDTH)
-                self.chartView.moveViewToX(xMin)
-                self.chartView.isUserInteractionEnabled = true
-                self.removeSpinner(self.spinner)
-                self.updating = false
-                self.update.signal()
+                self.plotsToDraw = 3
+                self.hostView.isUserInteractionEnabled = true
+                self.removeSpinner(spinner)
+                
+                (self.hostView.hostedGraph?.defaultPlotSpace as? CPTXYPlotSpace)?.globalXRange = CPTPlotRange(location: NSNumber(value: self.patient.offsets[0]), length: NSNumber(value: self.patient.offsets[self.patient.offsets.count - 1] - self.patient.offsets[0]))
+            }
+            //self.removeSpinner(self.spinner)
+        }
+    }
+    
+    func loadNewBreaths() {
+        let spinner = self.showSpinner()
+        hostView.isUserInteractionEnabled = false
+        let oldMax = patient.offsets[patient.offsets.count - 1]
+        patient.loadNewBreaths { (_, _, off, error) in
+            if let error = error {
+                self.removeSpinner(spinner)
+                DispatchQueue.main.async {
+                    self.hostView.isUserInteractionEnabled = true
+                }
+                self.showAlert(withTitle: "Chart Load Error", message: error.localizedDescription)
+                return
+            }
+            if off.count == 0 {
+                self.removeSpinner(spinner)
+                DispatchQueue.main.async {
+                    self.hostView.isUserInteractionEnabled = true
+                    self.updateTimer = Timer.scheduledTimer(withTimeInterval: Double(Storage.updateInterval), repeats: false, block: { (timer) in
+                        if self.hostView.isUserInteractionEnabled == true {
+                            self.loadNewBreaths()
+                        }
+                    })
+                }
+                return
+            }
+            self.hostView.hostedGraph?.reloadData()
+            DispatchQueue.main.async {
+                self.plotsToDraw = 3
+                self.hostView.isUserInteractionEnabled = true
+                self.removeSpinner(spinner)
+                (self.hostView.hostedGraph?.defaultPlotSpace as? CPTXYPlotSpace)?.globalXRange = CPTPlotRange(location: NSNumber(value: self.patient.offsets[0]), length: NSNumber(value: self.patient.offsets[self.patient.offsets.count - 1] - self.patient.offsets[0]))
+                if let plotSpace = (self.hostView.hostedGraph?.defaultPlotSpace as? CPTXYPlotSpace), Double(plotSpace.xRange.maxLimit) + 0.05 >= oldMax {
+                    plotSpace.xRange = CPTPlotRange(location: NSNumber(value: self.patient.offsets[self.patient.offsets.count - 1] - Double(plotSpace.xRange.length)), length: plotSpace.xRange.length)
+                }
+                self.updateTimer = Timer.scheduledTimer(withTimeInterval: Double(Storage.updateInterval), repeats: false, block: { (timer) in
+                    self.timer()
+                })
+                self.updateLabel()
             }
         }
     }
     
-    func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
-       //loadAdditionalData()
-        if chartView.marker == nil {
-            let marker = BalloonMarker(color: UIColor.gray, font: UIFont(name: "Helvetica", size: 14)!, textColor: UIColor.white, insets: UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0))
-            marker.minimumSize = CGSize(width: 100.0, height: 180.0)
-            marker.chartView = chartView
-            chartView.marker = marker
+    func timer() {
+        if self.view.superview != nil {
+            if self.hostView.isUserInteractionEnabled == true {
+                loadNewBreaths()
+            }
+            else {
+                updateTimer = Timer.scheduledTimer(withTimeInterval: Double(Storage.updateInterval), repeats: false, block: { (timer) in
+                    self.timer()
+                })
+            }
         }
-        (chartView.marker as? BalloonMarker)?.data = patient
-        chartView.marker?.refreshContent(entry: entry, highlight: highlight)
     }
-    /*
-     
-     */
+  
+    @IBAction func returnPressed(_ sender: UIBarButtonItem) {
+        self.navigationController?.popToRootViewController(animated: true)
+    }
     
-    func showSpinner() {
+    
+    func showSpinner() -> UIView {
+        let spinner = UIView.init(frame: self.view.bounds)
         DispatchQueue.main.async {
-            self.spinner = UIView.init(frame: self.view.bounds)
-            self.spinner.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue:0.5, alpha: 0.5)
+            spinner.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue:0.5, alpha: 0.5)
             let activity = UIActivityIndicatorView.init(style: .whiteLarge)
             activity.startAnimating()
-            activity.center = self.spinner.center
-            self.spinner.addSubview(activity)
-            self.view.addSubview(self.spinner)
+            activity.center = spinner.center
+            spinner.addSubview(activity)
+            self.view.addSubview(spinner)
+            print("showing spinner...")
         }
+        return spinner
     }
     
     func removeSpinner(_ spinner: UIView) {
         DispatchQueue.main.async {
             spinner.removeFromSuperview()
+            print("removing spinner...")
         }
     }
     
@@ -266,7 +319,6 @@ class ChartViewController: UIViewController, ChartViewDelegate {
         alert.addAction(action)
         self.present(alert, animated: true)
     }
-    
 
     /*
     // MARK: - Navigation
@@ -280,19 +332,133 @@ class ChartViewController: UIViewController, ChartViewDelegate {
 
 }
 
-class TimeAxisValueFormatter: IAxisValueFormatter {
+extension ChartViewController: CPTScatterPlotDelegate, CPTScatterPlotDataSource {
     
-    let dateFormatter = DateFormatter()
-    var refDate: Date
-    
-    init(forDate refDate: Date) {
-        self.refDate = refDate
-        dateFormatter.dateFormat = "HH:mm:ss"
+    func numberOfRecords(for plot: CPTPlot) -> UInt {
+        let plotID = plot.identifier as! String
+        switch plotID {
+        case "flow": return UInt(patient.flow.count)
+        case "pressure": return UInt(patient.pressure.count)
+        case "async": return UInt(patient.asynchrony.count)
+        default: ()
+        }
+        return 0
     }
     
-    func stringForValue(_ value: Double, axis: AxisBase?) -> String {
-        return dateFormatter.string(from: Date(timeInterval: value, since: refDate))
+    func number(for plot: CPTPlot, field fieldEnum: UInt, record idx: UInt) -> Any? {
+        let plotField = CPTScatterPlotField(rawValue: Int(fieldEnum))
+        let plotID = plot.identifier as! String
+        
+        switch (plotID, plotField!) {
+        case("async", .X): return patient.offsets[patient.asynchronyIndex[Int(idx)]]
+        case("async", .Y): return patient.pressure[patient.asynchronyIndex[Int(idx)]]
+        case(_, .X): return patient.offsets[Int(idx)]
+        case ("flow", .Y): return patient.flow[Int(idx)]
+        case ("pressure", .Y): return patient.pressure[Int(idx)]
+        default: ()
+        }
+        return nil
     }
+    
+    func plotSpace(_ space: CPTPlotSpace, shouldHandlePointingDeviceDownEvent event: UIEvent, at point: CGPoint) -> Bool {
+        if let textLayer = self.marker?.contentLayer {
+            textLayer.isHidden = true
+        }
+        return true
+    }
+    
+    func scatterPlot(_ plot: CPTScatterPlot, plotSymbolWasSelectedAtRecord idx: UInt) {
+        guard let graph = hostView.hostedGraph, let plotSpace = graph.defaultPlotSpace as? CPTXYPlotSpace, let marker = self.marker, let textLayer = marker.contentLayer as? CPTTextLayer, let id = plot.identifier as? String else {
+            print("Point selection error")
+            return
+        }
+        
+        guard let temp = patient.json[patient.breathIndex[Int(idx)]]["breath_meta"] as? [String: Any], let etime = temp["e_time"] as? Double, let itime = temp["i_time"] as? Double, let peep = temp["peep"] as? Double, let tvei = temp["tve_tvi_ratio"] as? Double, let tve = temp["tve"] as? Double, let tvi = temp["tvi"] as? Double, let c = patient.json[patient.breathIndex[Int(idx)]]["classifications"] as? [String: Int], let bsa = c["bs_1or2"], let dta = c["dbl_4"], let tvv = c["tvv"] else {
+            print("Error parsing json while displaying marker")
+            return
+        }
+        
+        if plotSpace.xRange.contains(patient.offsets[Int(idx)]) {
+            textLayer.text = """
+            Flow: \(patient.flow[Int(idx)])
+            Pressure: \(patient.pressure[Int(idx)])
+            
+            E-time: \(etime)
+            I-time: \(itime)
+            Peep: \(peep)
+            TVe/TVi: \(tvei)
+            TVe: \(tve)
+            TVi: \(tvi)
+            """
+            textLayer.isHidden = false
+            marker.anchorPlotPoint = [patient.offsets[Int(idx)] as NSNumber, (id == "flow" ? patient.flow[Int(idx)] : patient.pressure[Int(idx)]) as NSNumber]
+        }
+        else {
+            textLayer.isHidden = true
+        }
+        
+    
+    }
+    
+    func dataLabel(for plot: CPTPlot, record idx: UInt) -> CPTLayer? {
+        if plot.identifier as? String == "async" {
+            let t = CPTTextLayer(text: patient.asynchrony[Int(idx)])
+            if let space = plot.plotSpace, let y = space.plotRange(for: .Y)?.minLimitDouble {
+                t.anchorPoint = CGPoint(x: patient.offsets[patient.asynchronyIndex[Int(idx)]], y: y + 10)
+            }
+            return t
+            //return CPTTextLayer(text: patient.asynchrony[Int(idx)])
+        }
+        return nil
+    }
+    
+    func symbol(for plot: CPTScatterPlot, record idx: UInt) -> CPTPlotSymbol? {
+        return CPTPlotSymbol()
+    }
+    
+    /*
+    func didFinishDrawing(_ plot: CPTPlot) {
+        print("Done Drawing \(plot.identifier)")
+        if plotsToDraw > 0 {
+            DispatchQueue.main.async {
+                self.plotsToDraw -= 1
+                if self.plotsToDraw == 0 {
+                    print("All done")
+                    self.removeSpinner(self.spinner)
+                    self.hostView.isUserInteractionEnabled = true
+                }
+            }
+        }
+    }
+    */
+    
+}
+
+extension ChartViewController: CPTPlotSpaceDelegate {
+    func plotSpace(_ space: CPTPlotSpace, willDisplaceBy proposedDisplacementVector: CGPoint) -> CGPoint {
+        if let plotSpace = space as? CPTXYPlotSpace, plotSpace.xRange.location == plotSpace.globalXRange?.location, proposedDisplacementVector.x > 20 {
+            print("DRAAG")
+            loadPastData()
+        }
+        return proposedDisplacementVector
+    }
+    
+    func plotSpace(_ space: CPTPlotSpace, didChangePlotRangeFor coordinate: CPTCoordinate) {
+        if let xAxis = (hostView.hostedGraph?.axisSet as? CPTXYAxisSet)?.xAxis {
+            xAxis.majorIntervalLength = Int(truncating: (space as! CPTXYPlotSpace).xRange.length) / 4 as NSNumber
+        }
+        
+        if marker?.contentLayer?.isHidden == false, let anchor = marker?.anchorPlotPoint, (space as? CPTXYPlotSpace)?.plotRange(for: coordinate)?.contains(anchor[coordinate.rawValue]) == false {
+            marker?.contentLayer?.isHidden = true
+        }
+        
+        if coordinate == CPTCoordinate.X {
+            
+        }
+    }
+    
     
     
 }
+
+

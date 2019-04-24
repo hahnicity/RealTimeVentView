@@ -105,11 +105,8 @@ class FeedbackViewController: UIViewController, ChartViewDelegate, UITableViewDe
             flowLine.drawCirclesEnabled = false
             pressureLine.colors = [UIColor.red]
             pressureLine.drawCirclesEnabled = false
-            self.chartView.xAxis.valueFormatter = TimeAxisValueFormatter(forDate: refDate)
-            self.chartView.xAxis.granularity = ChartViewController.GRANULARITY
             DispatchQueue.main.async {
                 self.chartView.data = LineChartData(dataSets: [flowLine, pressureLine])
-                self.chartView.setVisibleXRangeMaximum(ChartViewController.WINDOW_WIDTH)
                 self.chartView.moveViewToX(self.chartView.chartXMax)
                 self.removeSpinner(spinner)
             }

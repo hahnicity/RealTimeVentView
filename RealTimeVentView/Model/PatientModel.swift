@@ -24,6 +24,8 @@ class PatientModel {
     var flow: [Double] = []
     var pressure: [Double] = []
     var breathIndex: [Int] = []
+    var asynchrony: [String] = []
+    var asynchronyIndex: [Int] = []
     var refDate: Date? = nil
     var offsets: [Double] = []
     var sizeOfLastLoad = 0
@@ -121,12 +123,14 @@ class PatientModel {
                         print("Some error regarding breath json")
                         return
                     }
-                    let (newFlow, newPressure, newIndex, newOffsets) = self.parseBreathJSON(json)
+                    let (newFlow, newPressure, newIndex, newOffsets, newAsynchrony, newAsynchronyIndex) = self.parseBreathJSON(json)
                     self.flow = newFlow
                     self.pressure = newPressure
                     self.breathIndex = newIndex
                     self.json = json
                     self.offsets = newOffsets
+                    self.asynchrony = newAsynchrony
+                    self.asynchronyIndex = newAsynchronyIndex
                     completion(newFlow, newPressure, newOffsets, nil)
                 } catch {
                     print("\(error)")
@@ -140,9 +144,11 @@ class PatientModel {
     
     func loadPastBreaths(completion: @escaping CompletionUpdate) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss zz"
+        dateFormatter.dateFormat = SERVER_DATE_FORMAT
+        dateFormatter.timeZone = TimeZone(abbreviation: SERVER_TIMEZONE)!
+
         //print((json[0]["breath_meta"] as? [String: Any])?["abs_bs"])
-        guard json.count > 0, let first = json[0]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String, let lastDate = dateFormatter.date(from: date) else {
+        guard json.count > 0, let first = json[0][PACKET_METADATA] as? [String: Any], let date = first[PACKET_TIMESTAMP] as? String, let lastDate = dateFormatter.date(from: date) else {
             print("Error getting the last date")
             return
         }
@@ -156,12 +162,14 @@ class PatientModel {
                         print("Some error regarding breath json")
                         return
                     }
-                    let (newFlow, newPressure, newIndex, newOffsets) = self.parseBreathJSON(json)
+                    let (newFlow, newPressure, newIndex, newOffsets, newAsynchrony, newAsynchronyIndex) = self.parseBreathJSON(json)
                     self.flow = newFlow + self.flow
                     self.pressure = newPressure + self.pressure
                     self.breathIndex = newIndex + self.breathIndex
                     self.json = json + self.json
                     self.offsets = newOffsets + self.offsets
+                    self.asynchrony = newAsynchrony + self.asynchrony
+                    self.asynchronyIndex = newAsynchronyIndex + self.asynchronyIndex.map{ $0 + newOffsets.count }
                     completion(newFlow, newPressure, newOffsets, nil)
                 } catch {
                     print("\(error)")
@@ -175,10 +183,12 @@ class PatientModel {
     
     func loadNewBreaths(completion: @escaping CompletionUpdate) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss zz"
+        dateFormatter.dateFormat = SERVER_DATE_FORMAT
+        dateFormatter.timeZone = TimeZone(abbreviation: SERVER_TIMEZONE)!
+
         var lastDate = Date(timeIntervalSinceNow: -TimeInterval(Storage.updateInterval))
         if json.count > 0 {
-            guard let first = json[json.count - 1]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String, let l = dateFormatter.date(from: date) else {
+            guard let first = json[json.count - 1][PACKET_METADATA] as? [String: Any], let date = first[PACKET_TIMESTAMP] as? String, let l = dateFormatter.date(from: date) else {
                 print("Error getting the last date")
                 return
             }
@@ -194,11 +204,13 @@ class PatientModel {
                         print("Some error regarding breath json")
                         return
                     }
-                    let (newFlow, newPressure, newIndex, newOffsets) = self.parseBreathJSON(json)
+                    let (newFlow, newPressure, newIndex, newOffsets, newAsynchrony, newAsynchronyIndex) = self.parseBreathJSON(json)
                     self.flow = self.flow + newFlow
                     self.pressure = self.pressure + newPressure
                     self.breathIndex = self.breathIndex + newIndex.map({ $0 + self.json.count })
                     self.json = self.json + json
+                    self.asynchrony = self.asynchrony + newAsynchrony
+                    self.asynchronyIndex = self.asynchronyIndex + newAsynchronyIndex.map{ $0 + self.offsets.count }
                     self.offsets = self.offsets + newOffsets
                     completion(newFlow, newPressure, newOffsets, nil)
                 } catch {
@@ -211,45 +223,62 @@ class PatientModel {
         }
     }
     
-    func parseBreathJSON(_ json: [[String: Any]]) -> ([Double], [Double], [Int], [Double]) {
+    func parseBreathJSON(_ json: [[String: Any]]) -> ([Double], [Double], [Int], [Double], [String], [Int]) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss.SS zz"
+        dateFormatter.dateFormat = SERVER_DATE_FORMAT
+        dateFormatter.timeZone = TimeZone(abbreviation: SERVER_TIMEZONE)!
+
         if refDate == nil {
-            if json.count > 0, let first = json[0]["breath_meta"] as? [String: Any], let date = first["abs_bs"] as? String {
+            if json.count > 0, let first = json[0][PACKET_METADATA] as? [String: Any], let date = first[PACKET_TIMESTAMP] as? String {
                 refDate = dateFormatter.date(from: date)
             }
         }
         
-        var flowData: [Double] = [], pressureData: [Double] = [], indexData: [Int] = [], offsets: [Double] = []
+        var flowData: [Double] = [], pressureData: [Double] = [], indexData: [Int] = [], offsets: [Double] = [], asynchrony: [String] = [], asynchronyIndex: [Int] = []
         for (index, breath) in json.enumerated() {
-            if let temp = breath["vwd"] as? [String: [Double]], let flowSet = temp["flow"], let pressureSet = temp["pressure"], let date = (breath["breath_meta"] as? [String: Any])?["abs_bs"] as? String {
+            if let temp = breath[PACKET_WAVE_DATA] as? [String: [Double]], let flowSet = temp["flow"], let pressureSet = temp["pressure"], let date = (breath["breath_meta"] as? [String: Any])?["abs_bs"] as? String, let classifications = breath["classifications"] as? [String: Int] {
                 flowData += flowSet
                 pressureData += pressureSet
                 indexData += Array<Int>(repeating: index, count: flowSet.count)
+                switch (classifications["bs_1or2"], classifications["dbl_4"], classifications["tvv"]) {
+                case (1, _, _):
+                    asynchrony.append("BSA")
+                    asynchronyIndex.append(offsets.count + flowSet.count / 2)
+                case (_, 1, _):
+                    asynchrony.append("DTA")
+                    asynchronyIndex.append(offsets.count + flowSet.count / 2)
+                case (_, _, 1):
+                    asynchrony.append("TVV")
+                    asynchronyIndex.append(offsets.count + flowSet.count / 2)
+                default: ()
+                }
                 let base = dateFormatter.date(from: date)!.timeIntervalSince(refDate!)
                 // change sample rate around here
                 if index < json.count - 1 {
                     if let nextDate = (json[index + 1]["breath_meta"] as? [String: Any])?["abs_bs"] as? String, let next = dateFormatter.date(from: nextDate) {
-                        if next.timeIntervalSince(refDate!) - base < PatientModel.SAMPLE_RATE * Double(flowSet.count) {
-                            offsets += Array<Double>(stride(from: 0.0, to: next.timeIntervalSince(refDate!) - base, by: (next.timeIntervalSince(refDate!) - base) / Double(flowSet.count))).map({ $0 + base })
-                        }
+                        // if next.timeIntervalSince(refDate!) - base < PatientModel.SAMPLE_RATE * Double(flowSet.count) {
+                            offsets += Array<Double>(sequence(first: base) { $0 + (next.timeIntervalSince(self.refDate!) - base) / Double(flowSet.count) }.prefix(flowSet.count))
+                        // }
+                        /*
                         else {
                             offsets += Array<Double>(stride(from: 0.0, to: Double(flowSet.count) * PatientModel.SAMPLE_RATE, by: PatientModel.SAMPLE_RATE)).map({ $0 + base })
                         }
+                        */
                     }
                 }
                 else {
                     if self.json.count > 0, let nextDate = (self.json[0]["breath_meta"] as? [String: Any])?["abs_bs"] as? String, let next = dateFormatter.date(from: nextDate), next.timeIntervalSince(refDate!) > base {
                         print("\(next.timeIntervalSince(refDate!)) \(base)")
-                        offsets += Array<Double>(stride(from: 0.0, to: next.timeIntervalSince(refDate!) - base, by: (next.timeIntervalSince(refDate!) - base) / Double(flowSet.count))).map({ $0 + base })
+                        offsets += Array<Double>(sequence(first: base) { $0 + (next.timeIntervalSince(self.refDate!) - base) / Double(flowSet.count) }.prefix(flowSet.count))
                     }
                     else {
-                        offsets += Array<Double>(stride(from: 0.0, to: Double(flowSet.count) * PatientModel.SAMPLE_RATE, by: PatientModel.SAMPLE_RATE)).map({ $0 + base })
+                        offsets += Array<Double>(sequence(first: base) { $0 + PatientModel.SAMPLE_RATE }.prefix(flowSet.count))
                     }
                 }
+                assert(offsets.count == flowData.count)
             }
         }
-        return (flowData, pressureData, indexData, offsets)
+        return (flowData, pressureData, indexData, offsets, asynchrony, asynchronyIndex)
     }
     
     func loadBreaths(between startTime: Date, and endTime: Date, completion: @escaping CompletionUpdate) {
@@ -262,12 +291,14 @@ class PatientModel {
                         print("Some error regarding breath json")
                         return
                     }
-                    let (newFlow, newPressure, newIndex, newOffsets) = self.parseBreathJSON(json)
+                    let (newFlow, newPressure, newIndex, newOffsets, newAsynchrony, newAsynchronyIndex) = self.parseBreathJSON(json)
                     self.flow = newFlow
                     self.pressure = newPressure
                     self.breathIndex = newIndex
                     self.json = json
                     self.offsets = newOffsets
+                    self.asynchrony = newAsynchrony
+                    self.asynchronyIndex = newAsynchronyIndex
                     completion(newFlow, newPressure, newOffsets, nil)
                 } catch {
                     print("\(error)")
@@ -280,18 +311,42 @@ class PatientModel {
     }
     
     func loadJSON(completion: @escaping CompletionUpdate) {
-        guard let json = getJson(Named: "sample2") else {
+        guard let json = getJson(Named: "sample3") else {
             return
         }
         print("Num: \(json.count)")
-        let (newFlow, newPressure, newIndex, newOffsets) = self.parseBreathJSON(Array(json[0..<Storage.numFeedbackBreaths]))
+        let (newFlow, newPressure, newIndex, newOffsets, newAsynchrony, newAsynchronyIndex) = self.parseBreathJSON(json)
         print("Flows: \(newFlow.count)")
+        print("Async: \(newAsynchrony.count)")
         self.flow = newFlow
         self.pressure = newPressure
         self.breathIndex = newIndex
         self.json = json
         self.offsets = newOffsets
-        completion(newFlow, newPressure, newOffsets, nil)
+        self.asynchrony = newAsynchrony
+        self.asynchronyIndex = newAsynchronyIndex
+        DispatchQueue.global(qos: .userInitiated).async {
+            completion(newFlow, newPressure, newOffsets, nil)
+        }
+    }
+    
+    func loadPastJSON(completion: @escaping CompletionUpdate) {
+        guard let json = getJson(Named: "sample") else {
+            return
+        }
+        print("Num: \(json.count)")
+        let (newFlow, newPressure, newIndex, newOffsets, newAsynchrony, newAsynchronyIndex) = self.parseBreathJSON(json)
+        print("Flows: \(newFlow.count)")
+        self.flow = newFlow + self.flow
+        self.pressure = newPressure + self.pressure
+        self.breathIndex = newIndex + self.breathIndex
+        self.json = json + self.json
+        self.offsets = newOffsets + self.offsets
+        self.asynchrony = newAsynchrony + self.asynchrony
+        self.asynchronyIndex = newAsynchronyIndex + self.asynchronyIndex
+        DispatchQueue.global(qos: .userInitiated).async {
+            completion(newFlow, newPressure, newOffsets, nil)
+        }
     }
     
     

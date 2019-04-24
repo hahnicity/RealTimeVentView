@@ -9,5 +9,6 @@
 #ifndef RealTimeVentView_Bridging_Header_h
 #define RealTimeVentView_Bridging_Header_h
 
+#import 'CorePlot'
 
 #endif /* RealTimeVentView_Bridging_Header_h */
