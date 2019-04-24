@@ -60,6 +60,7 @@ class ChartViewController: UIViewController {
         let graph = CPTXYGraph(frame: hostView.bounds)
         hostView.hostedGraph = graph
         hostView.isUserInteractionEnabled = false
+        hostView.allowPinchScaling = true
         graph.paddingLeft = 0.0
         graph.paddingTop = 0.0
         graph.paddingRight = 0.0
@@ -182,6 +183,7 @@ class ChartViewController: UIViewController {
                 self.hostView.isUserInteractionEnabled = true
                 self.removeSpinner(spinner)
                 axisSet.xAxis?.relabel()
+                axisSet.yAxis?.relabel()
                 
                 self.updateTimer = Timer.scheduledTimer(withTimeInterval: Double(Storage.updateInterval), repeats: false, block: { (timer) in
                     self.timer()
@@ -455,6 +457,10 @@ extension ChartViewController: CPTPlotSpaceDelegate {
         if coordinate == CPTCoordinate.X {
             
         }
+    }
+    
+    func plotSpace(_ space: CPTPlotSpace, shouldScaleBy interactionScale: CGFloat, aboutPoint interactionPoint: CGPoint) -> Bool {
+        return true
     }
     
     
