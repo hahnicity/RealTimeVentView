@@ -46,12 +46,12 @@ class FeedbackViewController: UIViewController {
         hostView.hostedGraph = graph
         hostView.isUserInteractionEnabled = false
         hostView.allowPinchScaling = true
-        graph.paddingLeft = 0.0
+        graph.paddingLeft = 5.0
         graph.paddingTop = 0.0
         graph.paddingRight = 0.0
         graph.paddingBottom = 0.0
         
-        graph.plotAreaFrame?.paddingLeft = 40.0
+        graph.plotAreaFrame?.paddingLeft = 45.0
         graph.plotAreaFrame?.paddingRight = 0.0
         graph.plotAreaFrame?.paddingTop = 10.0
         graph.plotAreaFrame?.paddingBottom = 25.0
@@ -59,6 +59,7 @@ class FeedbackViewController: UIViewController {
         let plotSpace = graph.defaultPlotSpace as! CPTXYPlotSpace
         plotSpace.allowsUserInteraction = true
         plotSpace.yRange = CPTPlotRange(location: -100.0, length: 200.0)
+        plotSpace.globalYRange = CPTPlotRange(location: -200.0, length: 400.0)
         //plotSpace.allowsMomentumX = true
         plotSpace.delegate = self
         
