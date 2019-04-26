@@ -15,6 +15,7 @@
 		37AC9DC322012D3E0048469E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37AC9DC122012D3E0048469E /* LaunchScreen.storyboard */; };
 		37AC9DCE22012D3E0048469E /* RealTimeVentViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DCD22012D3E0048469E /* RealTimeVentViewTests.swift */; };
 		37AC9DD922012D3E0048469E /* RealTimeVentViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DD822012D3E0048469E /* RealTimeVentViewUITests.swift */; };
+		A31A21E42272F63300539EDC /* FeedbackCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31A21E32272F63300539EDC /* FeedbackCollectionViewCell.swift */; };
 		A32B735E220500DF000AF69A /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32B735D220500DF000AF69A /* BalloonMarker.swift */; };
 		A34A918F2211625E009F48FC /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34A918E2211625E009F48FC /* TextFieldTableViewCell.swift */; };
 		A34A91912211642C009F48FC /* EnrollTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34A91902211642C009F48FC /* EnrollTableViewController.swift */; };
@@ -74,6 +75,7 @@
 		53E043399744E6440568C8ED /* Pods-RealTimeVentViewTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeVentViewTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RealTimeVentViewTests/Pods-RealTimeVentViewTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7219F4F592484036F11EEA2F /* Pods_RealTimeVentViewTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RealTimeVentViewTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A7C5175102350E12448C7B5 /* Pods-RealTimeVentViewUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeVentViewUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RealTimeVentViewUITests/Pods-RealTimeVentViewUITests.release.xcconfig"; sourceTree = "<group>"; };
+		A31A21E32272F63300539EDC /* FeedbackCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackCollectionViewCell.swift; sourceTree = "<group>"; };
 		A32B735D220500DF000AF69A /* BalloonMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
 		A34A918E2211625E009F48FC /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
 		A34A91902211642C009F48FC /* EnrollTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollTableViewController.swift; sourceTree = "<group>"; };
@@ -207,6 +209,14 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		A31A21E22272F5F300539EDC /* CollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				A31A21E32272F63300539EDC /* FeedbackCollectionViewCell.swift */,
+			);
+			path = CollectionViewCell;
+			sourceTree = "<group>";
+		};
 		A3730E96221E463900302F84 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -220,6 +230,7 @@
 		A3730E97221E467100302F84 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				A31A21E22272F5F300539EDC /* CollectionViewCell */,
 				A3730E9A221E471B00302F84 /* Custom */,
 				A3730E99221E46B600302F84 /* TableViewCell */,
 				A3730E98221E46A300302F84 /* ViewController */,
@@ -497,6 +508,7 @@
 				A389FC3822153C9A00A4D430 /* AlertModel.swift in Sources */,
 				A34A918F2211625E009F48FC /* TextFieldTableViewCell.swift in Sources */,
 				37AC9DB922012D3E0048469E /* AppDelegate.swift in Sources */,
+				A31A21E42272F63300539EDC /* FeedbackCollectionViewCell.swift in Sources */,
 				A34A9193221169F1009F48FC /* PickerTableViewCell.swift in Sources */,
 				A754B6552202417100CD1A74 /* ChartViewController.swift in Sources */,
 				A39B1B4422127A9E00B855FA /* ConfigurationTableViewController.swift in Sources */,

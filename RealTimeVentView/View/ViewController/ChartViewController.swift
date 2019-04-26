@@ -362,13 +362,6 @@ extension ChartViewController: CPTScatterPlotDelegate, CPTScatterPlotDataSource 
         return nil
     }
     
-    func plotSpace(_ space: CPTPlotSpace, shouldHandlePointingDeviceDownEvent event: UIEvent, at point: CGPoint) -> Bool {
-        if let textLayer = self.marker?.contentLayer {
-            textLayer.isHidden = true
-        }
-        return true
-    }
-    
     func scatterPlot(_ plot: CPTScatterPlot, plotSymbolWasSelectedAtRecord idx: UInt) {
         guard let graph = hostView.hostedGraph, let plotSpace = graph.defaultPlotSpace as? CPTXYPlotSpace, let marker = self.marker, let textLayer = marker.contentLayer as? CPTTextLayer, let id = plot.identifier as? String else {
             print("Point selection error")
@@ -454,9 +447,17 @@ extension ChartViewController: CPTPlotSpaceDelegate {
             marker?.contentLayer?.isHidden = true
         }
         
+        
         if coordinate == CPTCoordinate.X {
             
         }
+    }
+    
+    func plotSpace(_ space: CPTPlotSpace, shouldHandlePointingDeviceDownEvent event: UIEvent, at point: CGPoint) -> Bool {
+        if let textLayer = self.marker?.contentLayer {
+            textLayer.isHidden = true
+        }
+        return true
     }
     
     func plotSpace(_ space: CPTPlotSpace, shouldScaleBy interactionScale: CGFloat, aboutPoint interactionPoint: CGPoint) -> Bool {
