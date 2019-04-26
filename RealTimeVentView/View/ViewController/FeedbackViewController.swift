@@ -132,7 +132,8 @@ class FeedbackViewController: UIViewController {
         graph.addAnnotation(marker)
         self.marker = marker
         
-        patient.loadBreaths { (_, _, off, error) in
+        
+        patient.loadBreaths(between: startTime, and: endTime) { (_, _, off, error) in
             if let error = error {
                 self.removeSpinner(spinner)
                 DispatchQueue.main.async {
@@ -230,36 +231,31 @@ class FeedbackViewController: UIViewController {
         }
     }
     
-    
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.chartView.highlightValue(nil, callDelegate: false)
-    }
     
     func showClassificationActions(for index: Int) {
         let alert = UIAlertController(title: "Breath #\(index + 1)", message: "Choose a classification for breath #\(index + 1)", preferredStyle: .actionSheet)
         let dta = UIAlertAction(title: "DTA", style: .default) { (action) in
             self.classification[index] = .dta
             self.collectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
-            self.chartView.highlightValue(nil, callDelegate: false)
+            self.marker?.contentLayer?.isHidden = true
             self.checkAllClassified()
         }
         let bsa = UIAlertAction(title: "BSA", style: .default) { (action) in
             self.classification[index] = .bsa
             self.collectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
-            self.chartView.highlightValue(nil, callDelegate: false)
+            self.marker?.contentLayer?.isHidden = true
             self.checkAllClassified()
         }
         let tvv = UIAlertAction(title: "TVV", style: .default) { (action) in
             self.classification[index] = .tvv
             self.collectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
-            self.chartView.highlightValue(nil, callDelegate: false)
+            self.marker?.contentLayer?.isHidden = true
             self.checkAllClassified()
         }
         let norm = UIAlertAction(title: "Normal", style: .default) { (action) in
             self.classification[index] = .norm
             self.collectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
-            self.chartView.highlightValue(nil, callDelegate: false)
+            self.marker?.contentLayer?.isHidden = true
             self.checkAllClassified()
         }
         let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
@@ -379,7 +375,7 @@ extension FeedbackViewController: CPTScatterPlotDelegate, CPTScatterPlotDataSour
             """
             textLayer.isHidden = false
             marker.anchorPlotPoint = [patient.offsets[Int(idx)] as NSNumber, (id == "flow" ? patient.flow[Int(idx)] : patient.pressure[Int(idx)]) as NSNumber]
-            self.showClassificationActions(for: Int(idx))
+            self.showClassificationActions(for: self.patient.breathIndex[Int(idx)])
         }
         else {
             textLayer.isHidden = true
