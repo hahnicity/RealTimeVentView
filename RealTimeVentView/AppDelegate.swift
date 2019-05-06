@@ -19,13 +19,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         registerForPushNotifications()
         #if DEBUG
-            application.listenForRemoteNotifications()
+            //application.listenForRemoteNotifications()
         #endif
         
         if let notification = launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] as? [String: Any], let type = notification["type"] as? String {
             if type == "feedback_push" {
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss zz"
+                dateFormatter.dateFormat = SERVER_DATE_FORMAT
+                dateFormatter.timeZone = TimeZone(abbreviation: SERVER_TIMEZONE)
                 if let name = notification["patient"] as? String, let start = notification["start_time"] as? String, let startTime = dateFormatter.date(from: start), let end = notification["end_time"] as? String, let endTime = dateFormatter.date(from: end) {
                     let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "feedbackViewController") as! FeedbackViewController
                     viewController.patient = PatientModel.searchPatient(named: name)
@@ -52,7 +53,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         if let type = userInfo["type"] as? String {
             if type == "feedback_push" {
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss zz"
+                dateFormatter.dateFormat = SERVER_DATE_FORMAT
+                dateFormatter.timeZone = TimeZone(abbreviation: SERVER_TIMEZONE)
+                print(userInfo)
                 if let name = userInfo["patient"] as? String, let start = userInfo["start_time"] as? String, let startTime = dateFormatter.date(from: start), let end = userInfo["end_time"] as? String, let endTime = dateFormatter.date(from: end) {
                     let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "feedbackViewController") as! FeedbackViewController
                     viewController.patient = PatientModel.searchPatient(named: name)
