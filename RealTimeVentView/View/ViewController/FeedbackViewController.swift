@@ -45,7 +45,7 @@ class FeedbackViewController: UIViewController {
         let graph = CPTXYGraph(frame: hostView.bounds)
         hostView.hostedGraph = graph
         hostView.isUserInteractionEnabled = false
-        hostView.allowPinchScaling = true
+        hostView.allowPinchScaling = false
         graph.paddingLeft = 5.0
         graph.paddingTop = 0.0
         graph.paddingRight = 0.0
