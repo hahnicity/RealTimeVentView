@@ -11,7 +11,7 @@ import Foundation
 typealias CompletionAPI = (Data?, Error?) -> ()
 
 let SERVER_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SS"
-let SERVER_TIMEZONE = "GMT"
+let SERVER_TIMEZONE = TimeZone(abbreviation: "GMT")!
 let PACKET_METADATA = "breath_meta"
 let PACKET_CLASSIFICATION = "classifications"
 let PACKET_WAVE_DATA = "vwd"
@@ -22,6 +22,7 @@ let PACKET_PEEP = "peep"
 let PACKET_TVE_TVI_RATIO = "tve_tvi_ratio"
 let PACKET_TVE = "tve"
 let PACKET_TVI = "tvi"
+let PACKET_ID = "id"
 let PACKET_BSA = "bs_1or2"
 let PACKET_DTA = "dbl_4"
 let PACKET_TVV = "tvv"
@@ -46,8 +47,8 @@ class ServerModel {
     
     func getBreaths(forPatient name: String, startTime: Date, endTime: Date, completion: @escaping CompletionAPI) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
+        dateFormatter.dateFormat = SERVER_DATE_FORMAT
+        dateFormatter.timeZone = SERVER_TIMEZONE
         let params = [name, "\(dateFormatter.string(from: startTime))", "\(dateFormatter.string(from: endTime))"]
         print(params)
         serverAPI(at: "last_breaths", type: "GET", withParams: params, completion: completion)

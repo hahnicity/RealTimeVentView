@@ -145,7 +145,7 @@ class PatientModel {
     func loadPastBreaths(completion: @escaping CompletionUpdate) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = SERVER_DATE_FORMAT
-        dateFormatter.timeZone = TimeZone(abbreviation: SERVER_TIMEZONE)!
+        dateFormatter.timeZone = SERVER_TIMEZONE
 
         //print((json[0]["breath_meta"] as? [String: Any])?["abs_bs"])
         guard json.count > 0, let first = json[0][PACKET_METADATA] as? [String: Any], let date = first[PACKET_TIMESTAMP] as? String, let lastDate = dateFormatter.date(from: date) else {
@@ -184,7 +184,7 @@ class PatientModel {
     func loadNewBreaths(completion: @escaping CompletionUpdate) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = SERVER_DATE_FORMAT
-        dateFormatter.timeZone = TimeZone(abbreviation: SERVER_TIMEZONE)!
+        dateFormatter.timeZone = SERVER_TIMEZONE
 
         var lastDate = Date(timeIntervalSinceNow: -TimeInterval(Storage.updateInterval))
         if json.count > 0 {
@@ -226,7 +226,7 @@ class PatientModel {
     func parseBreathJSON(_ json: [[String: Any]]) -> ([Double], [Double], [Int], [Double], [String], [Int]) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = SERVER_DATE_FORMAT
-        dateFormatter.timeZone = TimeZone(abbreviation: SERVER_TIMEZONE)!
+        dateFormatter.timeZone = SERVER_TIMEZONE
 
         if refDate == nil {
             if json.count > 0, let first = json[0][PACKET_METADATA] as? [String: Any], let date = first[PACKET_TIMESTAMP] as? String {
@@ -234,13 +234,17 @@ class PatientModel {
             }
         }
         
+        guard let refDate = refDate else {
+            return ([], [], [], [], [], [])
+        }
+        
         var flowData: [Double] = [], pressureData: [Double] = [], indexData: [Int] = [], offsets: [Double] = [], asynchrony: [String] = [], asynchronyIndex: [Int] = []
         for (index, breath) in json.enumerated() {
-            if let temp = breath[PACKET_WAVE_DATA] as? [String: [Double]], let flowSet = temp["flow"], let pressureSet = temp["pressure"], let date = (breath["breath_meta"] as? [String: Any])?["abs_bs"] as? String, let classifications = breath["classifications"] as? [String: Int] {
+            if let temp = breath[PACKET_WAVE_DATA] as? [String: [Double]], let flowSet = temp[PACKET_FLOW], let pressureSet = temp[PACKET_PRESSURE], let date = (breath[PACKET_METADATA] as? [String: Any])?[PACKET_TIMESTAMP] as? String, let classifications = breath[PACKET_CLASSIFICATION] as? [String: Int] {
                 flowData += flowSet
                 pressureData += pressureSet
                 indexData += Array<Int>(repeating: index, count: flowSet.count)
-                switch (classifications["bs_1or2"], classifications["dbl_4"], classifications["tvv"]) {
+                switch (classifications[PACKET_BSA], classifications[PACKET_DTA], classifications[PACKET_TVV]) {
                 case (1, _, _):
                     asynchrony.append("BSA")
                     asynchronyIndex.append(offsets.count + flowSet.count / 2)
@@ -252,10 +256,10 @@ class PatientModel {
                     asynchronyIndex.append(offsets.count + flowSet.count / 2)
                 default: ()
                 }
-                let base = dateFormatter.date(from: date)!.timeIntervalSince(refDate!)
+                let base = dateFormatter.date(from: date)!.timeIntervalSince(refDate)
                 // change sample rate around here
                 if index < json.count - 1 {
-                    if let nextDate = (json[index + 1]["breath_meta"] as? [String: Any])?["abs_bs"] as? String, let next = dateFormatter.date(from: nextDate) {
+                    if let nextDate = (json[index + 1][PACKET_METADATA] as? [String: Any])?[PACKET_TIMESTAMP] as? String, let next = dateFormatter.date(from: nextDate) {
                         // if next.timeIntervalSince(refDate!) - base < PatientModel.SAMPLE_RATE * Double(flowSet.count) {
                             offsets += Array<Double>(sequence(first: base) { $0 + (next.timeIntervalSince(self.refDate!) - base) / Double(flowSet.count) }.prefix(flowSet.count))
                         // }
@@ -267,8 +271,8 @@ class PatientModel {
                     }
                 }
                 else {
-                    if self.json.count > 0, let nextDate = (self.json[0]["breath_meta"] as? [String: Any])?["abs_bs"] as? String, let next = dateFormatter.date(from: nextDate), next.timeIntervalSince(refDate!) > base {
-                        print("\(next.timeIntervalSince(refDate!)) \(base)")
+                    if self.json.count > 0, let nextDate = (self.json[0][PACKET_METADATA] as? [String: Any])?[PACKET_TIMESTAMP] as? String, let next = dateFormatter.date(from: nextDate), next.timeIntervalSince(refDate) > base {
+                        print("\(next.timeIntervalSince(refDate)) \(base)")
                         offsets += Array<Double>(sequence(first: base) { $0 + (next.timeIntervalSince(self.refDate!) - base) / Double(flowSet.count) }.prefix(flowSet.count))
                     }
                     else {
@@ -368,7 +372,7 @@ class PatientModel {
     
     func getAllData(ofType field: String) -> [Double] {
         return json.compactMap { (breath) -> Double? in
-            guard let entity = (breath["breath_meta"] as? [String: Any])?[field] as? Double else {
+            guard let entity = (breath[PACKET_METADATA] as? [String: Any])?[field] as? Double else {
                 return nil
             }
             return entity
@@ -377,7 +381,7 @@ class PatientModel {
     
     func getBreathID() -> [Int] {
         return json.compactMap({ (breath) -> Int? in
-            guard let entity = (breath["breath_meta"] as? [String: Any])?["id"] as? Int else {
+            guard let entity = (breath[PACKET_METADATA] as? [String: Any])?[PACKET_ID] as? Int else {
                 return nil
             }
             return entity
@@ -396,7 +400,7 @@ class PatientModel {
     func parseJson(from json: [[String: Any]]) -> ([Double], [Double], [Int]) {
         var flowData: [Double] = [], pressureData: [Double] = [], breathIn: [Int] = []
         for (index, breath) in json.enumerated() {
-            guard let temp = breath["vwd"] as? [String: [Double]], let flowEntity = temp["flow"], let pressureEntity = temp["pressure"] else {
+            guard let temp = breath[PACKET_WAVE_DATA] as? [String: [Double]], let flowEntity = temp[PACKET_FLOW], let pressureEntity = temp[PACKET_PRESSURE] else {
                 return ([], [], [])
             }
             flowData += flowEntity
