@@ -10,7 +10,7 @@ import Foundation
 
 typealias CompletionAPI = (Data?, Error?) -> ()
 
-let SERVER_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SS"
+let SERVER_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSSSSS"
 let SERVER_TIMEZONE = TimeZone(abbreviation: "GMT")!
 let PACKET_METADATA = "breath_meta"
 let PACKET_CLASSIFICATION = "classifications"
@@ -128,9 +128,6 @@ class ServerModel {
     }
     
     func handleServerRessponse(data: Data?, response: URLResponse?, error: Error?, completion: @escaping CompletionAPI) {
-        print(data)
-        print(response)
-        print(error)
         if let response = response as? HTTPURLResponse {
             
             DispatchQueue.global(qos: .userInitiated).async {

@@ -54,13 +54,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             if type == "feedback_push" {
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = SERVER_DATE_FORMAT
-                dateFormatter.timeZone = TimeZone(abbreviation: SERVER_TIMEZONE)
+                dateFormatter.timeZone = SERVER_TIMEZONE
                 print(userInfo)
                 if let name = userInfo["patient"] as? String, let start = userInfo["start_time"] as? String, let startTime = dateFormatter.date(from: start), let end = userInfo["end_time"] as? String, let endTime = dateFormatter.date(from: end) {
                     let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "feedbackViewController") as! FeedbackViewController
                     viewController.patient = PatientModel.searchPatient(named: name)
                     viewController.startTime = startTime
                     viewController.endTime = endTime
+                    print("\(startTime) \(endTime)")
                     (self.window?.rootViewController as? UINavigationController)?.pushViewController(viewController, animated: true)
                 }
             }

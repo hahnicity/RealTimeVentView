@@ -286,7 +286,7 @@ class PatientModel {
     }
     
     func loadBreaths(between startTime: Date, and endTime: Date, completion: @escaping CompletionUpdate) {
-        ServerModel.shared.getBreaths(forPatient: name, startTime: startTime, endTime: endTime) { (data, error) in
+        ServerModel.shared.getBreaths(forPatient: name, startTime: startTime, endTime: Date(timeInterval: 0.001, since: endTime)) { (data, error) in
             switch((data, error)) {
             case(.some(let data), .none):
                 do {

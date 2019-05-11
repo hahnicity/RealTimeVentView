@@ -24,9 +24,10 @@ class ChartViewController: UIViewController {
     var patient: PatientModel = PatientModel()
     var accessType: ChartAccessType = .main
     var spinner: UIView = UIView()
-    var pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(handlePinchGesture))
+    var pinchGestureRecognizer = UIPinchGestureRecognizer()
     var plotsToDraw = 0
     var updateTimer = Timer()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,6 +59,7 @@ class ChartViewController: UIViewController {
     
     func initPlot() {
         let spinner = showSpinner()
+        pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(ChartViewController.handlePinchGesture))
         hostView.addGestureRecognizer(pinchGestureRecognizer)
         let graph = CPTXYGraph(frame: hostView.bounds)
         hostView.hostedGraph = graph
@@ -291,6 +293,10 @@ class ChartViewController: UIViewController {
     }
     
     @objc func handlePinchGesture() {
+        print("is being called")
+        if pinchGestureRecognizer.numberOfTouches < 2 {
+            return
+        }
         var interactionPoint = pinchGestureRecognizer.location(in: hostView)
         var touchPoint1 = pinchGestureRecognizer.location(ofTouch: 0, in: hostView)
         var touchPoint2 = pinchGestureRecognizer.location(ofTouch: 1, in: hostView)
@@ -361,7 +367,7 @@ class ChartViewController: UIViewController {
         
         var newLocationY = Decimal()
         if CPTDecimalGreaterThanOrEqualTo(oldRangeY.lengthDecimal, CPTDecimalFromInteger(0)) {
-            let oldFirstLengthY = CPTDecimalSubtract(plotInteractionPoint[CPTCoordinate.Y.rawValue], oldRangeX.minLimitDecimal)
+            let oldFirstLengthY = CPTDecimalSubtract(plotInteractionPoint[CPTCoordinate.Y.rawValue], oldRangeY.minLimitDecimal)
             let newFirstLengthY = CPTDecimalDivide(oldFirstLengthY, decimalYScale)
             newLocationY = CPTDecimalSubtract(plotInteractionPoint[CPTCoordinate.Y.rawValue], newFirstLengthY)
         }
