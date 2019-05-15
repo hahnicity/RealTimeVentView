@@ -23,6 +23,7 @@ class FeedbackViewController: UIViewController {
     
     var marker: CPTPlotSpaceAnnotation? = nil
     var patient = PatientModel()
+    var pinchGestureRecognizer = UIPinchGestureRecognizer()
     var startTime = Date()
     var endTime = Date()
     var classification: [Classification] = [Classification](repeating: .none, count: Storage.numFeedbackBreaths)
@@ -42,6 +43,8 @@ class FeedbackViewController: UIViewController {
     
     func initPlot() {
         let spinner = showSpinner()
+        pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(ChartViewController.handlePinchGesture))
+        hostView.addGestureRecognizer(pinchGestureRecognizer)
         let graph = CPTXYGraph(frame: hostView.bounds)
         hostView.hostedGraph = graph
         hostView.isUserInteractionEnabled = false
@@ -209,6 +212,105 @@ class FeedbackViewController: UIViewController {
             }
         }
         submitButton.isEnabled = true
+    }
+    
+    @objc func handlePinchGesture() {
+        print("is being called")
+        if pinchGestureRecognizer.numberOfTouches < 2 {
+            return
+        }
+        var interactionPoint = pinchGestureRecognizer.location(in: hostView)
+        var touchPoint1 = pinchGestureRecognizer.location(ofTouch: 0, in: hostView)
+        var touchPoint2 = pinchGestureRecognizer.location(ofTouch: 1, in: hostView)
+        let scale = pinchGestureRecognizer.scale
+        let dY = abs(touchPoint1.y - touchPoint2.y)
+        let dX = abs(touchPoint1.x - touchPoint2.x)
+        let scaleX = 1.0 + (scale - 1.0) * dX / (dX + dY)
+        let scaleY = 1.0 + (scale - 1.0) * dY / (dX + dY)
+        guard let hostedGraph = hostView.hostedGraph else {
+            return
+        }
+        
+        hostedGraph.frame = hostView.bounds
+        hostedGraph.layoutIfNeeded()
+        
+        if hostView.collapsesLayers {
+            interactionPoint.y = hostView.frame.size.height - interactionPoint.y
+            touchPoint1.y = hostView.frame.size.height - touchPoint1.y
+            touchPoint2.y = hostView.frame.size.height - touchPoint2.y
+        }
+        else {
+            interactionPoint = hostView.layer.convert(interactionPoint, to: hostedGraph)
+            touchPoint1 = hostView.layer.convert(touchPoint1, to: hostedGraph)
+            touchPoint2 = hostView.layer.convert(touchPoint2, to: hostedGraph)
+        }
+        
+        let pointInPlotArea = hostedGraph.convert(interactionPoint, to: hostedGraph.plotAreaFrame?.plotArea)
+        
+        for space in hostedGraph.allPlotSpaces() {
+            if space.allowsUserInteraction {
+                scalePlotSpace(byX: scaleX, Y: scaleY, aboutPoint: pointInPlotArea, in: space)
+            }
+        }
+        
+        pinchGestureRecognizer.scale = 1.0;
+    }
+    
+    func scalePlotSpace(byX scaleX: CGFloat, Y scaleY: CGFloat, aboutPoint interactionPoint: CGPoint, in space: CPTPlotSpace) {
+        guard let plotArea = space.graph?.plotAreaFrame?.plotArea,
+            let space = space as? CPTXYPlotSpace,
+            scaleX > CGFloat(Float("1e-6")!),
+            scaleY > CGFloat(Float("1e-6")!),
+            plotArea.contains(interactionPoint) else {
+                return
+        }
+        let decimalXScale = CPTDecimalFromCGFloat(scaleX)
+        let decimalYScale = CPTDecimalFromCGFloat(scaleY)
+        let plotInteractionPoint = UnsafeMutablePointer<Decimal>.allocate(capacity: 2)
+        space.plotPoint(plotInteractionPoint, numberOfCoordinates: 2, forPlotAreaViewPoint: interactionPoint)
+        
+        let oldRangeX = space.xRange
+        let oldRangeY = space.yRange
+        
+        let newLengthX = CPTDecimalDivide(oldRangeX.lengthDecimal, decimalXScale)
+        let newLengthY = CPTDecimalDivide(oldRangeY.lengthDecimal, decimalYScale)
+        
+        var newLocationX = Decimal()
+        if CPTDecimalGreaterThanOrEqualTo(oldRangeX.lengthDecimal, CPTDecimalFromInteger(0)) {
+            let oldFirstLengthX = CPTDecimalSubtract(plotInteractionPoint[CPTCoordinate.X.rawValue], oldRangeX.minLimitDecimal)
+            let newFirstLengthX = CPTDecimalDivide(oldFirstLengthX, decimalXScale)
+            newLocationX = CPTDecimalSubtract(plotInteractionPoint[CPTCoordinate.X.rawValue], newFirstLengthX)
+        }
+        else {
+            let oldSecondLengthX = CPTDecimalSubtract(oldRangeX.maxLimitDecimal, plotInteractionPoint[0])
+            let newSecondLengthX = CPTDecimalDivide(oldSecondLengthX, decimalXScale)
+            newLocationX = CPTDecimalAdd(plotInteractionPoint[CPTCoordinate.X.rawValue], newSecondLengthX)
+        }
+        
+        var newLocationY = Decimal()
+        if CPTDecimalGreaterThanOrEqualTo(oldRangeY.lengthDecimal, CPTDecimalFromInteger(0)) {
+            let oldFirstLengthY = CPTDecimalSubtract(plotInteractionPoint[CPTCoordinate.Y.rawValue], oldRangeY.minLimitDecimal)
+            let newFirstLengthY = CPTDecimalDivide(oldFirstLengthY, decimalYScale)
+            newLocationY = CPTDecimalSubtract(plotInteractionPoint[CPTCoordinate.Y.rawValue], newFirstLengthY)
+        }
+        else {
+            let oldSecondLengthY = CPTDecimalSubtract(oldRangeY.maxLimitDecimal, plotInteractionPoint[1])
+            let newSecondLengthY = CPTDecimalDivide(oldSecondLengthY, decimalYScale)
+            newLocationY = CPTDecimalAdd(plotInteractionPoint[CPTCoordinate.Y.rawValue], newSecondLengthY)
+        }
+        
+        let newRangeX = CPTPlotRange(locationDecimal: newLocationX, lengthDecimal: newLengthX)
+        let newRangeY = CPTPlotRange(locationDecimal: newLocationY, lengthDecimal: newLengthY)
+        
+        var oldMomentum = space.allowsMomentumX
+        space.allowsMomentumX = false
+        space.xRange = newRangeX
+        space.allowsMomentumX = oldMomentum
+        
+        oldMomentum = space.allowsMomentumY
+        space.allowsMomentumY = false
+        space.yRange = newRangeY
+        space.allowsMomentumY = oldMomentum
     }
     
     func showSpinner() -> UIView {

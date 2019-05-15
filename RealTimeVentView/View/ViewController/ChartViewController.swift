@@ -425,6 +425,19 @@ class ChartViewController: UIViewController {
         alert.addAction(action)
         self.present(alert, animated: true)
     }
+    
+    func calculateWindowStats() {
+        guard let plotSpace = hostView.hostedGraph?.defaultPlotSpace as? CPTXYPlotSpace else {
+            return
+        }
+        let metadata = patient.getMetadata(between: plotSpace.xRange.minLimitDouble, and: plotSpace.xRange.maxLimitDouble)
+        let tvi = metadata.compactMap { ($0[PACKET_METADATA] as? [String: Any])?[PACKET_TVI] as? Double }
+        let tviAvg = tvi.reduce(0.0, +) / Double(tvi.count)
+        //print(tviAvg)
+        DispatchQueue.main.async {
+            self.tviLabel.text = "TVi: \(tviAvg)"
+        }
+    }
 
     /*
     // MARK: - Navigation
@@ -553,6 +566,9 @@ extension ChartViewController: CPTPlotSpaceDelegate {
         
         
         if coordinate == CPTCoordinate.X {
+            DispatchQueue.global(qos: .default).async {
+                self.calculateWindowStats()
+            }
             
         }
     }

@@ -410,4 +410,25 @@ class PatientModel {
         self.json += json
         return (flowData, pressureData, breathIn)
     }
+    
+    func getMetadata(between startTime: Double, and endTime: Double) -> [[String: Any]] {
+        return Array(json[getBreathIndex(for: startTime)...getBreathIndex(for: endTime)])
+    }
+    
+    func getBreathIndex(for offset: Double) -> Int {
+        var floor = 0
+        var ceil = self.offsets.count - 1
+        var index = (ceil + floor) / 2
+        while index > 0 && !(offset <= offsets[index] && offset >= offsets[index - 1]) {
+            if offset > offsets[index] {
+                floor = index + 1
+            }
+            else {
+                ceil = index - 1
+            }
+            index = (ceil + floor) / 2
+        }
+        print("index \(breathIndex[index])")
+        return breathIndex[index]
+    }
 }
