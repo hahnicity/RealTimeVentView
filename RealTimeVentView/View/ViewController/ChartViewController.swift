@@ -19,6 +19,8 @@ class ChartViewController: UIViewController {
     @IBOutlet weak var tviLabel: UILabel!
     @IBOutlet weak var tveLabel: UILabel!
     
+    @IBOutlet weak var breathStatsTableView: UITableView!
+    @IBOutlet weak var asyncStatsTableView: UITableView!
     
     var marker: CPTPlotSpaceAnnotation? = nil
     var patient: PatientModel = PatientModel()
@@ -29,11 +31,16 @@ class ChartViewController: UIViewController {
     var updateTimer = Timer()
     var isUpdating = false
     
+    let breathMetadataType = ["TVi", "TVe", "RR", "PEEP"]
+    lazy var breathMetadataStat = [String](repeating: "", count: breathMetadataType.count)
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.navigationItem.title = patient.name
+        
+        breathStatsTableView.delegate = self
+        breathStatsTableView.dataSource = self
         
         switch accessType {
         case .main:
@@ -75,7 +82,7 @@ class ChartViewController: UIViewController {
         graph.plotAreaFrame?.paddingLeft = 45.0
         graph.plotAreaFrame?.paddingRight = 0.0
         graph.plotAreaFrame?.paddingTop = 10.0
-        graph.plotAreaFrame?.paddingBottom = 25.0
+        graph.plotAreaFrame?.paddingBottom = 35.0
         
         let plotSpace = graph.defaultPlotSpace as! CPTXYPlotSpace
         plotSpace.allowsUserInteraction = true
@@ -133,7 +140,7 @@ class ChartViewController: UIViewController {
         graph.add(asyncChart)
         
         graph.legend = CPTLegend(plots: [flowChart, pressureChart])
-        graph.legendDisplacement = CGPoint(x: 0.0, y: -20.0)
+        graph.legendDisplacement = CGPoint(x: 0.0, y: -10.0)
         
         let markerTextStyle = CPTMutableTextStyle()
         markerTextStyle.color = .white()
@@ -447,10 +454,10 @@ class ChartViewController: UIViewController {
         var tvi: [Double] = [], tve: [Double] = [], rr: [Double] = [], peep: [Double] = []
         metadata.forEach { (breath) in
             guard let meta = breath[PACKET_METADATA] as? [String: Any],
-                let i = breath[PACKET_TVI] as? Double,
-                let e = breath[PACKET_TVE] as? Double,
-                let r = breath[PACKET_RR] as? Double,
-                let p = breath[PACKET_PEEP] as? Double else {
+                let i = meta[PACKET_TVI] as? Double,
+                let e = meta[PACKET_TVE] as? Double,
+                let r = meta[PACKET_RR] as? Double,
+                let p = meta[PACKET_PEEP] as? Double else {
                 return
             }
             tvi.append(i)
@@ -458,14 +465,15 @@ class ChartViewController: UIViewController {
             rr.append(r)
             peep.append(p)
         }
-        let tviAvg = tvi.reduce(0.0, +) / Double(tvi.count)
-        let tveAvg = tve.reduce(0.0, +) / Double(tve.count)
-        let rrAvg = rr.reduce(0.0, +) / Double(rr.count)
-        let peepAvg = peep.reduce(0.0, +) / Double(peep.count)
+        
+        breathMetadataStat[0] = String(format: "%.2f", tvi.reduce(0.0, +) / Double(tvi.count))
+        breathMetadataStat[1] = String(format: "%.2f", tve.reduce(0.0, +) / Double(tve.count))
+        breathMetadataStat[2] = String(format: "%.2f", rr.reduce(0.0, +) / Double(rr.count))
+        breathMetadataStat[3] = String(format: "%.2f", peep.reduce(0.0, +) / Double(peep.count))
         
         //print(tviAvg)
         DispatchQueue.main.async {
-            self.tviLabel.text = "TVi: \(tviAvg)"
+            self.breathStatsTableView.reloadData()
         }
     }
 
@@ -619,4 +627,49 @@ extension ChartViewController: CPTPlotSpaceDelegate {
     
 }
 
+extension ChartViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if tableView == breathStatsTableView {
+            return breathMetadataType.count
+        }
+        else if tableView == asyncStatsTableView {
+            
+        }
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell = tableView.dequeueReusableCell(withIdentifier: "statsCell") ?? UITableViewCell(style: .default, reuseIdentifier: "statsCell")
+        if tableView == breathStatsTableView {
+            cell.textLabel?.text = breathMetadataType[indexPath.row]
+            cell.detailTextLabel?.text = breathMetadataStat[indexPath.row]
+        }
+        else if tableView == asyncStatsTableView {
+            
+        }
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if tableView == breathStatsTableView {
+            return "Breath Stats"
+        }
+        else if tableView == asyncStatsTableView {
+            
+        }
+        return ""
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if tableView == breathStatsTableView {
+            return (tableView.contentSize.height - tableView.sectionHeaderHeight) / 5.0
+        }
+        else if tableView == asyncStatsTableView {
+            
+        }
+        return (tableView.contentSize.height - tableView.sectionHeaderHeight) / 5.0
+    }
+}
 

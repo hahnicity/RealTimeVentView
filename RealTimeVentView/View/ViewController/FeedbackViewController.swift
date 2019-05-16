@@ -57,7 +57,7 @@ class FeedbackViewController: UIViewController {
         graph.plotAreaFrame?.paddingLeft = 45.0
         graph.plotAreaFrame?.paddingRight = 0.0
         graph.plotAreaFrame?.paddingTop = 10.0
-        graph.plotAreaFrame?.paddingBottom = 25.0
+        graph.plotAreaFrame?.paddingBottom = 35.0
         
         let plotSpace = graph.defaultPlotSpace as! CPTXYPlotSpace
         plotSpace.allowsUserInteraction = true
@@ -115,7 +115,7 @@ class FeedbackViewController: UIViewController {
         graph.add(asyncChart)
         
         graph.legend = CPTLegend(plots: [flowChart, pressureChart])
-        graph.legendDisplacement = CGPoint(x: 0.0, y: -20.0)
+        graph.legendDisplacement = CGPoint(x: 0.0, y: -10.0)
         
         let markerTextStyle = CPTMutableTextStyle()
         markerTextStyle.color = .white()
