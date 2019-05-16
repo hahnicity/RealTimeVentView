@@ -165,7 +165,7 @@ class PatientModel {
                     let (newFlow, newPressure, newIndex, newOffsets, newAsynchrony, newAsynchronyIndex) = self.parseBreathJSON(json)
                     self.flow = newFlow + self.flow
                     self.pressure = newPressure + self.pressure
-                    self.breathIndex = newIndex + self.breathIndex
+                    self.breathIndex = newIndex + self.breathIndex.map{ $0 + json.count }
                     self.json = json + self.json
                     self.offsets = newOffsets + self.offsets
                     self.asynchrony = newAsynchrony + self.asynchrony
@@ -343,7 +343,7 @@ class PatientModel {
         print("Flows: \(newFlow.count)")
         self.flow = newFlow + self.flow
         self.pressure = newPressure + self.pressure
-        self.breathIndex = newIndex + self.breathIndex
+        self.breathIndex = newIndex + self.breathIndex.map{ $0 + json.count }
         self.json = json + self.json
         self.offsets = newOffsets + self.offsets
         self.asynchrony = newAsynchrony + self.asynchrony

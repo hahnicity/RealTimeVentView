@@ -27,6 +27,7 @@ class ChartViewController: UIViewController {
     var pinchGestureRecognizer = UIPinchGestureRecognizer()
     var plotsToDraw = 0
     var updateTimer = Timer()
+    var isUpdating = false
     
     
     override func viewDidLoad() {
@@ -59,6 +60,7 @@ class ChartViewController: UIViewController {
     
     func initPlot() {
         let spinner = showSpinner()
+        isUpdating = true
         pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(ChartViewController.handlePinchGesture))
         hostView.addGestureRecognizer(pinchGestureRecognizer)
         let graph = CPTXYGraph(frame: hostView.bounds)
@@ -156,6 +158,7 @@ class ChartViewController: UIViewController {
             if let error = error {
                 self.removeSpinner(spinner)
                 DispatchQueue.main.async {
+                    self.isUpdating = false
                     self.hostView.isUserInteractionEnabled = true
                 }
                 self.showAlert(withTitle: "Chart Load Error", message: error.localizedDescription)
@@ -164,6 +167,7 @@ class ChartViewController: UIViewController {
             if off.count == 0 {
                 self.removeSpinner(spinner)
                 DispatchQueue.main.async {
+                    self.isUpdating = false
                     self.hostView.isUserInteractionEnabled = true
                 }
                 return
@@ -184,7 +188,8 @@ class ChartViewController: UIViewController {
             plotSpace.globalXRange = CPTPlotRange(location: NSNumber(value: self.patient.offsets[0]), length: NSNumber(value: self.patient.offsets[self.patient.offsets.count - 1] - self.patient.offsets[0]))
             plotSpace.xRange = CPTPlotRange(location: NSNumber(value: self.patient.offsets[self.patient.offsets.count - 1] - 30.0), length: NSNumber(value: 30.0))
             DispatchQueue.main.async {
-                self.updateLabel()
+                //self.updateLabel()
+                self.isUpdating = false
                 self.hostView.isUserInteractionEnabled = true
                 self.removeSpinner(spinner)
                 axisSet.xAxis?.relabel()
@@ -207,12 +212,14 @@ class ChartViewController: UIViewController {
     }
     
     func loadPastData() {
+        self.isUpdating = true
         hostView.isUserInteractionEnabled = false
         let spinner = self.showSpinner()
         patient.loadPastBreaths { (_, _, off, error) in
             if let error = error {
                 self.removeSpinner(spinner)
                 DispatchQueue.main.async {
+                    self.isUpdating = false
                     self.hostView.isUserInteractionEnabled = true
                 }
                 self.showAlert(withTitle: "Chart Load Error", message: error.localizedDescription)
@@ -221,6 +228,7 @@ class ChartViewController: UIViewController {
             if off.count == 0 {
                 self.removeSpinner(spinner)
                 DispatchQueue.main.async {
+                    self.isUpdating = false
                     self.hostView.isUserInteractionEnabled = true
                 }
                 return
@@ -228,6 +236,7 @@ class ChartViewController: UIViewController {
             self.hostView.hostedGraph?.reloadData()
             DispatchQueue.main.async {
                 self.plotsToDraw = 3
+                self.isUpdating = false
                 self.hostView.isUserInteractionEnabled = true
                 self.removeSpinner(spinner)
                 
@@ -239,12 +248,14 @@ class ChartViewController: UIViewController {
     
     func loadNewBreaths() {
         let spinner = self.showSpinner()
+        self.isUpdating = true
         hostView.isUserInteractionEnabled = false
         let oldMax = patient.offsets[patient.offsets.count - 1]
         patient.loadNewBreaths { (_, _, off, error) in
             if let error = error {
                 self.removeSpinner(spinner)
                 DispatchQueue.main.async {
+                    self.isUpdating = false
                     self.hostView.isUserInteractionEnabled = true
                 }
                 self.showAlert(withTitle: "Chart Load Error", message: error.localizedDescription)
@@ -253,6 +264,7 @@ class ChartViewController: UIViewController {
             if off.count == 0 {
                 self.removeSpinner(spinner)
                 DispatchQueue.main.async {
+                    self.isUpdating = false
                     self.hostView.isUserInteractionEnabled = true
                     self.updateTimer = Timer.scheduledTimer(withTimeInterval: Double(Storage.updateInterval), repeats: false, block: { (timer) in
                         if self.hostView.isUserInteractionEnabled == true {
@@ -265,6 +277,7 @@ class ChartViewController: UIViewController {
             self.hostView.hostedGraph?.reloadData()
             DispatchQueue.main.async {
                 self.plotsToDraw = 3
+                self.isUpdating = false
                 self.hostView.isUserInteractionEnabled = true
                 self.removeSpinner(spinner)
                 (self.hostView.hostedGraph?.defaultPlotSpace as? CPTXYPlotSpace)?.globalXRange = CPTPlotRange(location: NSNumber(value: self.patient.offsets[0]), length: NSNumber(value: self.patient.offsets[self.patient.offsets.count - 1] - self.patient.offsets[0]))
@@ -274,7 +287,7 @@ class ChartViewController: UIViewController {
                 self.updateTimer = Timer.scheduledTimer(withTimeInterval: Double(Storage.updateInterval), repeats: false, block: { (timer) in
                     self.timer()
                 })
-                self.updateLabel()
+                //self.updateLabel()
             }
         }
     }
@@ -431,8 +444,25 @@ class ChartViewController: UIViewController {
             return
         }
         let metadata = patient.getMetadata(between: plotSpace.xRange.minLimitDouble, and: plotSpace.xRange.maxLimitDouble)
-        let tvi = metadata.compactMap { ($0[PACKET_METADATA] as? [String: Any])?[PACKET_TVI] as? Double }
+        var tvi: [Double] = [], tve: [Double] = [], rr: [Double] = [], peep: [Double] = []
+        metadata.forEach { (breath) in
+            guard let meta = breath[PACKET_METADATA] as? [String: Any],
+                let i = breath[PACKET_TVI] as? Double,
+                let e = breath[PACKET_TVE] as? Double,
+                let r = breath[PACKET_RR] as? Double,
+                let p = breath[PACKET_PEEP] as? Double else {
+                return
+            }
+            tvi.append(i)
+            tve.append(e)
+            rr.append(r)
+            peep.append(p)
+        }
         let tviAvg = tvi.reduce(0.0, +) / Double(tvi.count)
+        let tveAvg = tve.reduce(0.0, +) / Double(tve.count)
+        let rrAvg = rr.reduce(0.0, +) / Double(rr.count)
+        let peepAvg = peep.reduce(0.0, +) / Double(peep.count)
+        
         //print(tviAvg)
         DispatchQueue.main.async {
             self.tviLabel.text = "TVi: \(tviAvg)"
@@ -485,7 +515,7 @@ extension ChartViewController: CPTScatterPlotDelegate, CPTScatterPlotDataSource 
             return
         }
         
-        guard let temp = patient.json[patient.breathIndex[Int(idx)]]["breath_meta"] as? [String: Any], let etime = temp["e_time"] as? Double, let itime = temp["i_time"] as? Double, let peep = temp["peep"] as? Double, let tvei = temp["tve_tvi_ratio"] as? Double, let tve = temp["tve"] as? Double, let tvi = temp["tvi"] as? Double, let c = patient.json[patient.breathIndex[Int(idx)]]["classifications"] as? [String: Int], let bsa = c["bs_1or2"], let dta = c["dbl_4"], let tvv = c["tvv"] else {
+        guard let temp = patient.json[patient.breathIndex[Int(idx)]][PACKET_METADATA] as? [String: Any], let etime = temp[PACKET_E_TIME] as? Double, let itime = temp[PACKET_I_TIME] as? Double, let peep = temp[PACKET_PEEP] as? Double, let rr = temp[PACKET_RR], let tvei = temp[PACKET_TVE_TVI_RATIO] as? Double, let tve = temp[PACKET_TVE] as? Double, let tvi = temp["tvi"] as? Double, let c = patient.json[patient.breathIndex[Int(idx)]][PACKET_CLASSIFICATION] as? [String: Int], let bsa = c[PACKET_BSA], let dta = c[PACKET_DTA], let tvv = c[PACKET_TVV] else {
             print("Error parsing json while displaying marker")
             return
         }
@@ -497,6 +527,7 @@ extension ChartViewController: CPTScatterPlotDelegate, CPTScatterPlotDataSource 
             
             E-time: \(etime)
             I-time: \(itime)
+            RR: \(rr)
             Peep: \(peep)
             TVe/TVi: \(tvei)
             TVe: \(tve)
@@ -548,7 +579,7 @@ extension ChartViewController: CPTScatterPlotDelegate, CPTScatterPlotDataSource 
 
 extension ChartViewController: CPTPlotSpaceDelegate {
     func plotSpace(_ space: CPTPlotSpace, willDisplaceBy proposedDisplacementVector: CGPoint) -> CGPoint {
-        if let plotSpace = space as? CPTXYPlotSpace, plotSpace.xRange.location == plotSpace.globalXRange?.location, proposedDisplacementVector.x > 20 {
+        if !self.isUpdating, let plotSpace = space as? CPTXYPlotSpace, plotSpace.xRange.location == plotSpace.globalXRange?.location, proposedDisplacementVector.x > 40 {
             print("DRAAG")
             loadPastData()
         }

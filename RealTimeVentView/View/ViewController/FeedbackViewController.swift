@@ -459,7 +459,7 @@ extension FeedbackViewController: CPTScatterPlotDelegate, CPTScatterPlotDataSour
             return
         }
         
-        guard let temp = patient.json[patient.breathIndex[Int(idx)]]["breath_meta"] as? [String: Any], let etime = temp["e_time"] as? Double, let itime = temp["i_time"] as? Double, let peep = temp["peep"] as? Double, let tvei = temp["tve_tvi_ratio"] as? Double, let tve = temp["tve"] as? Double, let tvi = temp["tvi"] as? Double, let c = patient.json[patient.breathIndex[Int(idx)]]["classifications"] as? [String: Int], let bsa = c["bs_1or2"], let dta = c["dbl_4"], let tvv = c["tvv"] else {
+        guard let temp = patient.json[patient.breathIndex[Int(idx)]][PACKET_METADATA] as? [String: Any], let etime = temp[PACKET_E_TIME] as? Double, let itime = temp[PACKET_I_TIME] as? Double, let peep = temp[PACKET_PEEP] as? Double, let rr = temp[PACKET_RR], let tvei = temp[PACKET_TVE_TVI_RATIO] as? Double, let tve = temp[PACKET_TVE] as? Double, let tvi = temp["tvi"] as? Double, let c = patient.json[patient.breathIndex[Int(idx)]][PACKET_CLASSIFICATION] as? [String: Int], let bsa = c[PACKET_BSA], let dta = c[PACKET_DTA], let tvv = c[PACKET_TVV] else {
             print("Error parsing json while displaying marker")
             return
         }
@@ -471,6 +471,7 @@ extension FeedbackViewController: CPTScatterPlotDelegate, CPTScatterPlotDataSour
             
             E-time: \(etime)
             I-time: \(itime)
+            RR: \(rr)
             Peep: \(peep)
             TVe/TVi: \(tvei)
             TVe: \(tve)
