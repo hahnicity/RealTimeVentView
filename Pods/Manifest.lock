@@ -3,16 +3,19 @@ PODS:
     - Charts/Core (= 3.2.0)
   - Charts/Core (3.2.0)
   - CorePlot (2.2)
+  - SideMenu (5.0.3)
   - SimulatorRemoteNotifications (0.0.3)
 
 DEPENDENCIES:
   - Charts
   - CorePlot (from `https://github.com/core-plot/core-plot.git`, branch `release-2.3`)
+  - SideMenu
   - SimulatorRemoteNotifications
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Charts
+    - SideMenu
     - SimulatorRemoteNotifications
 
 EXTERNAL SOURCES:
@@ -28,8 +31,9 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Charts: 680c8328bd5e90cb14f67e00d2176f3113d19141
   CorePlot: a89f21d4662cb54853e579c4ce560e74036cffcb
+  SideMenu: 1dcaabce84538c53325c287f7fe62999379a641c
   SimulatorRemoteNotifications: 1610643e0582b2af67bc254b071ace4077e8ef86
 
-PODFILE CHECKSUM: d004ca19ba14ecbe142821a33cf471118ca213a6
+PODFILE CHECKSUM: c45a0c92f0722f51b45461618315912b9fcbe865
 
 COCOAPODS: 1.6.1

@@ -9,6 +9,7 @@ target 'RealTimeVentView' do
   pod 'Charts'
   pod 'SimulatorRemoteNotifications'
   pod 'CorePlot', :git => 'https://github.com/core-plot/core-plot.git', :branch => 'release-2.3'
+  pod 'SideMenu'
 
   target 'RealTimeVentViewTests' do
     inherit! :search_paths

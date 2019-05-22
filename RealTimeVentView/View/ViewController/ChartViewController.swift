@@ -8,6 +8,7 @@
 
 import UIKit
 import CorePlot
+import SideMenu
 
 enum ChartAccessType {
     case main, enroll
@@ -22,6 +23,7 @@ class ChartViewController: UIViewController {
     @IBOutlet weak var breathStatsTableView: UITableView!
     @IBOutlet weak var asyncStatsTableView: UITableView!
     
+    var sideMenuManager = SideMenuManager()
     var marker: CPTPlotSpaceAnnotation? = nil
     var patient: PatientModel = PatientModel()
     var accessType: ChartAccessType = .main
@@ -38,6 +40,13 @@ class ChartViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = patient.name
+        
+        let menuRightNavigationController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "sideMenuNavigationController") as! UISideMenuNavigationController
+        menuRightNavigationController.sideMenuManager = sideMenuManager
+        sideMenuManager.menuRightNavigationController = menuRightNavigationController
+        sideMenuManager.menuAddPanGestureToPresent(toView: self.navigationController!.navigationBar)
+        sideMenuManager.menuAddScreenEdgePanGesturesToPresent(toView: self.navigationController!.view)
+        sideMenuManager.menuFadeStatusBar = false
         
         breathStatsTableView.delegate = self
         breathStatsTableView.dataSource = self

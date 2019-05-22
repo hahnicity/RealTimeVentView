@@ -599,6 +599,35 @@
             </objects>
             <point key="canvasLocation" x="574" y="-706"/>
         </scene>
+        <!--Time Frame Menu Table View Controller-->
+        <scene sceneID="3VY-3o-QNY">
+            <objects>
+                <tableViewController id="MUm-fT-JI7" customClass="TimeFrameMenuTableViewController" customModule="RealTimeVentView" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="v7Z-bw-DNO">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="timeFrameCell" id="aPs-Pk-6r5">
+                                <rect key="frame" x="0.0" y="28" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aPs-Pk-6r5" id="hA4-7v-0Ej">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="MUm-fT-JI7" id="uDT-da-Fdy"/>
+                            <outlet property="delegate" destination="MUm-fT-JI7" id="6LJ-0g-jKG"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="pyO-fG-VtB"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Hkg-iV-Amu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2006" y="-706"/>
+        </scene>
         <!--Select Task-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -1468,6 +1497,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HPm-2Y-Eda" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-149" y="745"/>
+        </scene>
+        <!--Side Menu Navigation Controller-->
+        <scene sceneID="SPV-6G-6dH">
+            <objects>
+                <navigationController storyboardIdentifier="sideMenuNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="jff-f3-WnE" customClass="UISideMenuNavigationController" customModule="SideMenu" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Rxr-tK-m1k">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="MUm-fT-JI7" kind="relationship" relationship="rootViewController" id="oSv-Ds-Ac7"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VV2-CQ-fFP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1292.753623188406" y="-706.47321428571422"/>
         </scene>
     </scenes>
 </document>
