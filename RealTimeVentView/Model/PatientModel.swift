@@ -11,6 +11,7 @@ import Foundation
 
 
 typealias CompletionUpdate = ([Double], [Double], [Double], Error?) -> ()
+typealias CompletionStats = ([String: Double], Error?) -> ()
 
 class PatientModel {
     var name: String
@@ -109,6 +110,49 @@ class PatientModel {
     func store(completion: @escaping CompletionAPI) {
         Storage.patients.append(["name": name, "age": "\(age)", "sex": sex, "height": "\(height)", "rpi": rpi])
         ServerModel.shared.enrollPatient(withName: name, rpi: rpi, height: height, sex: sex, age: age, completion: completion)
+    }
+    
+    func getStats(for timeInterval: TimeInterval, from date: Date, completion: @escaping CompletionStats) {
+        if timeInterval > 1500.0 {
+            
+        }
+        else {
+            ServerModel.shared.getBreaths(forPatient: name, startTime: Date(timeInterval: -timeInterval, since: date), endTime: date) { (data, error) in
+                switch((data, error)) {
+                case(.some(let data), .none):
+                    do {
+                        let object = try JSONSerialization.jsonObject(with: data)
+                        guard let json = object as? [[String: Any]] else {
+                            print("Some error regarding breath json")
+                            return
+                        }
+                        var tvi = 0.0, tve = 0.0, rr = 0.0, mv = 0.0, count = 0
+                        json.forEach({ (breath) in
+                            guard let meta = breath[PACKET_METADATA] as? [String: Any],
+                                let i = meta[PACKET_TVI] as? Double,
+                                let e = meta[PACKET_TVE] as? Double,
+                                let r = meta[PACKET_RR] as? Double
+                                else {
+                                    return
+                            }
+                            tvi += i
+                            tve += e
+                            rr += r
+                            mv += i * r
+                            count += 1
+                        })
+                        let stats = ["TVi": tvi / Double(count), "TVe": tve / Double(count), "RR": rr / Double(count), "MV": mv / Double(count)]
+                        completion(stats, nil)
+                    } catch {
+                        print("\(error)")
+                    }
+                    
+                case(.none, .some(let error)):
+                    completion([:], error)
+                default: ()
+                }
+            }
+        }
     }
     
     func loadBreaths(completion: @escaping CompletionUpdate) {

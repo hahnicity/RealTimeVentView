@@ -42,6 +42,9 @@ class ChartViewController: UIViewController {
         self.navigationItem.title = patient.name
         
         let menuRightNavigationController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "sideMenuNavigationController") as! UISideMenuNavigationController
+        let menu = menuRightNavigationController.viewControllers.first as? TimeFrameMenuTableViewController
+        menu?.patient = patient
+        menu?.returnPoint = self
         menuRightNavigationController.sideMenuManager = sideMenuManager
         sideMenuManager.menuRightNavigationController = menuRightNavigationController
         sideMenuManager.menuAddPanGestureToPresent(toView: self.navigationController!.navigationBar)
@@ -460,7 +463,7 @@ class ChartViewController: UIViewController {
             return
         }
         let metadata = patient.getMetadata(between: plotSpace.xRange.minLimitDouble, and: plotSpace.xRange.maxLimitDouble)
-        var tvi: [Double] = [], tve: [Double] = [], rr: [Double] = [], peep: [Double] = []
+        var tvi = 0.0, tve = 0.0, rr = 0.0, peep = 0.0, count = 0
         metadata.forEach { (breath) in
             guard let meta = breath[PACKET_METADATA] as? [String: Any],
                 let i = meta[PACKET_TVI] as? Double,
@@ -469,16 +472,17 @@ class ChartViewController: UIViewController {
                 let p = meta[PACKET_PEEP] as? Double else {
                 return
             }
-            tvi.append(i)
-            tve.append(e)
-            rr.append(r)
-            peep.append(p)
+            tvi += i
+            tve += e
+            rr += r
+            peep += p
+            count += 1
         }
         
-        breathMetadataStat[0] = String(format: "%.2f", tvi.reduce(0.0, +) / Double(tvi.count))
-        breathMetadataStat[1] = String(format: "%.2f", tve.reduce(0.0, +) / Double(tve.count))
-        breathMetadataStat[2] = String(format: "%.2f", rr.reduce(0.0, +) / Double(rr.count))
-        breathMetadataStat[3] = String(format: "%.2f", peep.reduce(0.0, +) / Double(peep.count))
+        breathMetadataStat[0] = String(format: "%.2f", tvi / Double(count))
+        breathMetadataStat[1] = String(format: "%.2f", tve / Double(count))
+        breathMetadataStat[2] = String(format: "%.2f", rr / Double(count))
+        breathMetadataStat[3] = String(format: "%.2f", peep / Double(count))
         
         //print(tviAvg)
         DispatchQueue.main.async {
@@ -663,7 +667,7 @@ extension ChartViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if tableView == breathStatsTableView {
-            return "Breath Stats"
+            return "Metadata Stats"
         }
         else if tableView == asyncStatsTableView {
             

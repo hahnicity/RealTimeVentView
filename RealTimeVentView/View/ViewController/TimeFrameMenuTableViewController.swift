@@ -11,13 +11,13 @@ import UIKit
 class TimeFrameMenuTableViewController: UITableViewController {
 
     let items = [("5 mins", 300.0),
-                 ("10 mins", 600.0),
                  ("15 mins", 900.0),
-                 ("30 mins", 1800.0),
                  ("1 hour", 3600.0),
-                 ("2 hours", 7200.0),
-                 ("3 hours", 10800.0),
-                 ("6 hours", 21600.0)]
+                 ("4 hours", 14400.0),
+                 ("12 hours", 43200.0),
+                 ("24 hours", 86400.0)]
+    var patient = PatientModel()
+    var returnPoint = UIViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,7 +53,11 @@ class TimeFrameMenuTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainViewController") as! MainViewController
+        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "timeFrameStatsViewController") as! TimeFrameStatsViewController
+        viewController.patient = patient
+        viewController.date = Date()
+        viewController.timeInterval = items[indexPath.row].1
+        viewController.returnPoint = returnPoint
         //self.present(viewController, animated: true)
         navigationController?.pushViewController(viewController, animated: true)
         
