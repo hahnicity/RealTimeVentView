@@ -151,6 +151,7 @@ class EnrollTableViewController: UITableViewController, UIPickerViewDelegate, UI
         }
  
         barrier.wait()
+        DatabaseModel.shared.initVisibleStats(for: patient.name)
         
         let transition = UIAlertController(title: "Alert", message: "Would you like to configure the alert setting for this patient?", preferredStyle: .alert)
         let yes = UIAlertAction(title: "Yes", style: .default) { (alertAction) in

@@ -47,6 +47,10 @@ class AlertSettingsTableViewController: UITableViewController, TextFieldTableVie
     @IBOutlet var alertBSAControlledTableViewCells: [UITableViewCell]!
     @IBOutlet var alertTVVControlledTableViewCells: [UITableViewCell]!
     
+    @IBOutlet weak var manageStatsCell: UITableViewCell!
+    @IBOutlet weak var alertLogCell: UITableViewCell!
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -128,6 +132,19 @@ class AlertSettingsTableViewController: UITableViewController, TextFieldTableVie
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        switch tableView.cellForRow(at: indexPath) {
+        case manageStatsCell:
+            let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "selectDisplayedStatsViewController") as! SelectDisplayedStatsViewController
+            viewController.patient = patient
+            self.navigationController?.pushViewController(viewController, animated: true)
+        case alertLogCell:
+            let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "alertLogsTableViewController") as! AlertLogTableViewController
+            viewController.patient = patient
+            self.navigationController?.pushViewController(viewController, animated: true)
+        default: ()
+        }
+
     }
     
     @IBAction func submit(_ sender: UIBarButtonItem) {

@@ -10,9 +10,18 @@ import UIKit
 
 class ChartContainerViewController: UIViewController {
 
+    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        var chartNavigationController: UINavigationController
+        var chartViewController: ChartViewController!
+        
+        chartViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "chartViewController") as! ChartViewController
+        chartNavigationController = UINavigationController(rootViewController: chartViewController)
+        chartNavigationController.didMove(toParent: self)
+        
         // Do any additional setup after loading the view.
     }
     
@@ -28,3 +37,5 @@ class ChartContainerViewController: UIViewController {
     */
 
 }
+
+

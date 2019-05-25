@@ -5,18 +5,23 @@ PODS:
   - CorePlot (2.2)
   - SideMenu (5.0.3)
   - SimulatorRemoteNotifications (0.0.3)
+  - SQLite.swift (0.11.6):
+    - SQLite.swift/standard (= 0.11.6)
+  - SQLite.swift/standard (0.11.6)
 
 DEPENDENCIES:
   - Charts
   - CorePlot (from `https://github.com/core-plot/core-plot.git`, branch `release-2.3`)
   - SideMenu
   - SimulatorRemoteNotifications
+  - SQLite.swift (= 0.11.6)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Charts
     - SideMenu
     - SimulatorRemoteNotifications
+    - SQLite.swift
 
 EXTERNAL SOURCES:
   CorePlot:
@@ -33,7 +38,8 @@ SPEC CHECKSUMS:
   CorePlot: a89f21d4662cb54853e579c4ce560e74036cffcb
   SideMenu: 1dcaabce84538c53325c287f7fe62999379a641c
   SimulatorRemoteNotifications: 1610643e0582b2af67bc254b071ace4077e8ef86
+  SQLite.swift: 46d890be8601964454bd3392527f863d1b802d45
 
-PODFILE CHECKSUM: c45a0c92f0722f51b45461618315912b9fcbe865
+PODFILE CHECKSUM: d8d23886193e91af4eeb0b8ccad1a182650ec79e
 
 COCOAPODS: 1.6.1

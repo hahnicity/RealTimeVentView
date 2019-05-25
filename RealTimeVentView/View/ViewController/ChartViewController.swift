@@ -24,6 +24,7 @@ class ChartViewController: UIViewController {
     @IBOutlet weak var asyncStatsTableView: UITableView!
     
     var sideMenuManager = SideMenuManager()
+    var sideMenuGestures: [UIGestureRecognizer] = []
     var marker: CPTPlotSpaceAnnotation? = nil
     var patient: PatientModel = PatientModel()
     var accessType: ChartAccessType = .main
@@ -33,8 +34,8 @@ class ChartViewController: UIViewController {
     var updateTimer = Timer()
     var isUpdating = false
     
-    let breathMetadataType = ["TVi", "TVe", "RR", "PEEP"]
-    lazy var breathMetadataStat = [String](repeating: "", count: breathMetadataType.count)
+    var breathMetadataType: [String] = []
+    var breathMetadataStat: [String] = []
 
     
     override func viewDidLoad() {
@@ -47,8 +48,9 @@ class ChartViewController: UIViewController {
         menu?.returnPoint = self
         menuRightNavigationController.sideMenuManager = sideMenuManager
         sideMenuManager.menuRightNavigationController = menuRightNavigationController
-        sideMenuManager.menuAddPanGestureToPresent(toView: self.navigationController!.navigationBar)
-        sideMenuManager.menuAddScreenEdgePanGesturesToPresent(toView: self.navigationController!.view)
+        sideMenuGestures.append(sideMenuManager.menuAddPanGestureToPresent(toView: self.navigationController!.navigationBar))
+        sideMenuGestures.append(contentsOf: sideMenuManager.menuAddScreenEdgePanGesturesToPresent(toView: self.navigationController!.view))
+        
         sideMenuManager.menuFadeStatusBar = false
         
         breathStatsTableView.delegate = self
@@ -66,6 +68,13 @@ class ChartViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        if self.isMovingFromParent {
+            sideMenuGestures.forEach{
+                self.navigationController?.navigationBar.removeGestureRecognizer($0)
+                self.navigationController?.view.removeGestureRecognizer($0)
+            }
+        }
+        print(self.navigationController?.navigationBar.gestureRecognizers?.count)
         DispatchQueue.main.async {
             self.updateTimer.invalidate()
             self.updateTimer = Timer()
@@ -79,6 +88,10 @@ class ChartViewController: UIViewController {
     
     func initPlot() {
         let spinner = showSpinner()
+        
+        breathMetadataType = DatabaseModel.shared.getVisibleStats(for: patient.name)
+        breathMetadataStat = [String](repeating: "", count: breathMetadataType.count)
+        
         isUpdating = true
         pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(ChartViewController.handlePinchGesture))
         hostView.addGestureRecognizer(pinchGestureRecognizer)
@@ -463,27 +476,29 @@ class ChartViewController: UIViewController {
             return
         }
         let metadata = patient.getMetadata(between: plotSpace.xRange.minLimitDouble, and: plotSpace.xRange.maxLimitDouble)
-        var tvi = 0.0, tve = 0.0, rr = 0.0, peep = 0.0, count = 0
+        var stats = [Double](repeating: 0.0, count: breathMetadataType.count)
+        var count = 0
         metadata.forEach { (breath) in
-            guard let meta = breath[PACKET_METADATA] as? [String: Any],
-                let i = meta[PACKET_TVI] as? Double,
-                let e = meta[PACKET_TVE] as? Double,
-                let r = meta[PACKET_RR] as? Double,
-                let p = meta[PACKET_PEEP] as? Double else {
+            guard let meta = breath[PACKET_METADATA] as? [String: Any] else {
                 return
             }
-            tvi += i
-            tve += e
-            rr += r
-            peep += p
+            var s = [Double](repeating: 0.0, count: breathMetadataType.count)
+            for (index, type) in self.breathMetadataType.enumerated() {
+                guard let temp = meta[METADATA_TO_PACKET_NAME[type]!] as? Double else {
+                    return
+                }
+                s[index] = temp
+            }
+            
+            for (index, val) in s.enumerated() {
+                stats[index] += val
+            }
             count += 1
         }
         
-        breathMetadataStat[0] = String(format: "%.2f", tvi / Double(count))
-        breathMetadataStat[1] = String(format: "%.2f", tve / Double(count))
-        breathMetadataStat[2] = String(format: "%.2f", rr / Double(count))
-        breathMetadataStat[3] = String(format: "%.2f", peep / Double(count))
-        
+        for (index, stat) in stats.enumerated() {
+            breathMetadataStat[index] = String(format: "%.2f", stat / Double(count))
+        }
         //print(tviAvg)
         DispatchQueue.main.async {
             self.breathStatsTableView.reloadData()
@@ -677,7 +692,7 @@ extension ChartViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if tableView == breathStatsTableView {
-            return (tableView.contentSize.height - tableView.sectionHeaderHeight) / 5.0
+            return 30.0
         }
         else if tableView == asyncStatsTableView {
             

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SQLite
 import UserNotifications
 import SimulatorRemoteNotifications
 
@@ -18,8 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         registerForPushNotifications()
+        //databaseSetup()
+        let z = DatabaseModel.shared
         #if DEBUG
-            //application.listenForRemoteNotifications()
+            application.listenForRemoteNotifications()
         #endif
         
         if let notification = launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] as? [String: Any], let type = notification["type"] as? String {
@@ -48,6 +51,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         return true
     }
     
+    func databaseSetup() {
+        do {
+            let path = NSSearchPathForDirectoriesInDomains(
+                .documentDirectory, .userDomainMask, true
+                ).first!
+            let db = try Connection("\(path)/db.sqlite3")
+            let visibleStats = Table(TABLE_VISIBLE_STATS)
+            let alertLogs = Table(TABLE_ALERT_LOGS)
+            let patientName = Expression<String>(COL_PATIENT_NAME)
+            let statName = Expression<String>(COL_STAT_NAME)
+            let logDate = Expression<Date>(COL_LOG_DATE)
+            let logType = Expression<String>(COL_LOG_TYPE)
+            
+            try db.run(visibleStats.create(block: { (t) in
+                t.column(patientName)
+                t.column(statName)
+            }))
+            
+            try db.run(alertLogs.create(block: { (t) in
+                t.column(patientName)
+                t.column(logDate)
+                t.column(logType)
+            }))
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+    
+    func logAsync(type: String, for patient: String) {
+        do {
+            let path = NSSearchPathForDirectoriesInDomains(
+                .documentDirectory, .userDomainMask, true
+                ).first!
+            let db = try Connection("\(path)/db.sqlite3")
+            let alertlogs = Table(TABLE_ALERT_LOGS)
+            let patientName = Expression<String>(COL_PATIENT_NAME)
+            let logDate = Expression<Date>(COL_LOG_DATE)
+            let logType = Expression<String>(COL_LOG_TYPE)
+            
+            try db.run(alertlogs.insert(patientName <- patient, logDate <- Date(), logType <- type))
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+    
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         print("notification received")
         if let type = userInfo["type"] as? String {
@@ -61,6 +109,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     viewController.patient = PatientModel.searchPatient(named: name)
                     viewController.startTime = startTime
                     viewController.endTime = endTime
+                    completionHandler(.newData)
                     print("\(startTime) \(endTime)")
                     (self.window?.rootViewController as? UINavigationController)?.pushViewController(viewController, animated: true)
                 }
@@ -70,6 +119,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "chartViewController") as! ChartViewController
                     viewController.patient = PatientModel.searchPatient(named: name)
                     viewController.accessType = .enroll
+                    completionHandler(.newData)
                     (self.window?.rootViewController as? UINavigationController)?.pushViewController(viewController, animated: true)
                 }
             }

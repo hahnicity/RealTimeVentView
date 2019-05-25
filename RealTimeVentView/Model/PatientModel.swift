@@ -75,6 +75,7 @@ class PatientModel {
         ServerModel.shared.disassociatePatient(named: PatientModel(at: index)!.name) { (data, error) in
             switch((data, error)) {
             case(.some, .none):
+                DatabaseModel.shared.clearRecord(for: PatientModel(at: index)!.name)
                 Storage.patients.remove(at: index)
                 Storage.alerts.remove(at: index)
                 completion(data, nil)
@@ -463,7 +464,7 @@ class PatientModel {
         var floor = 0
         var ceil = self.offsets.count - 1
         var index = (ceil + floor) / 2
-        while index > 0 && !(offset <= offsets[index] && offset >= offsets[index - 1]) {
+        while index > 0 && !(offset <= offsets[index] && offset >= offsets[index - 1]) && ceil > floor {
             if offset > offsets[index] {
                 floor = index + 1
             }

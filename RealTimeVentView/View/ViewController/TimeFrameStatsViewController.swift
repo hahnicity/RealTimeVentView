@@ -36,6 +36,8 @@ class TimeFrameStatsViewController: UIViewController {
         starTimeLabel.text = dateFormatter.string(from: Date(timeInterval: -timeInterval, since: date))
         endTimeLabel.text = dateFormatter.string(from: date)
         
+        let spinner = showSpinner()
+        
         patient.getStats(for: timeInterval, from: date) { (stats, error) in
             if let error = error {
                 self.showAlert(withTitle: "Stats Calculation Error", message: error.localizedDescription)
@@ -48,6 +50,7 @@ class TimeFrameStatsViewController: UIViewController {
             }
             DispatchQueue.main.async {
                 self.breathStatsTableView.reloadData()
+                self.removeSpinner(spinner)
             }
         }
         // Do any additional setup after loading the view.
@@ -64,6 +67,27 @@ class TimeFrameStatsViewController: UIViewController {
         }
         alert.addAction(action)
         self.present(alert, animated: true)
+    }
+    
+    func showSpinner() -> UIView {
+        let spinner = UIView.init(frame: self.view.bounds)
+        DispatchQueue.main.async {
+            spinner.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue:0.5, alpha: 0.5)
+            let activity = UIActivityIndicatorView.init(style: .whiteLarge)
+            activity.startAnimating()
+            activity.center = spinner.center
+            spinner.addSubview(activity)
+            self.view.addSubview(spinner)
+            print("showing spinner...")
+        }
+        return spinner
+    }
+    
+    func removeSpinner(_ spinner: UIView) {
+        DispatchQueue.main.async {
+            spinner.removeFromSuperview()
+            print("removing spinner...")
+        }
     }
     
 

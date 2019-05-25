@@ -18,17 +18,25 @@ let PACKET_WAVE_DATA = "vwd"
 let PACKET_TIMESTAMP = "abs_bs"
 let PACKET_E_TIME = "e_time"
 let PACKET_I_TIME = "i_time"
+let PACKET_IE_RATIO = "ie_ratio"
 let PACKET_PEEP = "peep"
 let PACKET_TVE_TVI_RATIO = "tve_tvi_ratio"
 let PACKET_TVE = "tve"
 let PACKET_TVI = "tvi"
+let PACKET_EP_AUC = "ep_auc"
+let PACKET_IP_AUC = "ip_auc"
 let PACKET_ID = "id"
 let PACKET_RR = "inst_rr"
+let PACKET_PIP = "pip"
 let PACKET_BSA = "bs_1or2"
 let PACKET_DTA = "dbl_4"
 let PACKET_TVV = "tvv"
 let PACKET_FLOW = "flow"
 let PACKET_PRESSURE = "pressure"
+
+let BREATH_METADATA = ["E-Time", "I-Time", "I:E Ratio", "TVe", "TVi", "TVe/TVi", "epAUC", "ipAUC", "RR", "PEEP", "PIP"]
+let METADATA_TO_PACKET_NAME = ["E-Time": PACKET_E_TIME, "I-Time": PACKET_I_TIME, "I:E Ratio": PACKET_IE_RATIO, "TVe": PACKET_TVE, "TVi": PACKET_TVI, "TVe/TVi": PACKET_TVE_TVI_RATIO, "epAUC": PACKET_EP_AUC, "ipAUC": PACKET_IP_AUC, "RR": PACKET_RR, "PEEP": PACKET_PEEP, "PIP": PACKET_PIP]
+
 
 class ServerModel {
     static var shared: ServerModel = ServerModel()

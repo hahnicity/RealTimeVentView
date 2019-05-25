@@ -17,6 +17,11 @@
 		37AC9DD922012D3E0048469E /* RealTimeVentViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DD822012D3E0048469E /* RealTimeVentViewUITests.swift */; };
 		A31A21E42272F63300539EDC /* FeedbackCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31A21E32272F63300539EDC /* FeedbackCollectionViewCell.swift */; };
 		A32B735E220500DF000AF69A /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32B735D220500DF000AF69A /* BalloonMarker.swift */; };
+		A343AB8222989F12003C975E /* DatabaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A343AB8122989F12003C975E /* DatabaseModel.swift */; };
+		A343AB842298C2B1003C975E /* StatCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A343AB832298C2B1003C975E /* StatCollectionViewCell.swift */; };
+		A343AB862298C44F003C975E /* SelectDisplayedStatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A343AB852298C44F003C975E /* SelectDisplayedStatsViewController.swift */; };
+		A343AB882298E805003C975E /* BreathStatsHeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A343AB872298E805003C975E /* BreathStatsHeaderCollectionReusableView.swift */; };
+		A343AB8B229931A8003C975E /* AlertLogTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A343AB8A229931A8003C975E /* AlertLogTableViewController.swift */; };
 		A34A918F2211625E009F48FC /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34A918E2211625E009F48FC /* TextFieldTableViewCell.swift */; };
 		A34A91912211642C009F48FC /* EnrollTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34A91902211642C009F48FC /* EnrollTableViewController.swift */; };
 		A34A9193221169F1009F48FC /* PickerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34A9192221169F1009F48FC /* PickerTableViewCell.swift */; };
@@ -80,6 +85,11 @@
 		7A7C5175102350E12448C7B5 /* Pods-RealTimeVentViewUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeVentViewUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RealTimeVentViewUITests/Pods-RealTimeVentViewUITests.release.xcconfig"; sourceTree = "<group>"; };
 		A31A21E32272F63300539EDC /* FeedbackCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackCollectionViewCell.swift; sourceTree = "<group>"; };
 		A32B735D220500DF000AF69A /* BalloonMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
+		A343AB8122989F12003C975E /* DatabaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseModel.swift; sourceTree = "<group>"; };
+		A343AB832298C2B1003C975E /* StatCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatCollectionViewCell.swift; sourceTree = "<group>"; };
+		A343AB852298C44F003C975E /* SelectDisplayedStatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDisplayedStatsViewController.swift; sourceTree = "<group>"; };
+		A343AB872298E805003C975E /* BreathStatsHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathStatsHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
+		A343AB8A229931A8003C975E /* AlertLogTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertLogTableViewController.swift; sourceTree = "<group>"; };
 		A34A918E2211625E009F48FC /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
 		A34A91902211642C009F48FC /* EnrollTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollTableViewController.swift; sourceTree = "<group>"; };
 		A34A9192221169F1009F48FC /* PickerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerTableViewCell.swift; sourceTree = "<group>"; };
@@ -219,6 +229,8 @@
 			isa = PBXGroup;
 			children = (
 				A31A21E32272F63300539EDC /* FeedbackCollectionViewCell.swift */,
+				A343AB832298C2B1003C975E /* StatCollectionViewCell.swift */,
+				A343AB872298E805003C975E /* BreathStatsHeaderCollectionReusableView.swift */,
 			);
 			path = CollectionViewCell;
 			sourceTree = "<group>";
@@ -229,6 +241,7 @@
 				A754B656220241CC00CD1A74 /* PatientModel.swift */,
 				A38668832217E043001F4850 /* ServerModel.swift */,
 				A389FC3722153C9A00A4D430 /* AlertModel.swift */,
+				A343AB8122989F12003C975E /* DatabaseModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -257,6 +270,8 @@
 				A382C8242295E79C00E73C78 /* TimeFrameMenuTableViewController.swift */,
 				A382C8262295EB2900E73C78 /* ChartContainerViewController.swift */,
 				A37BA33522967AEA001CFE40 /* TimeFrameStatsViewController.swift */,
+				A343AB852298C44F003C975E /* SelectDisplayedStatsViewController.swift */,
+				A343AB8A229931A8003C975E /* AlertLogTableViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -435,6 +450,7 @@
 				"${PODS_ROOT}/Target Support Files/Pods-RealTimeVentView/Pods-RealTimeVentView-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
 				"${BUILT_PRODUCTS_DIR}/CorePlot/CorePlot.framework",
+				"${BUILT_PRODUCTS_DIR}/SQLite.swift/SQLite.framework",
 				"${BUILT_PRODUCTS_DIR}/SideMenu/SideMenu.framework",
 				"${BUILT_PRODUCTS_DIR}/SimulatorRemoteNotifications/SimulatorRemoteNotifications.framework",
 			);
@@ -442,6 +458,7 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CorePlot.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SQLite.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SideMenu.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SimulatorRemoteNotifications.framework",
 			);
@@ -517,11 +534,16 @@
 				A3EED178222C522800A79058 /* FeedbackViewController.swift in Sources */,
 				A382C8252295E79C00E73C78 /* TimeFrameMenuTableViewController.swift in Sources */,
 				37AC9DBB22012D3E0048469E /* MainViewController.swift in Sources */,
+				A343AB842298C2B1003C975E /* StatCollectionViewCell.swift in Sources */,
+				A343AB8222989F12003C975E /* DatabaseModel.swift in Sources */,
 				A38D4F472211959F001A8B2D /* SwitchTableViewCell.swift in Sources */,
 				A389FC3822153C9A00A4D430 /* AlertModel.swift in Sources */,
 				A34A918F2211625E009F48FC /* TextFieldTableViewCell.swift in Sources */,
+				A343AB882298E805003C975E /* BreathStatsHeaderCollectionReusableView.swift in Sources */,
 				37AC9DB922012D3E0048469E /* AppDelegate.swift in Sources */,
+				A343AB8B229931A8003C975E /* AlertLogTableViewController.swift in Sources */,
 				A31A21E42272F63300539EDC /* FeedbackCollectionViewCell.swift in Sources */,
+				A343AB862298C44F003C975E /* SelectDisplayedStatsViewController.swift in Sources */,
 				A34A9193221169F1009F48FC /* PickerTableViewCell.swift in Sources */,
 				A754B6552202417100CD1A74 /* ChartViewController.swift in Sources */,
 				A39B1B4422127A9E00B855FA /* ConfigurationTableViewController.swift in Sources */,
