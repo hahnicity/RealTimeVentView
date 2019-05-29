@@ -77,11 +77,11 @@ class DatabaseModel {
             let index = Expression<Int64>(COL_INDEX)
             let statName = Expression<String>(COL_STAT_NAME)
             
-            let list = visibleStats.filter(patientName == patient)
+            let list = visibleStats.filter(patientName == patient).order(index.asc)
             
             var stats: [String] = []
             
-            for stat in try db.prepare(list).sorted(by: { $0[index] < $1[index] }) {
+            for stat in try db.prepare(list) {
                 stats.append(stat[statName])
             }
             
@@ -129,7 +129,7 @@ class DatabaseModel {
             let logType = Expression<String>(COL_LOG_TYPE)
             
             let old = alertlogs.filter(logDate < Date(timeIntervalSinceNow: -86400.0))
-            let list = alertlogs.filter(patientName == patient && logDate > Date(timeIntervalSinceNow: -86400.0))
+            let list = alertlogs.filter(patientName == patient && logDate > Date(timeIntervalSinceNow: -86400.0)).order(logDate.desc)
             
             var alerts: [(String, Date)] = []
             

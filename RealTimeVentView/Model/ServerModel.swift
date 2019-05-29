@@ -63,6 +63,14 @@ class ServerModel {
         serverAPI(at: "last_breaths", type: "GET", withParams: params, completion: completion)
     }
     
+    func getBreathStats(forPatient name: String, startTime: Date, endTime: Date, completion: @escaping CompletionAPI) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = SERVER_DATE_FORMAT
+        dateFormatter.timeZone = SERVER_TIMEZONE
+        let params = [name, "\(dateFormatter.string(from: startTime))", "\(dateFormatter.string(from: endTime))"]
+        serverAPI(at: "patient_stats", type: "GET", withParams: params, completion: completion)
+    }
+    
     func setAlertSettings(forPatient name: String, alertDTA: Bool, thresholdDTA: Int, alertBSA: Bool, thresholdBSA: Int, completion: @escaping CompletionAPI) {
         let params = [name, "\(alertDTA)", "\(thresholdDTA)", "\(alertBSA)", "\(thresholdBSA)"]
         print(params)
@@ -93,7 +101,10 @@ class ServerModel {
     }
     
     func setAlertSettings(for patient: PatientModel, to setting: AlertModel, completion: @escaping CompletionAPI) {
-        let json: [String: Any] = ["apn": Storage.deviceToken, "patient": patient.name, "alert_for_dta": setting.alertDTA, "dta_alert_freq": setting.thresholdDTA, "alert_for_bsa": setting.alertBSA, "bsa_alert_freq": setting.thresholdBSA, "alert_for_tvv": setting.alertTVV, "tvv_alert_freq": setting.thresholdTVV]
+        var json: [String: Any] = setting.json
+        json["apn"] = Storage.deviceToken
+        json["patient"] = patient.name
+        json["notification"] = nil
         print(json)
         
         serverAPI(at: "apn_settings", type: "POST", withParams: [], withData: json, completion: completion)
@@ -138,7 +149,7 @@ class ServerModel {
     
     func handleServerRessponse(data: Data?, response: URLResponse?, error: Error?, completion: @escaping CompletionAPI) {
         if let response = response as? HTTPURLResponse {
-            
+            print(response)
             DispatchQueue.global(qos: .userInitiated).async {
                 if response.statusCode != 200 {
                     completion(nil, NSError(domain: "HttpServerOperationErrorDomain", code: response.statusCode, userInfo: [NSLocalizedDescriptionKey: NSLocalizedString("Operation was not successful.", comment: "")]))

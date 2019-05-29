@@ -33,6 +33,7 @@
 		A389FC3822153C9A00A4D430 /* AlertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A389FC3722153C9A00A4D430 /* AlertModel.swift */; };
 		A38D4F472211959F001A8B2D /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38D4F462211959F001A8B2D /* SwitchTableViewCell.swift */; };
 		A38D4F49221196CA001A8B2D /* AlertSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38D4F48221196CA001A8B2D /* AlertSettingsTableViewController.swift */; };
+		A393AA80229E449C00FCC06B /* AsyncAlertSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393AA7F229E449C00FCC06B /* AsyncAlertSettingsTableViewController.swift */; };
 		A39B1B4422127A9E00B855FA /* ConfigurationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39B1B4322127A9E00B855FA /* ConfigurationTableViewController.swift */; };
 		A3EED178222C522800A79058 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3EED177222C522800A79058 /* FeedbackViewController.swift */; };
 		A3FC7FE92219622200D68BFA /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FC7FE82219622200D68BFA /* Storage.swift */; };
@@ -102,6 +103,7 @@
 		A389FC3722153C9A00A4D430 /* AlertModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModel.swift; sourceTree = "<group>"; };
 		A38D4F462211959F001A8B2D /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		A38D4F48221196CA001A8B2D /* AlertSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertSettingsTableViewController.swift; sourceTree = "<group>"; };
+		A393AA7F229E449C00FCC06B /* AsyncAlertSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncAlertSettingsTableViewController.swift; sourceTree = "<group>"; };
 		A39B1B4322127A9E00B855FA /* ConfigurationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationTableViewController.swift; sourceTree = "<group>"; };
 		A3B614852270FE7C00C83E4F /* RealTimeVentView-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RealTimeVentView-Bridging-Header.h"; sourceTree = "<group>"; };
 		A3EED177222C522800A79058 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 				A37BA33522967AEA001CFE40 /* TimeFrameStatsViewController.swift */,
 				A343AB852298C44F003C975E /* SelectDisplayedStatsViewController.swift */,
 				A343AB8A229931A8003C975E /* AlertLogTableViewController.swift */,
+				A393AA7F229E449C00FCC06B /* AsyncAlertSettingsTableViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -530,6 +533,7 @@
 			files = (
 				A754B65B2202483C00CD1A74 /* PatientListTableViewController.swift in Sources */,
 				A37BA33622967AEA001CFE40 /* TimeFrameStatsViewController.swift in Sources */,
+				A393AA80229E449C00FCC06B /* AsyncAlertSettingsTableViewController.swift in Sources */,
 				A38D4F49221196CA001A8B2D /* AlertSettingsTableViewController.swift in Sources */,
 				A3EED178222C522800A79058 /* FeedbackViewController.swift in Sources */,
 				A382C8252295E79C00E73C78 /* TimeFrameMenuTableViewController.swift in Sources */,

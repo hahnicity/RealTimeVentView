@@ -10,46 +10,34 @@ import Foundation
 
 class AlertModel {
     var notification: Bool
-    var alertDTA: Bool
-    var thresholdDTA: Int
-    var alertBSA: Bool
-    var thresholdBSA: Int
-    var alertTVV: Bool
-    var thresholdTVV: Int
+    var alertBS: AsynchronyAlertModel
+    var alertDT: AsynchronyAlertModel
+    var alertTV: AsynchronyAlertModel
+    
     var json: [String: Any] {
         get {
-            return ["notification": notification, "alertDTA": alertDTA, "thresholdDTA": thresholdDTA, "alertBSA": alertBSA, "thresholdBSA": thresholdBSA, "alertTVV": alertTVV, "thresholdTVV": thresholdTVV]
+            var json = alertBS.json.merging(alertDT.json) { a, b in a }.merging(alertTV.json) { a, b in a }
+            json["notification"] = notification
+            return json
         }
     }
     
     init() {
-        let setting = Storage.defaultAlert
-        notification = setting["notification"] as! Bool
-        alertDTA = setting["alertDTA"] as! Bool
-        thresholdDTA = setting["thresholdDTA"] as! Int
-        alertBSA = setting["alertBSA"] as! Bool
-        thresholdBSA = setting["thresholdBSA"] as! Int
-        alertTVV = setting["alertTVV"] as! Bool
-        thresholdTVV = setting["thresholdTVV"] as! Int
+        self.notification = Storage.defaultAlert["notification"] as! Bool
+        self.alertBS = AsynchronyAlertModel(forType: .bsa)
+        self.alertDT = AsynchronyAlertModel(forType: .dta)
+        self.alertTV = AsynchronyAlertModel(forType: .tvv)
     }
     
-    init(withAlertDTA alertDTA: Bool, thresholdDTA: Int, alertBSA: Bool, thresholdBSA: Int, alertTVV: Bool, thresholdTVV: Int, notification: Bool) {
-        self.alertDTA = alertDTA
-        self.thresholdDTA = thresholdDTA
-        self.alertBSA = alertBSA
-        self.thresholdBSA = thresholdBSA
-        self.alertTVV = alertTVV
-        self.thresholdTVV = thresholdTVV
-        self.notification = notification
+    init(withJSON json: [String: Any]) {
+        self.notification = json["notification"] as! Bool
+        self.alertBS = AsynchronyAlertModel(forType: .bsa, withJSON: json)
+        self.alertDT = AsynchronyAlertModel(forType: .dta, withJSON: json)
+        self.alertTV = AsynchronyAlertModel(forType: .tvv, withJSON: json)
     }
     
     convenience init(at index: Int) {
-        let alert = Storage.alerts[index]
-        guard let adta = alert["alertDTA"] as? Bool, let tdta = alert["thresholdDTA"] as? Int, let absa = alert["alertBSA"] as? Bool, let tbsa = alert["thresholdBSA"] as? Int, let atvv = alert["alertTVV"] as? Bool, let ttvv = alert["thresholdTVV"] as? Int, let n = alert["notification"] as? Bool else {
-            self.init()
-            return
-        }
-        self.init(withAlertDTA: adta, thresholdDTA: tdta, alertBSA: absa, thresholdBSA: tbsa, alertTVV: atvv, thresholdTVV: ttvv, notification: n)
+        self.init(withJSON: Storage.alerts[index])
     }
     
     func store(for patient: PatientModel, completion: @escaping CompletionAPI) {
@@ -70,5 +58,71 @@ class AlertModel {
         else {
             ServerModel.shared.removeAlertSettings(for: patient, completion: completion)
         }
+    }
+}
+
+enum AsyncType: Int {
+    case bsa = 0
+    case dta = 1
+    case tvv = 2
+    
+    var string: String {
+        get {
+            switch self {
+            case .bsa: return "BSA"
+            case .dta: return "DTA"
+            case .tvv: return "TVV"
+            }
+        }
+    }
+    
+    var packetString: String {
+        get {
+            switch self {
+            case .bsa: return "bsa"
+            case .dta: return "dta"
+            case .tvv: return "tvv"
+            }
+        }
+    }
+}
+
+class AsynchronyAlertModel {
+    var type: AsyncType
+    var alert: Bool
+    var thresholdFrequency: Int
+    var timeFrame: Int
+    var json: [String: Any] {
+        get {
+            return ["alert_for_\(type.packetString)": alert, "\(type.packetString)_alert_freq": thresholdFrequency, "minutes_between_alerts": timeFrame]
+        }
+    }
+    
+    init(forType type: AsyncType) {
+        self.type = type
+        self.alert = Storage.defaultAlert["alert_for_\(type.packetString)"] as! Bool
+        self.thresholdFrequency = Storage.defaultAlert["\(type.packetString)_alert_freq"] as! Int
+        self.timeFrame = Storage.defaultAlert["minutes_between_alerts"] as! Int
+    }
+    
+    init(forType type: AsyncType, withJSON json: [String: Any]) {
+        self.type = type
+        self.alert = json["alert_for_\(type.packetString)"] as! Bool
+        self.thresholdFrequency = json["\(type.packetString)_alert_freq"] as! Int
+        self.timeFrame = json["minutes_between_alerts"] as! Int
+    }
+    
+    init(forType type: AsyncType, setTo alert: Bool, withThresholdFrequencyOf thresholdFrequency: Int, withinTimeFrame timeFrame: Int) {
+        self.type = type
+        self.alert = alert
+        self.thresholdFrequency = thresholdFrequency
+        self.timeFrame = timeFrame
+    }
+    
+    init(forType type: AsyncType, setTo alert: Bool, withThresholdFrequencyOf thresholdFrequency: Int) {
+        self.type = type
+        self.alert = alert
+        self.thresholdFrequency = thresholdFrequency
+        self.timeFrame = 0
     }
 }

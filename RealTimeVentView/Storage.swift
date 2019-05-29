@@ -75,7 +75,7 @@ class Storage {
     
     static var defaultAlert: [String: Any] {
         get {
-            return UserDefaults.standard.dictionary(forKey: "defaultAlert") ?? ["notification": true, "alertDTA": true, "thresholdDTA": 20, "alertBSA": true, "thresholdBSA": 20, "alertTVV": true, "thresholdTVV": 20]
+            return UserDefaults.standard.dictionary(forKey: "defaultAlert") ?? ["notification": true, "alert_for_dta": true, "dta_alert_freq": 3, "alert_for_bsa": true, "bsa_alert_freq": 10, "alert_for_tvv": true, "tvv_alert_freq": 3, "minutes_between_alerts": 30]
         }
         set(defaultAlert) {
             UserDefaults.standard.set(defaultAlert, forKey: "defaultAlert")

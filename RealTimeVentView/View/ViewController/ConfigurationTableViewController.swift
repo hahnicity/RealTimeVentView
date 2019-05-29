@@ -13,7 +13,7 @@ enum ConfigType {
     case label, textField, alertSwitch
 }
 
-class ConfigurationTableViewController: UITableViewController, TextFieldTableViewCellDelegate {
+class ConfigurationTableViewController: UITableViewController {
     
 
     var alertCellTypes: [AlertSettingType] = [.alertSwitch, .alertSwitch, .label, .textField, .alertSwitch, .label, .textField, .alertSwitch, .label, .textField, .button]
@@ -43,20 +43,6 @@ class ConfigurationTableViewController: UITableViewController, TextFieldTableVie
     @IBOutlet weak var numFeedbackBreathsTextField: UITextField!
     @IBOutlet weak var notificationSwitch: UISwitch!
     @IBOutlet weak var defaultNotificationSwitch: UISwitch!
-    @IBOutlet weak var alertDTASwitch: UISwitch!
-    @IBOutlet weak var thresholdDTATextField: UITextField!
-    @IBOutlet weak var alertBSASwitch: UISwitch!
-    @IBOutlet weak var thresholdBSATextField: UITextField!
-    @IBOutlet weak var alertTVVSwitch: UISwitch!
-    @IBOutlet weak var thresholdTVVTextField: UITextField!
-    
-    @IBOutlet var notificationControlledTableViewCells: [UITableViewCell]!
-    @IBOutlet var alertDTAControlledTableViewCells: [UITableViewCell]!
-    @IBOutlet var alertBSAControlledTableViewCells: [UITableViewCell]!
-    @IBOutlet var alertTVVControlledTableViewCells: [UITableViewCell]!
-    
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,19 +52,6 @@ class ConfigurationTableViewController: UITableViewController, TextFieldTableVie
         notificationSwitch.isOn = UIApplication.shared.isRegisteredForRemoteNotifications
         let defaultAlert = AlertModel()
         defaultNotificationSwitch.isOn = defaultAlert.notification
-        alertDTASwitch.isOn = defaultAlert.alertDTA
-        thresholdDTATextField.text = "\(defaultAlert.thresholdDTA)"
-        alertBSASwitch.isOn = defaultAlert.alertBSA
-        thresholdBSATextField.text = "\(defaultAlert.thresholdBSA)"
-        alertTVVSwitch.isOn = defaultAlert.alertTVV
-        thresholdTVVTextField.text = "\(defaultAlert.thresholdTVV)"
-        
-        enableCells(in: notificationControlledTableViewCells, enable: defaultNotificationSwitch.isOn)
-        if defaultNotificationSwitch.isOn {
-            enableCells(in: alertDTAControlledTableViewCells, enable: alertDTASwitch.isOn)
-            enableCells(in: alertBSAControlledTableViewCells, enable: alertBSASwitch.isOn)
-            enableCells(in: alertTVVControlledTableViewCells, enable: alertTVVSwitch.isOn)
-        }
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
@@ -88,57 +61,20 @@ class ConfigurationTableViewController: UITableViewController, TextFieldTableVie
     // MARK: - Table view data source
     
     
-    @IBAction func notificationSwitchChanged(_ sender: UISwitch) {
-        enableCells(in: notificationControlledTableViewCells, enable: sender.isOn)
-        if sender.isOn {
-            enableCells(in: alertDTAControlledTableViewCells, enable: alertDTASwitch.isOn)
-            enableCells(in: alertBSAControlledTableViewCells, enable: alertBSASwitch.isOn)
-            enableCells(in: alertTVVControlledTableViewCells, enable: alertTVVSwitch.isOn)
-        }
-    }
-    
-    @IBAction func alertDTASwitchChanged(_ sender: UISwitch) {
-        enableCells(in: alertDTAControlledTableViewCells, enable: sender.isOn)
-    }
-    
-    @IBAction func alertBSASwitchChanged(_ sender: UISwitch) {
-        enableCells(in: alertBSAControlledTableViewCells, enable: sender.isOn)
-    }
-    
-    @IBAction func alertTVVSwitchChanged(_ sender: UISwitch) {
-        enableCells(in: alertTVVControlledTableViewCells, enable: sender.isOn)
-    }
-    
-    func enableCells(in cells: [UITableViewCell], enable: Bool) {
-        for cell in cells {
-            cell.isUserInteractionEnabled = enable
-            switch cell {
-            case let switchCell as SwitchTableViewCell:
-                switchCell.title.isEnabled = enable
-                switchCell.alertSwitch.isEnabled = enable
-            case let textCell as TextFieldTableViewCell:
-                textCell.textField.isEnabled = enable
-            default:
-                cell.textLabel?.isEnabled = enable
-            }
-        }
-    }
-    
-    
-    
+
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        if indexPath.section == 1, indexPath.row > 0 {
+            let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "asyncAlertSettingsTableViewController") as! AsyncAlertSettingsTableViewController
+            viewController.alert = defaultAlert
+            viewController.type = AsyncType(rawValue: indexPath.row - 1) ?? .bsa
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
         self.view.endEditing(true)
     }
 
-
-    
-    
-    
-    func editingText(_ text: String) {
-        
-    }
     
     func textChanged(ofType type: TextFieldType, to value: String) {
         print(value)
@@ -163,15 +99,13 @@ class ConfigurationTableViewController: UITableViewController, TextFieldTableVie
         
         guard let loadTimeFrame = loadTimeFrameTextField.text,
             let updateInterval = updateIntervalTextField.text,
-            let numFeedbackBreaths = numFeedbackBreathsTextField.text,
-            let thresholdDTA = thresholdDTATextField.text,
-            let thresholdBSA = thresholdBSATextField.text,
-            let thresholdTVV = thresholdTVVTextField.text else {
+            let numFeedbackBreaths = numFeedbackBreathsTextField.text
+            else {
                 print("Number not retrieved")
                 return
         }
         
-        if hasAppConfigError(withLoadTimeFrame: loadTimeFrame, updateInterval: updateInterval, numBreathFeedback: numFeedbackBreaths) || hasDefaultSettingsError(withDTA: thresholdDTA, BSA: thresholdBSA, TVV: thresholdTVV) {
+        if hasAppConfigError(withLoadTimeFrame: loadTimeFrame, updateInterval: updateInterval, numBreathFeedback: numFeedbackBreaths) {
             return
         }
         
@@ -203,44 +137,13 @@ class ConfigurationTableViewController: UITableViewController, TextFieldTableVie
                 UIApplication.shared.unregisterForRemoteNotifications()
             }
         }
+        defaultAlert.notification = defaultNotificationSwitch.isOn
         Storage.loadTimeFrame = Int(loadTimeFrame)!
         Storage.updateInterval = Int(updateInterval)!
         Storage.numFeedbackBreaths = Int(numFeedbackBreaths)!
-        Storage.defaultAlert = AlertModel(withAlertDTA: alertDTASwitch.isOn, thresholdDTA: Int(thresholdDTA)!, alertBSA: alertBSASwitch.isOn, thresholdBSA: Int(thresholdBSA)!, alertTVV: alertTVVSwitch.isOn, thresholdTVV: Int(thresholdTVV)!, notification: defaultNotificationSwitch.isOn).json
+        Storage.defaultAlert = defaultAlert.json
         
         self.navigationController?.popToRootViewController(animated: true)
-    }
-    
-    func hasDefaultSettingsError(withDTA dta: String, BSA bsa: String, TVV tvv: String) -> Bool {
-        if dta.count == 0 {
-            showAlert(withTitle: "Default Alert Settings Error", message: "Please enter the DTA threshold for the patient.")
-            return true
-        }
-        if bsa.count == 0 {
-            showAlert(withTitle: "Default Alert Settings Error", message: "Please enter the BSA threshold for the patient.")
-            return true
-        }
-        if tvv.count == 0 {
-            showAlert(withTitle: "Alert Settings Error", message: "Please enter the TVV threshold for the patient.")
-            return true
-        }
-        
-        guard let temp_dta = Int(dta), temp_dta > 0 else {
-            showAlert(withTitle: "Alert Settings Error", message: "The DTA threshold for the patient must be a nonzero number.")
-            return true
-        }
-        
-        guard let temp_bsa = Int(bsa), temp_bsa > 0 else {
-            showAlert(withTitle: "Alert Settings Error", message: "The BSA threshold for the patient must be a nonzero number.")
-            return true
-        }
-        
-        guard let temp_tvv = Int(tvv), temp_tvv > 0 else {
-            showAlert(withTitle: "Alert Settings Error", message: "The TVV threshold for the patient must be a nonzero number.")
-            return true
-        }
-        
-        return false
     }
     
     func hasAppConfigError(withLoadTimeFrame loadTimeFrame: String, updateInterval: String, numBreathFeedback: String) -> Bool {

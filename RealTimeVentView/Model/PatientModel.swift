@@ -115,7 +115,15 @@ class PatientModel {
     
     func getStats(for timeInterval: TimeInterval, from date: Date, completion: @escaping CompletionStats) {
         if timeInterval > 1500.0 {
-            
+            ServerModel.shared.getBreathStats(forPatient: name, startTime: date, endTime: Date(timeInterval: -timeInterval, since: date)) { (data, error) in
+                switch (data, error) {
+                case (.some(data), .none):
+                    ()
+                case (.none, .some(let error)):
+                    completion([:], error)
+                default: ()
+                }
+            }
         }
         else {
             ServerModel.shared.getBreaths(forPatient: name, startTime: Date(timeInterval: -timeInterval, since: date), endTime: date) { (data, error) in
