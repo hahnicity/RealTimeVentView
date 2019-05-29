@@ -40,6 +40,7 @@ class TimeFrameStatsViewController: UIViewController {
         
         patient.getStats(for: timeInterval, from: date) { (stats, error) in
             if let error = error {
+                self.removeSpinner(spinner)
                 self.showAlert(withTitle: "Stats Calculation Error", message: error.localizedDescription)
                 return
             }
@@ -61,12 +62,14 @@ class TimeFrameStatsViewController: UIViewController {
     }
     
     func showAlert(withTitle title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: "Confirm", style: .cancel) { (alertAction) in
-            
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            let action = UIAlertAction(title: "Confirm", style: .cancel) { (alertAction) in
+                
+            }
+            alert.addAction(action)
+            self.present(alert, animated: true)
         }
-        alert.addAction(action)
-        self.present(alert, animated: true)
     }
     
     func showSpinner() -> UIView {

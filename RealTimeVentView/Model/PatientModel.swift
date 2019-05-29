@@ -117,8 +117,20 @@ class PatientModel {
         if timeInterval > 1500.0 {
             ServerModel.shared.getBreathStats(forPatient: name, startTime: date, endTime: Date(timeInterval: -timeInterval, since: date)) { (data, error) in
                 switch (data, error) {
-                case (.some(data), .none):
-                    ()
+                case (.some(let data), .none):
+                    do {
+                        let object = try JSONSerialization.jsonObject(with: data)
+                        guard let json = object as? [[String: Any]],
+                            let stat = json[0] as? [String: Double],
+                            let async = json[1] as? [String: Int] else {
+                            print("Some error regarding breath json")
+                            return
+                        }
+                        let stats = Dictionary(uniqueKeysWithValues: stat.map({ (PACKET_NAME_TO_METADATA[$0]!, $1) }))
+                        completion(stats, nil)
+                    } catch {
+                        print(error)
+                    }
                 case (.none, .some(let error)):
                     completion([:], error)
                 default: ()
