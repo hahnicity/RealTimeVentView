@@ -36,6 +36,10 @@ class ChartViewController: UIViewController {
     
     var breathMetadataType: [String] = []
     var breathMetadataStat: [String] = []
+    
+    // Luigi
+    var asyncMetadataType: [String] = []
+    var asyncMetadataStat: [String] = []
 
     
     override func viewDidLoad() {
@@ -55,6 +59,10 @@ class ChartViewController: UIViewController {
         
         breathStatsTableView.delegate = self
         breathStatsTableView.dataSource = self
+        
+        // Luigi
+        asyncStatsTableView.delegate = self
+        asyncStatsTableView.dataSource = self
         
         switch accessType {
         case .main:
@@ -91,6 +99,10 @@ class ChartViewController: UIViewController {
         
         breathMetadataType = DatabaseModel.shared.getVisibleStats(for: patient.name)
         breathMetadataStat = [String](repeating: "", count: breathMetadataType.count)
+        
+        // Luigi
+        asyncMetadataType = ["BSA", "DTA", "TVV"]
+        asyncMetadataStat = [String](repeating: "", count: asyncMetadataType.count)
         
         isUpdating = true
         pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(ChartViewController.handlePinchGesture))
@@ -478,6 +490,9 @@ class ChartViewController: UIViewController {
         let metadata = patient.getMetadata(between: plotSpace.xRange.minLimitDouble, and: plotSpace.xRange.maxLimitDouble)
         var stats = [Double](repeating: 0.0, count: breathMetadataType.count)
         var count = 0
+        // Luigi
+        var asyncStats = [Int](repeating: 0, count: asyncMetadataType.count)
+        
         metadata.forEach { (breath) in
             guard let meta = breath[PACKET_METADATA] as? [String: Any] else {
                 return
@@ -496,12 +511,32 @@ class ChartViewController: UIViewController {
             count += 1
         }
         
+        // Luigi
+        metadata.forEach { (breath) in
+            guard let classifications = breath[PACKET_CLASSIFICATION] as? [String: Any] else {
+                return
+            }
+            for (index, type) in self.asyncMetadataType.enumerated() {
+                guard let temp = classifications[CLASSIFICATIONS_TO_PACKET_NAME[type]!] as? Int else {
+                    return
+                }
+                asyncStats[index] = asyncStats[index] + temp
+            }
+            
+        }
+        
+        // Luigi
+        for (index, _) in asyncStats.enumerated() {
+            asyncMetadataStat[index] = String(format: "%d", asyncStats[index])
+        }
+        
         for (index, stat) in stats.enumerated() {
             breathMetadataStat[index] = String(format: "%.2f", stat / Double(count))
         }
         //print(tviAvg)
         DispatchQueue.main.async {
             self.breathStatsTableView.reloadData()
+            self.asyncStatsTableView.reloadData() // Luigi
         }
     }
 
@@ -663,7 +698,7 @@ extension ChartViewController: UITableViewDelegate, UITableViewDataSource {
             return breathMetadataType.count
         }
         else if tableView == asyncStatsTableView {
-            
+            return asyncMetadataType.count // Luigi
         }
         return 0
     }
@@ -675,7 +710,9 @@ extension ChartViewController: UITableViewDelegate, UITableViewDataSource {
             cell.detailTextLabel?.text = breathMetadataStat[indexPath.row]
         }
         else if tableView == asyncStatsTableView {
-            
+            // Luigi
+            cell.textLabel?.text = asyncMetadataType[indexPath.row]
+            cell.detailTextLabel?.text = asyncMetadataStat[indexPath.row]
         }
         return cell
     }
@@ -685,7 +722,7 @@ extension ChartViewController: UITableViewDelegate, UITableViewDataSource {
             return "Metadata Stats"
         }
         else if tableView == asyncStatsTableView {
-            
+            return "Async Counts" // Luigi
         }
         return ""
     }
@@ -695,7 +732,7 @@ extension ChartViewController: UITableViewDelegate, UITableViewDataSource {
             return 30.0
         }
         else if tableView == asyncStatsTableView {
-            
+            return 30.0 // Luigi
         }
         return (tableView.contentSize.height - tableView.sectionHeaderHeight) / 5.0
     }
