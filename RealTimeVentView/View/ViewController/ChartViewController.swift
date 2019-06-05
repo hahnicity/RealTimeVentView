@@ -101,8 +101,8 @@ class ChartViewController: UIViewController {
         breathMetadataStat = [String](repeating: "", count: breathMetadataType.count)
         
         // Luigi
-        asyncMetadataType = ["test", "luigi"]
-        asyncMetadataStat = ["2", "3"]
+        asyncMetadataType = ["BSA", "DTA", "TVV"]
+        asyncMetadataStat = [String](repeating: "", count: asyncMetadataType.count)
         
         isUpdating = true
         pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(ChartViewController.handlePinchGesture))
@@ -490,6 +490,9 @@ class ChartViewController: UIViewController {
         let metadata = patient.getMetadata(between: plotSpace.xRange.minLimitDouble, and: plotSpace.xRange.maxLimitDouble)
         var stats = [Double](repeating: 0.0, count: breathMetadataType.count)
         var count = 0
+        // Luigi
+        var asyncStats = [Int](repeating: 0, count: asyncMetadataType.count)
+        
         metadata.forEach { (breath) in
             guard let meta = breath[PACKET_METADATA] as? [String: Any] else {
                 return
@@ -506,6 +509,25 @@ class ChartViewController: UIViewController {
                 stats[index] += val
             }
             count += 1
+        }
+        
+        // Luigi
+        metadata.forEach { (breath) in
+            guard let classifications = breath[PACKET_CLASSIFICATION] as? [String: Any] else {
+                return
+            }
+            for (index, type) in self.asyncMetadataType.enumerated() {
+                guard let temp = classifications[CLASSIFICATIONS_TO_PACKET_NAME[type]!] as? Int else {
+                    return
+                }
+                asyncStats[index] = asyncStats[index] + temp
+            }
+            
+        }
+        
+        // Luigi
+        for (index, _) in asyncStats.enumerated() {
+            asyncMetadataStat[index] = String(format: "%d", asyncStats[index])
         }
         
         for (index, stat) in stats.enumerated() {
