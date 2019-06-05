@@ -148,9 +148,9 @@ class PatientModel {
                             return
                         }
                         var tvi = 0.0, tve = 0.0, rr = 0.0, mv = 0.0, count = 0
-                        var calc = Array<Double>(repeating: 0.0, count: BREATH_STAT_METADATA.count)
+                        var calc = Array<Double>(repeating: 0.0, count: BREATH_METADATA.count)
                         json.forEach({ (breath) in
-                            var c = Array<Double>(repeating: 0.0, count: BREATH_STAT_METADATA.count)
+                            var c = Array<Double>(repeating: 0.0, count: BREATH_METADATA.count)
                             for (index, val) in BREATH_METADATA.enumerated() {
                                 guard let temp = (breath[PACKET_METADATA] as? [String: Any])?[METADATA_TO_PACKET_NAME[val]!] as? Double else {
                                     return
@@ -161,12 +161,14 @@ class PatientModel {
                             for (index, val) in c.enumerated() {
                                 calc[index] += val
                             }
+                            mv += c[4] * c[8]
                             count += 1
                         })
                         var stats: [String: Double] = [:]
                         calc.enumerated().forEach({ (index, val) in
-                            stats[BREATH_STAT_METADATA[index]] = val / Double(count)
+                            stats[BREATH_METADATA[index]] = val / Double(count)
                         })
+                        stats["MV"] = mv / Double(count)
                         completion(stats, nil)
                     } catch {
                         print("\(error)")
