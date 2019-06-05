@@ -115,7 +115,7 @@ class PatientModel {
     
     func getStats(for timeInterval: TimeInterval, from date: Date, completion: @escaping CompletionStats) {
         if timeInterval > 1500.0 {
-            ServerModel.shared.getBreathStats(forPatient: name, startTime: date, endTime: Date(timeInterval: -timeInterval, since: date)) { (data, error) in
+            ServerModel.shared.getBreathStats(forPatient: name, startTime: Date(timeInterval: -timeInterval, since: date), endTime: date) { (data, error) in
                 switch (data, error) {
                 case (.some(let data), .none):
                     do {
@@ -148,21 +148,25 @@ class PatientModel {
                             return
                         }
                         var tvi = 0.0, tve = 0.0, rr = 0.0, mv = 0.0, count = 0
+                        var calc = Array<Double>(repeating: 0.0, count: BREATH_STAT_METADATA.count)
                         json.forEach({ (breath) in
-                            guard let meta = breath[PACKET_METADATA] as? [String: Any],
-                                let i = meta[PACKET_TVI] as? Double,
-                                let e = meta[PACKET_TVE] as? Double,
-                                let r = meta[PACKET_RR] as? Double
-                                else {
+                            var c = Array<Double>(repeating: 0.0, count: BREATH_STAT_METADATA.count)
+                            for (index, val) in BREATH_METADATA.enumerated() {
+                                guard let temp = (breath[PACKET_METADATA] as? [String: Any])?[METADATA_TO_PACKET_NAME[val]!] as? Double else {
                                     return
+                                }
+                                c[index] = temp
                             }
-                            tvi += i
-                            tve += e
-                            rr += r
-                            mv += i * r
+                            
+                            for (index, val) in c.enumerated() {
+                                calc[index] += val
+                            }
                             count += 1
                         })
-                        let stats = ["TVi": tvi / Double(count), "TVe": tve / Double(count), "RR": rr / Double(count), "MV": mv / Double(count)]
+                        var stats: [String: Double] = [:]
+                        calc.enumerated().forEach({ (index, val) in
+                            stats[BREATH_STAT_METADATA[index]] = val / Double(count)
+                        })
                         completion(stats, nil)
                     } catch {
                         print("\(error)")

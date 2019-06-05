@@ -20,7 +20,7 @@ class TimeFrameStatsViewController: UIViewController {
     var timeInterval = 0.0
     var returnPoint = UIViewController()
     
-    let breathMetadataType = ["TVi", "TVe", "RR", "MV"]
+    let breathMetadataType = BREATH_STAT_METADATA
     lazy var breathMetadataStat = [String](repeating: "", count: breathMetadataType.count)
     
     override func viewDidLoad() {
