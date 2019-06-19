@@ -108,20 +108,28 @@ class DatabaseModel {
         }
     }
     
-    func logAlert(ofType type: String, for patient: String) {
+    func logAlert(_ alerts: [[String: Any]], for patient: String, at date: Date) {
         do {
             let alertlogs = Table(TABLE_ALERT_LOGS)
             let patientName = Expression<String>(COL_PATIENT_NAME)
             let logDate = Expression<Date>(COL_LOG_DATE)
             let logType = Expression<String>(COL_LOG_TYPE)
             
-            try db.run(alertlogs.insert(patientName <- patient, logDate <- Date(), logType <- type))
+            var alertString = ""
+            alerts.forEach { (alert) in
+                guard let type = alert["alert"] as? String, let count = alert["count"] else {
+                    return
+                }
+                alertString += "\(type):\(count) "
+            }
+            
+            try db.run(alertlogs.insert(patientName <- patient, logDate <- date, logType <- alertString))
         } catch {
             print("Error: \(error)")
         }
     }
     
-    func getAlerts(for patient: String) -> [(String, Date)] {
+    func getAlerts(for patient: String) -> [([(String, Int)], Date)] {
         do {
             let alertlogs = Table(TABLE_ALERT_LOGS)
             let patientName = Expression<String>(COL_PATIENT_NAME)
@@ -131,11 +139,23 @@ class DatabaseModel {
             let old = alertlogs.filter(logDate < Date(timeIntervalSinceNow: -86400.0))
             let list = alertlogs.filter(patientName == patient && logDate > Date(timeIntervalSinceNow: -86400.0)).order(logDate.desc)
             
-            var alerts: [(String, Date)] = []
+            var alerts: [([(String, Int)], Date)] = []
             
-            for alert in try db.prepare(list) {
-                alerts.append((alert[logType], alert[logDate]))
-            }
+            try db.prepare(list).forEach({ (alert) in
+                let l = alert[logType].split(separator: " ")
+                var al: [(String, Int)] = []
+                l.forEach({ (t) in
+                    guard let t = t.split(separator: ":").first,
+                        let temp = t.split(separator: ":").last,
+                        let count = Int(String(temp)) else {
+                        return
+                    }
+                    al.append((String(t), count))
+                })
+                alerts.append((al, alert[logDate]))
+            })
+            
+
             try db.run(old.delete())
             
             return alerts

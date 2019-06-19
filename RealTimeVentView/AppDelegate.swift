@@ -39,7 +39,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 }
             }
             else if type == "threshold_push" {
-                if let name = notification["patient"] as? String {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = SERVER_DATE_FORMAT
+                dateFormatter.timeZone = SERVER_TIMEZONE
+                if let name = notification["patient"] as? String,
+                    let dateString = notification["date"] as? String,
+                    let date = dateFormatter.date(from: dateString),
+                    let alerts = notification["alerts"] as? [[String: Any]] {
+                    logAsync(alerts, for: name, at: date)
                     let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "chartViewController") as! ChartViewController
                     viewController.patient = PatientModel.searchPatient(named: name)
                     (self.window?.rootViewController as? UINavigationController)?.pushViewController(viewController, animated: true)
@@ -79,7 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
     }
     
-    func logAsync(type: String, for patient: String) {
+    func logAsync(_ alerts: [[String: Any]], for patient: String, at date: Date) {
         do {
             let path = NSSearchPathForDirectoriesInDomains(
                 .documentDirectory, .userDomainMask, true
@@ -90,7 +97,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             let logDate = Expression<Date>(COL_LOG_DATE)
             let logType = Expression<String>(COL_LOG_TYPE)
             
-            try db.run(alertlogs.insert(patientName <- patient, logDate <- Date(), logType <- type))
+            var alertString = ""
+            alerts.forEach { (alert) in
+                guard let type = alert["alert"] as? String, let count = alert["count"] else {
+                    return
+                }
+                alertString += "\(type):\(count) "
+            }
+            
+            try db.run(alertlogs.insert(patientName <- patient, logDate <- Date(), logType <- alertString))
         } catch {
             print("Error: \(error)")
         }

@@ -10,13 +10,14 @@ import Foundation
 
 class AlertModel {
     var notification: Bool
-    var alertBS: AsynchronyAlertModel
-    var alertDT: AsynchronyAlertModel
-    var alertTV: AsynchronyAlertModel
+    var alertBSA: AsynchronyAlertModel
+    var alertDTA: AsynchronyAlertModel
+    var alertTVV: AsynchronyAlertModel
+    var alertRR: AsynchronyAlertModel
     
     var json: [String: Any] {
         get {
-            var json = alertBS.json.merging(alertDT.json) { a, b in a }.merging(alertTV.json) { a, b in a }
+            var json = alertBSA.json.merging(alertDTA.json) { a, b in a }.merging(alertTVV.json) { a, b in a }.merging(alertRR.json) { a, b in a }
             json["notification"] = notification
             return json
         }
@@ -24,16 +25,18 @@ class AlertModel {
     
     init() {
         self.notification = Storage.defaultAlert["notification"] as! Bool
-        self.alertBS = AsynchronyAlertModel(forType: .bsa)
-        self.alertDT = AsynchronyAlertModel(forType: .dta)
-        self.alertTV = AsynchronyAlertModel(forType: .tvv)
+        self.alertBSA = AsynchronyAlertModel(forType: .bsa)
+        self.alertDTA = AsynchronyAlertModel(forType: .dta)
+        self.alertTVV = AsynchronyAlertModel(forType: .tvv)
+        self.alertRR = AsynchronyAlertModel(forType: .rr)
     }
     
     init(withJSON json: [String: Any]) {
         self.notification = json["notification"] as! Bool
-        self.alertBS = AsynchronyAlertModel(forType: .bsa, withJSON: json)
-        self.alertDT = AsynchronyAlertModel(forType: .dta, withJSON: json)
-        self.alertTV = AsynchronyAlertModel(forType: .tvv, withJSON: json)
+        self.alertBSA = AsynchronyAlertModel(forType: .bsa, withJSON: json)
+        self.alertDTA = AsynchronyAlertModel(forType: .dta, withJSON: json)
+        self.alertTVV = AsynchronyAlertModel(forType: .tvv, withJSON: json)
+        self.alertRR = AsynchronyAlertModel(forType: .rr, withJSON: json)
     }
     
     convenience init(at index: Int) {
@@ -65,6 +68,7 @@ enum AsyncType: Int {
     case bsa = 0
     case dta = 1
     case tvv = 2
+    case rr = 3
     
     var string: String {
         get {
@@ -72,6 +76,7 @@ enum AsyncType: Int {
             case .bsa: return "BSA"
             case .dta: return "DTA"
             case .tvv: return "TVV"
+            case .rr: return "RR"
             }
         }
     }
@@ -82,6 +87,7 @@ enum AsyncType: Int {
             case .bsa: return "bsa"
             case .dta: return "dta"
             case .tvv: return "tvv"
+            case .rr: return "rr"
             }
         }
     }
@@ -91,10 +97,15 @@ class AsynchronyAlertModel {
     var type: AsyncType
     var alert: Bool
     var thresholdFrequency: Int
+    var alertDuration: Int?
     var timeFrame: Int
     var json: [String: Any] {
         get {
-            return ["alert_for_\(type.packetString)": alert, "\(type.packetString)_alert_freq": thresholdFrequency, "minutes_between_alerts": timeFrame]
+            var json: [String: Any] =  ["alert_for_\(type.packetString)": alert, "\(type.packetString)_alert_freq": thresholdFrequency, "minutes_between_alerts": timeFrame]
+            if let alertDuration = alertDuration {
+                json["\(type.packetString)_alert_duration"] = alertDuration
+            }
+            return json
         }
     }
     
@@ -103,6 +114,7 @@ class AsynchronyAlertModel {
         self.alert = Storage.defaultAlert["alert_for_\(type.packetString)"] as! Bool
         self.thresholdFrequency = Storage.defaultAlert["\(type.packetString)_alert_freq"] as! Int
         self.timeFrame = Storage.defaultAlert["minutes_between_alerts"] as! Int
+        self.alertDuration = Storage.defaultAlert["\(type.packetString)_alert_duration"] as? Int
     }
     
     init(forType type: AsyncType, withJSON json: [String: Any]) {
@@ -110,19 +122,15 @@ class AsynchronyAlertModel {
         self.alert = json["alert_for_\(type.packetString)"] as! Bool
         self.thresholdFrequency = json["\(type.packetString)_alert_freq"] as! Int
         self.timeFrame = json["minutes_between_alerts"] as! Int
+        self.alertDuration = json["\(type.packetString)_alert_duration"] as? Int
     }
     
-    init(forType type: AsyncType, setTo alert: Bool, withThresholdFrequencyOf thresholdFrequency: Int, withinTimeFrame timeFrame: Int) {
+    init(forType type: AsyncType, setTo alert: Bool, withThresholdFrequencyOf thresholdFrequency: Int, withAlertDurationOf alertDuration: Int? = nil, withinTimeFrame timeFrame: Int = 0) {
         self.type = type
         self.alert = alert
         self.thresholdFrequency = thresholdFrequency
+        self.alertDuration = alertDuration
         self.timeFrame = timeFrame
     }
     
-    init(forType type: AsyncType, setTo alert: Bool, withThresholdFrequencyOf thresholdFrequency: Int) {
-        self.type = type
-        self.alert = alert
-        self.thresholdFrequency = thresholdFrequency
-        self.timeFrame = 0
-    }
 }

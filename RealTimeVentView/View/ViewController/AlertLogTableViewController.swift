@@ -11,8 +11,11 @@ import UIKit
 class AlertLogTableViewController: UITableViewController {
 
     var patient = PatientModel()
-    var logs: [(String, Date)] = []
+    var logs: [([(String, Int)], Date)] = []
     let dateFormatter = DateFormatter()
+    
+    var expandedCell: IndexPath?
+    var detailCell: UITableViewCell?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,15 +38,29 @@ class AlertLogTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return logs.count
+        return logs.count + (expandedCell == nil ? 0 : 1)
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if indexPath.row - 1 == expandedCell?.row, let cell = detailCell {
+            return cell
+        }
+        
+        let row: Int
+        if let expandedCell = expandedCell, indexPath.row > expandedCell.row {
+            row = indexPath.row - 1
+        }
+        else {
+            row = indexPath.row
+        }
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "logCell") ?? UITableViewCell(style: .default, reuseIdentifier: "logCell")
         
-        cell.textLabel?.text = dateFormatter.string(from: logs[indexPath.row].1)
-        cell.detailTextLabel?.text = logs[indexPath.row].0
+        cell.detailTextLabel?.text = dateFormatter.string(from: logs[row].1)
+        let t = logs[row].0.map{ $0.0 }.joined(separator: ",")
+        cell.textLabel?.text = t
         // Configure the cell...
 
         return cell
@@ -51,6 +68,20 @@ class AlertLogTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        if let expandedCell = expandedCell {
+            tableView.deleteRows(at: [IndexPath(row: expandedCell.row + 1, section: expandedCell.section)], with: .automatic)
+            self.expandedCell = nil
+            if indexPath == expandedCell {
+                return
+            }
+        }
+        // expand new cell
+        let detailString = logs[indexPath.row].0.map { "\($0.0): \($0.1)" }.joined(separator: "\n")
+        detailCell = tableView.dequeueReusableCell(withIdentifier: "detailCell") ?? UITableViewCell(style: .default, reuseIdentifier: "detailCell")
+        detailCell?.textLabel?.text = detailString
+        expandedCell = indexPath
+        tableView.insertRows(at: [IndexPath(row: indexPath.row + 1, section: indexPath.section)], with: .automatic)
     }
 
     /*
