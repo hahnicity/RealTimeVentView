@@ -211,7 +211,6 @@ class ChartViewController: UIViewController {
                 self.removeSpinner(spinner)
                 DispatchQueue.main.async {
                     self.isUpdating = false
-                    self.hostView.isUserInteractionEnabled = true
                 }
                 return
             }
