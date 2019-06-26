@@ -421,6 +421,7 @@
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="alertDurationCell" destination="9ip-PU-oq0" id="bo7-U8-cpA"/>
                         <outlet property="alertDurationLabel" destination="a7b-qK-ALq" id="7FD-Sa-D1M"/>
                         <outlet property="alertDurationTextField" destination="IOq-Vh-XhL" id="xBO-x2-xSV"/>
                         <outlet property="alertLabel" destination="oIN-9X-45s" id="PQY-1C-pKj"/>

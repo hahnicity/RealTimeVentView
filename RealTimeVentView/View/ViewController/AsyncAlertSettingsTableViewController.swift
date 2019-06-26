@@ -22,10 +22,14 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
     @IBOutlet weak var alertDurationLabel: UILabel!
     @IBOutlet weak var alertDurationTextField: UITextField!
     
+    @IBOutlet weak var alertDurationCell: UITableViewCell!
+    
     var index: Int?
     var type: AsyncType = .bsa
     var patient: PatientModel?
     var alert = AlertModel()
+    
+    let alertDurationType: [AsyncType] = [ .rr ]
     
     
     override func viewDidLoad() {
@@ -53,8 +57,10 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
         timeFrameTextField.text = "\(alertType.timeFrame)"
         alertDurationTextField.text = alertType.alertDuration == nil ? "" : "\(alertType.alertDuration!)"
         
-        if alertType.type != .rr {
-            
+        if !alertDurationType.contains(type) {
+            //alertDurationCell.isHidden = true
+            alertDurationLabel.isHidden = true
+            alertDurationTextField.isHidden = true
         }
 
         turnCellsOn(alertType.alert)
@@ -150,9 +156,11 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
             return true
         }
         
-        guard let duration = Int(alertDuration), duration > 0 || type != .rr else {
-            showAlert(withTitle: "Alert Settings Error", message: "The alert duration must be a positive number.")
-            return true
+        if alertDurationType.contains(type) {
+            guard let duration = Int(alertDuration), duration > 0 else {
+                showAlert(withTitle: "Alert Settings Error", message: "The alert duration must be a positive number.")
+                return true
+            }
         }
         
         guard let time = Int(timeFrame), time > 0 else {

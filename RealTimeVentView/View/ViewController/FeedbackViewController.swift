@@ -35,7 +35,6 @@ class FeedbackViewController: UIViewController {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
         
-        self.navigationItem.hidesBackButton = true
 
         initPlot()
         // Do any additional setup after loading the view.
