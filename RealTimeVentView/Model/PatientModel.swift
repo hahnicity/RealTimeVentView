@@ -11,7 +11,7 @@ import Foundation
 
 
 typealias CompletionUpdate = ([Double], [Double], [Double], Error?) -> ()
-typealias CompletionStats = ([String: Double], Error?) -> ()
+typealias CompletionStats = ([String: Double], [String: Int], Error?) -> ()
 
 class PatientModel {
     var name: String
@@ -127,12 +127,13 @@ class PatientModel {
                             return
                         }
                         let stats = Dictionary(uniqueKeysWithValues: stat.map({ (PACKET_NAME_TO_METADATA[$0]!, $1) }))
-                        completion(stats, nil)
+                        let asyncs = Dictionary(uniqueKeysWithValues: async.map({ (PACKET_NAME_TO_CLASSIFICATIONS[$0]!, $1)}))
+                        completion(stats, asyncs, nil)
                     } catch {
                         print(error)
                     }
                 case (.none, .some(let error)):
-                    completion([:], error)
+                    completion([:], [:], error)
                 default: ()
                 }
             }
@@ -149,6 +150,7 @@ class PatientModel {
                         }
                         var tvi = 0.0, tve = 0.0, rr = 0.0, mv = 0.0, count = 0
                         var calc = Array<Double>(repeating: 0.0, count: BREATH_METADATA.count)
+                        var asyncTotal = Array<Int>(repeating: 0, count: ASYNC_COUNTS.count)
                         json.forEach({ (breath) in
                             var c = Array<Double>(repeating: 0.0, count: BREATH_METADATA.count)
                             for (index, val) in BREATH_METADATA.enumerated() {
@@ -156,6 +158,12 @@ class PatientModel {
                                     return
                                 }
                                 c[index] = temp
+                            }
+                            for (index, val) in ASYNC_COUNTS.enumerated() {
+                                guard let temp = (breath[PACKET_CLASSIFICATION] as? [String: Any])?[CLASSIFICATIONS_TO_PACKET_NAME[val]!] as? Int else {
+                                    return
+                                }
+                                asyncTotal[index] += temp
                             }
                             
                             for (index, val) in c.enumerated() {
@@ -165,17 +173,21 @@ class PatientModel {
                             count += 1
                         })
                         var stats: [String: Double] = [:]
+                        var asyncs: [String: Int] = [:]
                         calc.enumerated().forEach({ (index, val) in
                             stats[BREATH_METADATA[index]] = val / Double(count)
                         })
+                        asyncTotal.enumerated().forEach({ (index, val) in
+                            asyncs[ASYNC_COUNTS[index]] = val
+                        })
                         stats["MV"] = mv / Double(count)
-                        completion(stats, nil)
+                        completion(stats, asyncs, nil)
                     } catch {
                         print("\(error)")
                     }
                     
                 case(.none, .some(let error)):
-                    completion([:], error)
+                    completion([:], [:], error)
                 default: ()
                 }
             }
