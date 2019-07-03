@@ -21,6 +21,8 @@ class TimeFrameStatsViewController: UIViewController {
     var returnPoint = UIViewController()
     
     let breathMetadataType = BREATH_STAT_METADATA
+    let asyncTypes = ASYNC_COUNTS // luigi
+    lazy var asyncCounts = [String](repeating: "", count: asyncTypes.count)
     lazy var breathMetadataStat = [String](repeating: "", count: breathMetadataType.count)
     
     override func viewDidLoad() {
@@ -38,7 +40,7 @@ class TimeFrameStatsViewController: UIViewController {
         
         let spinner = showSpinner()
         
-        patient.getStats(for: timeInterval, from: date) { (stats, error) in
+        patient.getStats(for: timeInterval, from: date) { (stats, asyncs, error) in
             if let error = error {
                 self.removeSpinner(spinner)
                 self.showAlert(withTitle: "Stats Calculation Error", message: error.localizedDescription)
@@ -49,8 +51,15 @@ class TimeFrameStatsViewController: UIViewController {
                     self.breathMetadataStat[index] = String(format: "%.2f", stat)
                 }
             }
+            // luigi
+            for (index, type) in self.asyncTypes.enumerated() {
+                if let async = asyncs[type] {
+                    self.asyncCounts[index] = String(format: "%d", async)
+                }
+            }
             DispatchQueue.main.async {
                 self.breathStatsTableView.reloadData()
+                self.asyncStatsTableView.reloadData()
                 self.removeSpinner(spinner)
             }
         }
@@ -112,7 +121,7 @@ extension TimeFrameStatsViewController: UITableViewDelegate, UITableViewDataSour
             return "Metadata Stats"
         }
         else if tableView == asyncStatsTableView {
-            
+            return "Async Counts"
         }
         return ""
     }
@@ -122,7 +131,7 @@ extension TimeFrameStatsViewController: UITableViewDelegate, UITableViewDataSour
             return breathMetadataType.count
         }
         else if tableView == asyncStatsTableView {
-            
+            return asyncTypes.count
         }
         
         return 0
@@ -135,7 +144,8 @@ extension TimeFrameStatsViewController: UITableViewDelegate, UITableViewDataSour
             cell.detailTextLabel?.text = breathMetadataStat[indexPath.row]
         }
         else if tableView == asyncStatsTableView {
-            
+            cell.textLabel?.text = asyncTypes[indexPath.row]
+            cell.detailTextLabel?.text = asyncCounts[indexPath.row]
         }
         
         return cell
