@@ -68,12 +68,22 @@ class FeedbackViewController: UIViewController {
         
         let axisSet = graph.axisSet as! CPTXYAxisSet
         
+        // Define the style for the gridlines
+        let minorGridStyle = CPTMutableLineStyle()
+        minorGridStyle.lineColor = CPTColor.lightGray()
+        
+        let majorGridStyle = CPTLineStyle()
+        
         
         if let x = axisSet.xAxis, let y = axisSet.yAxis {
             x.majorIntervalLength   = Int(truncating: plotSpace.xRange.length) / 4 as NSNumber
             x.minorTicksPerInterval = 4
             x.axisConstraints = CPTConstraints(lowerOffset: 0.0)
+            x.majorGridLineStyle = majorGridStyle
+            x.minorGridLineStyle = minorGridStyle
             
+            y.majorGridLineStyle = majorGridStyle
+            y.minorGridLineStyle = minorGridStyle
             y.majorIntervalLength   = 50.0
             y.minorTicksPerInterval = 4
             y.axisConstraints = CPTConstraints(lowerOffset: 0.0)
