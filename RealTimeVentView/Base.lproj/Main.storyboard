@@ -913,10 +913,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0zM-WB-D3v" customClass="CPTGraphHostingView">
-                                <rect key="frame" x="20" y="64" width="335" height="472"/>
+                                <rect key="frame" x="20" y="64" width="335" height="410.5"/>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="o3e-sk-J0x">
-                                <rect key="frame" x="187.5" y="544" width="171.5" height="123"/>
+                                <rect key="frame" x="187.5" y="482.5" width="171.5" height="184.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="statsCell" textLabel="cvV-Z5-xe3" detailTextLabel="Yic-tD-JxU" style="IBUITableViewCellStyleValue1" id="7P5-d0-POp">
@@ -946,7 +946,7 @@
                                 </prototypes>
                             </tableView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GWz-dA-sFK">
-                                <rect key="frame" x="16" y="544" width="171.5" height="123"/>
+                                <rect key="frame" x="16" y="482.5" width="171.5" height="184.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="statsCell" textLabel="YHS-ea-gfR" detailTextLabel="hYg-1q-JUQ" style="IBUITableViewCellStyleValue1" id="8qS-9F-jYD">
@@ -982,7 +982,7 @@
                             <constraint firstItem="0zM-WB-D3v" firstAttribute="top" secondItem="tC5-vb-Jak" secondAttribute="bottom" id="3NK-eZ-pyj"/>
                             <constraint firstItem="o3e-sk-J0x" firstAttribute="top" secondItem="GWz-dA-sFK" secondAttribute="bottom" constant="8" id="64b-UW-5cl"/>
                             <constraint firstItem="o3e-sk-J0x" firstAttribute="top" secondItem="0zM-WB-D3v" secondAttribute="bottom" constant="8" id="9wO-3Y-Ebg"/>
-                            <constraint firstItem="GWz-dA-sFK" firstAttribute="height" secondItem="0zM-WB-D3v" secondAttribute="height" multiplier="0.26" id="BOg-cm-D0z"/>
+                            <constraint firstItem="GWz-dA-sFK" firstAttribute="height" secondItem="0zM-WB-D3v" secondAttribute="height" multiplier="0.45" id="BOg-cm-D0z"/>
                             <constraint firstItem="GWz-dA-sFK" firstAttribute="top" secondItem="tC5-vb-Jak" secondAttribute="bottom" id="J1g-SY-IjH"/>
                             <constraint firstItem="AA7-xY-urS" firstAttribute="top" secondItem="o3e-sk-J0x" secondAttribute="bottom" id="Jts-98-JGt"/>
                             <constraint firstItem="o3e-sk-J0x" firstAttribute="width" secondItem="GWz-dA-sFK" secondAttribute="width" id="KUc-VR-Phz"/>
@@ -1083,10 +1083,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="chP-FZ-KWL" customClass="CPTGraphHostingView">
-                                <rect key="frame" x="16" y="64" width="343" height="472"/>
+                                <rect key="frame" x="16" y="64" width="343" height="410.5"/>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="u3L-ss-aCC">
-                                <rect key="frame" x="16" y="544" width="343" height="123"/>
+                                <rect key="frame" x="16" y="482.5" width="343" height="184.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="0pV-sR-BOo">
                                     <size key="itemSize" width="142" height="50"/>
@@ -1164,7 +1164,7 @@
                             <constraint firstItem="chP-FZ-KWL" firstAttribute="top" secondItem="l5T-h0-SjN" secondAttribute="bottom" id="TAc-Yy-uoL"/>
                             <constraint firstItem="u3L-ss-aCC" firstAttribute="top" secondItem="chP-FZ-KWL" secondAttribute="bottom" constant="8" id="UQc-gY-Qlq"/>
                             <constraint firstItem="u3L-ss-aCC" firstAttribute="leading" secondItem="chP-FZ-KWL" secondAttribute="trailing" constant="8" id="azS-zf-Q45"/>
-                            <constraint firstItem="u3L-ss-aCC" firstAttribute="height" secondItem="chP-FZ-KWL" secondAttribute="height" multiplier="0.26" id="bGD-1c-NHh"/>
+                            <constraint firstItem="u3L-ss-aCC" firstAttribute="height" secondItem="chP-FZ-KWL" secondAttribute="height" multiplier="0.45" id="bGD-1c-NHh"/>
                             <constraint firstItem="u3L-ss-aCC" firstAttribute="trailing" secondItem="I68-q1-1mw" secondAttribute="trailingMargin" id="drd-F8-bi3"/>
                             <constraint firstItem="chP-FZ-KWL" firstAttribute="width" secondItem="I68-q1-1mw" secondAttribute="width" multiplier="0.6" id="fmE-36-UMX"/>
                             <constraint firstItem="u3L-ss-aCC" firstAttribute="leading" secondItem="I68-q1-1mw" secondAttribute="leadingMargin" id="kSK-lE-etO"/>

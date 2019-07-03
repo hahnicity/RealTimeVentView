@@ -127,6 +127,7 @@ class PatientModel {
                             return
                         }
                         let stats = Dictionary(uniqueKeysWithValues: stat.map({ (PACKET_NAME_TO_METADATA[$0]!, $1) }))
+                        let asyncs = Dictionary(uniqueKeysWithValues: async.map({ (PACKET_NAME_TO_CLASSIFICATIONS[$0]!, $1) }))
                         completion(stats, nil)
                     } catch {
                         print(error)
@@ -149,6 +150,7 @@ class PatientModel {
                         }
                         var tvi = 0.0, tve = 0.0, rr = 0.0, mv = 0.0, count = 0
                         var calc = Array<Double>(repeating: 0.0, count: BREATH_METADATA.count)
+                        var async = Array<Int>(repeating: 0, count: BREATH_ASYNCHRONY.count)
                         json.forEach({ (breath) in
                             var c = Array<Double>(repeating: 0.0, count: BREATH_METADATA.count)
                             for (index, val) in BREATH_METADATA.enumerated() {
@@ -158,8 +160,20 @@ class PatientModel {
                                 c[index] = temp
                             }
                             
+                            var a = Array<Int>(repeating: 0, count: BREATH_ASYNCHRONY.count)
+                            for (index, val) in BREATH_ASYNCHRONY.enumerated() {
+                                guard let temp = (breath[PACKET_CLASSIFICATION] as? [String: Any])?[CLASSIFICATIONS_TO_PACKET_NAME[val]!] as? Int else {
+                                    return
+                                }
+                                
+                                a[index] = temp
+                            }
+                            
                             for (index, val) in c.enumerated() {
                                 calc[index] += val
+                            }
+                            for (index, val) in a.enumerated() {
+                                async[index] += val
                             }
                             mv += c[4] * c[8]
                             count += 1
@@ -167,6 +181,10 @@ class PatientModel {
                         var stats: [String: Double] = [:]
                         calc.enumerated().forEach({ (index, val) in
                             stats[BREATH_METADATA[index]] = val / Double(count)
+                        })
+                        var asyncs: [String: Int] = [:]
+                        async.enumerated().forEach({ (index, val) in
+                            asyncs[BREATH_ASYNCHRONY[index]] = val
                         })
                         stats["MV"] = mv / Double(count)
                         completion(stats, nil)
@@ -316,11 +334,17 @@ class PatientModel {
                 pressureData += pressureSet
                 indexData += Array<Int>(repeating: index, count: flowSet.count)
                 switch (classifications[PACKET_BSA], classifications[PACKET_DTA], classifications[PACKET_TVV]) {
-                case (1, _, _):
+                case (1, _, 0):
                     asynchrony.append("BSA")
                     asynchronyIndex.append(offsets.count + flowSet.count / 2)
-                case (_, 1, _):
+                case (1, _, 1):
+                    asynchrony.append("BSA\nTVV")
+                    asynchronyIndex.append(offsets.count + flowSet.count / 2)
+                case (_, 1, 0):
                     asynchrony.append("DTA")
+                    asynchronyIndex.append(offsets.count + flowSet.count / 2)
+                case (_, 1, 1):
+                    asynchrony.append("DTA\nTVV")
                     asynchronyIndex.append(offsets.count + flowSet.count / 2)
                 case (_, _, 1):
                     asynchrony.append("TVV")

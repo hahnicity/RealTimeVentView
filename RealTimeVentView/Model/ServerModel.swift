@@ -37,7 +37,9 @@ let PACKET_NUM_BREATHS = "n_breaths"
 let PACKET_MV = "mv"
 
 // Luigi
+let BREATH_ASYNCHRONY = ["BSA", "DTA", "TVV"]
 let CLASSIFICATIONS_TO_PACKET_NAME = ["BSA": PACKET_BSA, "DTA": PACKET_DTA, "TVV": PACKET_TVV]
+let PACKET_NAME_TO_CLASSIFICATIONS = [PACKET_BSA: "BSA", PACKET_DTA: "DTA", PACKET_TVV: "TVV"]
 
 let BREATH_METADATA = ["E-Time", "I-Time", "I:E Ratio", "TVe", "TVi", "TVe/TVi", "epAUC", "ipAUC", "RR", "PEEP", "PIP"]
 let BREATH_STAT_METADATA = ["E-Time", "I-Time", "I:E Ratio", "TVe", "TVi", "TVe/TVi", "epAUC", "ipAUC", "RR", "MV", "PEEP", "PIP"]
