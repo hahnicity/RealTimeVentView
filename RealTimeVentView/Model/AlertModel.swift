@@ -101,7 +101,7 @@ class AsynchronyAlertModel {
     var timeFrame: Int
     var json: [String: Any] {
         get {
-            var json: [String: Any] =  ["alert_for_\(type.packetString)": alert, "\(type.packetString)_alert_freq": thresholdFrequency, "minutes_between_alerts": timeFrame]
+            var json: [String: Any] =  ["alert_for_\(type.packetString)": alert, "\(type.packetString)_alert_thresh": thresholdFrequency, "minutes_between_alerts": timeFrame]
             if let alertDuration = alertDuration {
                 json["\(type.packetString)_alert_duration"] = alertDuration
             }
@@ -112,7 +112,7 @@ class AsynchronyAlertModel {
     init(forType type: AsyncType) {
         self.type = type
         self.alert = Storage.defaultAlert["alert_for_\(type.packetString)"] as! Bool
-        self.thresholdFrequency = Storage.defaultAlert["\(type.packetString)_alert_freq"] as! Int
+        self.thresholdFrequency = Storage.defaultAlert["\(type.packetString)_alert_thresh"] as! Int
         self.timeFrame = Storage.defaultAlert["minutes_between_alerts"] as! Int
         self.alertDuration = Storage.defaultAlert["\(type.packetString)_alert_duration"] as? Int
     }
@@ -120,7 +120,7 @@ class AsynchronyAlertModel {
     init(forType type: AsyncType, withJSON json: [String: Any]) {
         self.type = type
         self.alert = json["alert_for_\(type.packetString)"] as! Bool
-        self.thresholdFrequency = json["\(type.packetString)_alert_freq"] as! Int
+        self.thresholdFrequency = json["\(type.packetString)_alert_thresh"] as! Int
         self.timeFrame = json["minutes_between_alerts"] as! Int
         self.alertDuration = json["\(type.packetString)_alert_duration"] as? Int
     }
