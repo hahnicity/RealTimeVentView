@@ -22,6 +22,8 @@ class AlertLogTableViewController: UITableViewController {
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         self.navigationItem.title = patient.name
         logs = DatabaseModel.shared.getAlerts(for: patient.name)
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 44.0
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -68,18 +70,22 @@ class AlertLogTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
+        var indexPath = indexPath
         if let expandedCell = expandedCell {
-            tableView.deleteRows(at: [IndexPath(row: expandedCell.row + 1, section: expandedCell.section)], with: .automatic)
             self.expandedCell = nil
+            tableView.deleteRows(at: [IndexPath(row: expandedCell.row + 1, section: expandedCell.section)], with: .automatic)
             if indexPath == expandedCell {
                 return
+            }
+            if indexPath.row > expandedCell.row {
+                indexPath.row -= 1
             }
         }
         // expand new cell
         let detailString = logs[indexPath.row].0.map { "\($0.0): \($0.1)" }.joined(separator: "\n")
         detailCell = tableView.dequeueReusableCell(withIdentifier: "detailCell") ?? UITableViewCell(style: .default, reuseIdentifier: "detailCell")
         detailCell?.textLabel?.text = detailString
+        detailCell?.isUserInteractionEnabled = false
         expandedCell = indexPath
         tableView.insertRows(at: [IndexPath(row: indexPath.row + 1, section: indexPath.section)], with: .automatic)
     }
