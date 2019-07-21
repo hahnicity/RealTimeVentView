@@ -495,7 +495,6 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="neb-Ta-nGo">
                                                     <rect key="frame" x="306" y="6.5" width="51" height="30.5"/>
                                                     <connections>
-                                                        <action selector="notificationSwitchChanged:" destination="olE-Kj-zc3" eventType="valueChanged" id="7Q4-rW-YsZ"/>
                                                         <action selector="switchChanged:" destination="mwj-T0-p8b" eventType="valueChanged" id="rqk-RX-dTJ"/>
                                                     </connections>
                                                 </switch>
@@ -1418,7 +1417,6 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iEJ-Af-9kD">
                                                     <rect key="frame" x="306" y="6.5" width="51" height="30.5"/>
                                                     <connections>
-                                                        <action selector="notificationSwitchChanged:" destination="OQM-Ou-b6r" eventType="valueChanged" id="y2L-ng-Zj1"/>
                                                         <action selector="switchChanged:" destination="UZk-B6-2ne" eventType="valueChanged" id="JER-Py-mRZ"/>
                                                     </connections>
                                                 </switch>
