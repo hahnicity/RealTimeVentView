@@ -97,11 +97,12 @@ class AsynchronyAlertModel {
     var type: AsyncType
     var alert: Bool
     var thresholdFrequency: Int
+    var rrLowerThreshold: Int
     var alertDuration: Int?
     var timeFrame: Int
     var json: [String: Any] {
         get {
-            var json: [String: Any] =  ["alert_for_\(type.packetString)": alert, "\(type.packetString)_alert_thresh": thresholdFrequency, "minutes_between_alerts": timeFrame]
+            var json: [String: Any] =  ["alert_for_\(type.packetString)": alert, "\(type.packetString)_alert_thresh": thresholdFrequency, "rr_alert_lower_thresh": rrLowerThreshold, "minutes_between_alerts": timeFrame]
             if let alertDuration = alertDuration {
                 json["\(type.packetString)_alert_duration"] = alertDuration
             }
@@ -115,6 +116,11 @@ class AsynchronyAlertModel {
         self.thresholdFrequency = Storage.defaultAlert["\(type.packetString)_alert_thresh"] as! Int
         self.timeFrame = Storage.defaultAlert["minutes_between_alerts"] as! Int
         self.alertDuration = Storage.defaultAlert["\(type.packetString)_alert_duration"] as? Int
+        if type.packetString == "rr" {
+            self.rrLowerThreshold = Storage.defaultAlert["\(type.packetString)_alert_lower_thresh"] as! Int
+        } else {
+            self.rrLowerThreshold = 0
+        }
     }
     
     init(forType type: AsyncType, withJSON json: [String: Any]) {
@@ -123,14 +129,20 @@ class AsynchronyAlertModel {
         self.thresholdFrequency = json["\(type.packetString)_alert_thresh"] as! Int
         self.timeFrame = json["minutes_between_alerts"] as! Int
         self.alertDuration = json["\(type.packetString)_alert_duration"] as? Int
+        if type.packetString == "rr" {
+            self.rrLowerThreshold = json["\(type.packetString)_alert_lower_thresh"] as! Int
+        } else {
+            self.rrLowerThreshold = 0
+        }
     }
     
-    init(forType type: AsyncType, setTo alert: Bool, withThresholdFrequencyOf thresholdFrequency: Int, withAlertDurationOf alertDuration: Int? = nil, withinTimeFrame timeFrame: Int = 0) {
+    init(forType type: AsyncType, setTo alert: Bool, withThresholdFrequencyOf thresholdFrequency: Int, withLowerThresholFrequency rrLowerThreshold: Int, withAlertDurationOf alertDuration: Int? = nil, withinTimeFrame timeFrame: Int = 0) {
         self.type = type
         self.alert = alert
         self.thresholdFrequency = thresholdFrequency
         self.alertDuration = alertDuration
         self.timeFrame = timeFrame
+        self.rrLowerThreshold = rrLowerThreshold
     }
     
 }

@@ -15,6 +15,8 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
     @IBOutlet weak var alertLabel: UILabel!
     @IBOutlet weak var alertSwitch: UISwitch!
     
+    @IBOutlet weak var lowerThresholdFrequencyLabel: UILabel!
+    @IBOutlet weak var lowerThresholdFrequencyTextField: UITextField!
     @IBOutlet weak var thresholdFrequencyLabel: UILabel!
     @IBOutlet weak var thresholdFrequencyTextField: UITextField!
     @IBOutlet weak var timeFrameLabel: UILabel!
@@ -54,6 +56,7 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
         
         alertSwitch.isOn = alertType.alert
         thresholdFrequencyTextField.text = "\(alertType.thresholdFrequency)"
+        lowerThresholdFrequencyTextField.text = "\(alertType.rrLowerThreshold)"
         timeFrameTextField.text = "\(alertType.timeFrame)"
         alertDurationTextField.text = alertType.alertDuration == nil ? "" : "\(alertType.alertDuration!)"
         
@@ -63,7 +66,7 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
             alertDurationTextField.isHidden = true
         }
 
-        turnCellsOn(alertType.alert)
+        turnCellsOn(alertType.alert, type: alertType.type)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -77,6 +80,29 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
     }
     
     func turnCellsOn(_ on: Bool) {
+        if lowerThresholdFrequencyLabel.isEnabled {
+            lowerThresholdFrequencyLabel.isEnabled = on
+            lowerThresholdFrequencyTextField.isEnabled = on
+        } else {
+            lowerThresholdFrequencyLabel.isEnabled = false
+            lowerThresholdFrequencyTextField.isEnabled = false
+        }
+        thresholdFrequencyLabel.isEnabled = on
+        thresholdFrequencyTextField.isEnabled = on
+        timeFrameLabel.isEnabled = on
+        timeFrameTextField.isEnabled = on
+        alertDurationLabel.isEnabled = on
+        alertDurationTextField.isEnabled = on
+    }
+    
+    func turnCellsOn(_ on: Bool, type: AsyncType) {
+        if type.packetString == "rr" {
+            lowerThresholdFrequencyLabel.isEnabled = on
+            lowerThresholdFrequencyTextField.isEnabled = on
+        } else {
+            lowerThresholdFrequencyLabel.isEnabled = false
+            lowerThresholdFrequencyTextField.isEnabled = false
+        }
         thresholdFrequencyLabel.isEnabled = on
         thresholdFrequencyTextField.isEnabled = on
         timeFrameLabel.isEnabled = on
@@ -87,24 +113,25 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
     
     @IBAction func submit(_ sender: UIBarButtonItem) {
         guard let thresholdFrequency = thresholdFrequencyTextField.text,
+            let lowerThresholdFrequency = lowerThresholdFrequencyTextField.text,
             let timeFrame = timeFrameTextField.text,
             let alertDuration = alertDurationTextField.text else {
             return
         }
         
-        if hasFormError(WithThresholdFrequency: thresholdFrequency, withAlertDuration: alertDuration, WithinTimeFrame: timeFrame) {
+        if hasFormError(WithThresholdFrequency: thresholdFrequency, withLowerThresholdFrequency: lowerThresholdFrequency, withAlertDuration: alertDuration, WithinTimeFrame: timeFrame) {
             return
         }
         
         switch type {
         case .bsa:
-            alert.alertBSA = AsynchronyAlertModel(forType: .bsa, setTo: alertSwitch.isOn, withThresholdFrequencyOf: Int(thresholdFrequency)!, withinTimeFrame: Int(timeFrame)!)
+            alert.alertBSA = AsynchronyAlertModel(forType: .bsa, setTo: alertSwitch.isOn, withThresholdFrequencyOf: Int(thresholdFrequency)!, withLowerThresholFrequency: -1, withinTimeFrame: Int(timeFrame)!)
         case .dta:
-            alert.alertDTA = AsynchronyAlertModel(forType: .dta, setTo: alertSwitch.isOn, withThresholdFrequencyOf: Int(thresholdFrequency)!, withinTimeFrame: Int(timeFrame)!)
+            alert.alertDTA = AsynchronyAlertModel(forType: .dta, setTo: alertSwitch.isOn, withThresholdFrequencyOf: Int(thresholdFrequency)!, withLowerThresholFrequency: -1, withinTimeFrame: Int(timeFrame)!)
         case .tvv:
-            alert.alertTVV = AsynchronyAlertModel(forType: .tvv, setTo: alertSwitch.isOn, withThresholdFrequencyOf: Int(thresholdFrequency)!, withinTimeFrame: Int(timeFrame)!)
+            alert.alertTVV = AsynchronyAlertModel(forType: .tvv, setTo: alertSwitch.isOn, withThresholdFrequencyOf: Int(thresholdFrequency)!, withLowerThresholFrequency: -1, withinTimeFrame: Int(timeFrame)!)
         case .rr:
-            alert.alertRR = AsynchronyAlertModel(forType: .rr, setTo: alertSwitch.isOn, withThresholdFrequencyOf: Int(thresholdFrequency)!, withAlertDurationOf: Int(alertDuration), withinTimeFrame: Int(timeFrame)!)
+            alert.alertRR = AsynchronyAlertModel(forType: .rr, setTo: alertSwitch.isOn, withThresholdFrequencyOf: Int(thresholdFrequency)!, withLowerThresholFrequency: Int(lowerThresholdFrequency)!, withAlertDurationOf: Int(alertDuration), withinTimeFrame: Int(timeFrame)!)
         }
         
         // THIS IS ONLY HERE UNTIL WE IMPLEMENT A SEPERATE TIME FRAME FOR EACH ASYNCHRONY
@@ -135,7 +162,7 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
     }
     
     
-    func hasFormError(WithThresholdFrequency thresholdFrequency: String, withAlertDuration alertDuration: String, WithinTimeFrame timeFrame: String) -> Bool {
+    func hasFormError(WithThresholdFrequency thresholdFrequency: String, withLowerThresholdFrequency lowerThresholdFrequency: String, withAlertDuration alertDuration: String, WithinTimeFrame timeFrame: String) -> Bool {
         if thresholdFrequency.count == 0 {
             showAlert(withTitle: "Alert Settings Error", message: "Please enter the threshold frequency for the patient.")
             return true
@@ -143,6 +170,16 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
         
         if thresholdFrequency.count == 0 && type == .rr {
             showAlert(withTitle: "Alert Settings Error", message: "Please enter the alert duration for the patient.")
+            return true
+        }
+        
+        if lowerThresholdFrequency.count == 0 {
+            showAlert(withTitle: "Alert Settings Error", message: "Please enter the lower threshold frequency for the patient.")
+            return true
+        }
+        
+        if lowerThresholdFrequency.count >= thresholdFrequency.count {
+            showAlert(withTitle: "Alert Settings Error", message: "The lower threshold must be smaller value than the threshold.")
             return true
         }
 
@@ -153,6 +190,11 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
         
         guard let freq = Int(thresholdFrequency), freq > 0 else {
             showAlert(withTitle: "Alert Settings Error", message: "The threshold frequency must be a positive number.")
+            return true
+        }
+        
+        guard let lowerFreq = Int(lowerThresholdFrequency), lowerFreq > 0 else {
+            showAlert(withTitle: "Alert Settings Error", message: "The lower threshold frequency must be a positive number.")
             return true
         }
         
