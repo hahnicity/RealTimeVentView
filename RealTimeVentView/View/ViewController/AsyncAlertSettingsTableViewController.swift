@@ -64,9 +64,11 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
             //alertDurationCell.isHidden = true
             alertDurationLabel.isHidden = true
             alertDurationTextField.isHidden = true
+            lowerThresholdFrequencyLabel.isHidden = true
+            lowerThresholdFrequencyTextField.isHidden = true
         }
 
-        turnCellsOn(alertType.alert, type: alertType.type)
+        turnCellsOn(alertType.alert)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -80,29 +82,8 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
     }
     
     func turnCellsOn(_ on: Bool) {
-        if lowerThresholdFrequencyLabel.isEnabled {
-            lowerThresholdFrequencyLabel.isEnabled = on
-            lowerThresholdFrequencyTextField.isEnabled = on
-        } else {
-            lowerThresholdFrequencyLabel.isEnabled = false
-            lowerThresholdFrequencyTextField.isEnabled = false
-        }
-        thresholdFrequencyLabel.isEnabled = on
-        thresholdFrequencyTextField.isEnabled = on
-        timeFrameLabel.isEnabled = on
-        timeFrameTextField.isEnabled = on
-        alertDurationLabel.isEnabled = on
-        alertDurationTextField.isEnabled = on
-    }
-    
-    func turnCellsOn(_ on: Bool, type: AsyncType) {
-        if type.packetString == "rr" {
-            lowerThresholdFrequencyLabel.isEnabled = on
-            lowerThresholdFrequencyTextField.isEnabled = on
-        } else {
-            lowerThresholdFrequencyLabel.isEnabled = false
-            lowerThresholdFrequencyTextField.isEnabled = false
-        }
+        lowerThresholdFrequencyLabel.isEnabled = on
+        lowerThresholdFrequencyTextField.isEnabled = on
         thresholdFrequencyLabel.isEnabled = on
         thresholdFrequencyTextField.isEnabled = on
         timeFrameLabel.isEnabled = on
