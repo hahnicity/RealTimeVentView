@@ -74,7 +74,6 @@
 		37AC9DBD22012D3E0048469E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		37AC9DBF22012D3E0048469E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		37AC9DC222012D3E0048469E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		37AC9DC422012D3E0048469E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		37AC9DC922012D3E0048469E /* RealTimeVentViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RealTimeVentViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		37AC9DCD22012D3E0048469E /* RealTimeVentViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealTimeVentViewTests.swift; sourceTree = "<group>"; };
 		37AC9DCF22012D3E0048469E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -187,7 +186,6 @@
 				37AC9DBC22012D3E0048469E /* Main.storyboard */,
 				37AC9DC122012D3E0048469E /* LaunchScreen.storyboard */,
 				37AC9DBF22012D3E0048469E /* Assets.xcassets */,
-				37AC9DC422012D3E0048469E /* Info.plist */,
 				A3730E95221E11CC00302F84 /* RealTimeVentView.entitlements */,
 				A754B6582202448E00CD1A74 /* sample2.json */,
 				A754B6522202373000CD1A74 /* sample.json */,
@@ -370,7 +368,6 @@
 				TargetAttributes = {
 					37AC9DB422012D3E0048469E = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = BC2A7FVV3C;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -711,13 +708,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = RealTimeVentView/RealTimeVentView.entitlements;
-				DEVELOPMENT_TEAM = BC2A7FVV3C;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = RealTimeVentView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ccil.RealTimeVentViewer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -727,13 +725,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = RealTimeVentView/RealTimeVentView.entitlements;
-				DEVELOPMENT_TEAM = BC2A7FVV3C;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = RealTimeVentView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ccil.RealTimeVentViewer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
