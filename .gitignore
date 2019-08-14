@@ -66,3 +66,9 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+RealTimeVentView\.xcodeproj/project\.pbxproj
+
+Pods/Pods\.xcodeproj/xcshareddata/xcschemes/Charts\.xcscheme
+
+Pods/Pods\.xcodeproj/xcshareddata/xcschemes/Charts 2\.xcscheme
