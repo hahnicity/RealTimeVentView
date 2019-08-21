@@ -184,8 +184,8 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
             return true
         }
         
-        guard let lowerFreq = Int(lowerThresholdFrequency), lowerFreq > 0 else {
-            showAlert(withTitle: "Alert Settings Error", message: "The lower threshold frequency must be a positive number.")
+        guard let lowerFreq = Int(lowerThresholdFrequency), lowerFreq >= 0 else {
+            showAlert(withTitle: "Alert Settings Error", message: "The lower threshold frequency can't be negative.")
             return true
         }
         
