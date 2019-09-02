@@ -69,6 +69,11 @@ class PatientListTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if self.accessType == .alert {
+            let swipeAction = UISwipeActionsConfiguration(actions: [])
+            
+            return swipeAction
+        }
         let delete = UIContextualAction(style: .destructive, title: "Unenroll") { (action, view, success) in
             print("Disassociating row \(indexPath.row)")
             let alert = UIAlertController(title: "Disassociate Patient", message: "Would you like to disassociate patient \(self.patients[indexPath.row].name)?", preferredStyle: .alert)
