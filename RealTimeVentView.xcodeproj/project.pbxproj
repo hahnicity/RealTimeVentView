@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		028342BA9CA27D7690D2573C /* Pods_RealTimeVentView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFA4351A9C98CC2EC98494BC /* Pods_RealTimeVentView.framework */; };
+		2ADB23D2231DC793009F9CB7 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ADB23D1231DC793009F9CB7 /* SQLite.framework */; };
 		37AC9DB922012D3E0048469E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DB822012D3E0048469E /* AppDelegate.swift */; };
 		37AC9DBB22012D3E0048469E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DBA22012D3E0048469E /* MainViewController.swift */; };
 		37AC9DBE22012D3E0048469E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37AC9DBC22012D3E0048469E /* Main.storyboard */; };
@@ -66,6 +67,7 @@
 /* Begin PBXFileReference section */
 		0A2263EA28BC184410C3E34B /* Pods-RealTimeVentViewUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeVentViewUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RealTimeVentViewUITests/Pods-RealTimeVentViewUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		1987620A2B3BB6D084354849 /* Pods_RealTimeVentViewUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RealTimeVentViewUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2ADB23D1231DC793009F9CB7 /* SQLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SQLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FFFF9C671B6B66818BA518A /* Pods-RealTimeVentView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeVentView.release.xcconfig"; path = "Pods/Target Support Files/Pods-RealTimeVentView/Pods-RealTimeVentView.release.xcconfig"; sourceTree = "<group>"; };
 		34FF52546D325D7EEAE5915E /* Pods-RealTimeVentView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeVentView.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RealTimeVentView/Pods-RealTimeVentView.debug.xcconfig"; sourceTree = "<group>"; };
 		37AC9DB522012D3E0048469E /* RealTimeVentView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealTimeVentView.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -121,6 +123,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2ADB23D2231DC793009F9CB7 /* SQLite.framework in Frameworks */,
 				028342BA9CA27D7690D2573C /* Pods_RealTimeVentView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -147,6 +150,7 @@
 		25BA522C69857E495BAF1794 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2ADB23D1231DC793009F9CB7 /* SQLite.framework */,
 				BFA4351A9C98CC2EC98494BC /* Pods_RealTimeVentView.framework */,
 				7219F4F592484036F11EEA2F /* Pods_RealTimeVentViewTests.framework */,
 				1987620A2B3BB6D084354849 /* Pods_RealTimeVentViewUITests.framework */,

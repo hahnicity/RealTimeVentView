@@ -68,10 +68,10 @@ class ConfigurationTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if indexPath.section == 1, indexPath.row > 0 {
+        if indexPath.section == 1, indexPath.row > 1 {
             let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "asyncAlertSettingsTableViewController") as! AsyncAlertSettingsTableViewController
             viewController.alert = defaultAlert
-            viewController.type = AsyncType(rawValue: indexPath.row - 1) ?? .bsa
+            viewController.type = AsyncType(rawValue: indexPath.row - 2) ?? .bsa
             self.navigationController?.pushViewController(viewController, animated: true)
         }
         self.view.endEditing(true)
