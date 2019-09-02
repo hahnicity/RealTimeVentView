@@ -43,6 +43,7 @@ class ConfigurationTableViewController: UITableViewController {
     @IBOutlet weak var numFeedbackBreathsTextField: UITextField!
     @IBOutlet weak var notificationSwitch: UISwitch!
     @IBOutlet weak var defaultNotificationSwitch: UISwitch!
+    @IBOutlet weak var minutesBetweenAlertsText: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,6 +53,7 @@ class ConfigurationTableViewController: UITableViewController {
         notificationSwitch.isOn = UIApplication.shared.isRegisteredForRemoteNotifications
         let defaultAlert = AlertModel()
         defaultNotificationSwitch.isOn = defaultAlert.notification
+        minutesBetweenAlertsText.text = "\(defaultAlert.alertMV.timeFrame)"
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
@@ -99,13 +101,14 @@ class ConfigurationTableViewController: UITableViewController {
         
         guard let loadTimeFrame = loadTimeFrameTextField.text,
             let updateInterval = updateIntervalTextField.text,
-            let numFeedbackBreaths = numFeedbackBreathsTextField.text
+            let numFeedbackBreaths = numFeedbackBreathsTextField.text,
+            let minutes = minutesBetweenAlertsText.text
             else {
                 print("Number not retrieved")
                 return
         }
         
-        if hasAppConfigError(withLoadTimeFrame: loadTimeFrame, updateInterval: updateInterval, numBreathFeedback: numFeedbackBreaths) {
+        if hasAppConfigError(withLoadTimeFrame: loadTimeFrame, updateInterval: updateInterval, numBreathFeedback: numFeedbackBreaths, withMinutesBetweenAlerts: minutes) {
             return
         }
         
@@ -142,11 +145,22 @@ class ConfigurationTableViewController: UITableViewController {
         Storage.updateInterval = Int(updateInterval)!
         Storage.numFeedbackBreaths = Int(numFeedbackBreaths)!
         Storage.defaultAlert = defaultAlert.json
+        Storage.defaultAlert["minutes_between_alerts"] = Int(minutes)
         
         self.navigationController?.popToRootViewController(animated: true)
     }
     
-    func hasAppConfigError(withLoadTimeFrame loadTimeFrame: String, updateInterval: String, numBreathFeedback: String) -> Bool {
+    func hasAppConfigError(withLoadTimeFrame loadTimeFrame: String, updateInterval: String, numBreathFeedback: String, withMinutesBetweenAlerts minutesBetweenAlerts: String) -> Bool {
+        
+        if minutesBetweenAlerts.count == 0 {
+            showAlert(withTitle: "Alert Settings Error", message: "Please enter the minutes between alerts for the patient.")
+            return true
+        }
+        
+        guard let freq = Int(minutesBetweenAlerts), freq > 0 else {
+            showAlert(withTitle: "Alert Settings Error", message: "The minutes between alerts must be a positive number.")
+            return true
+        }
         
         if loadTimeFrame.count == 0 {
             showAlert(withTitle: "App Configuration Error", message: "Please enter the time frame of the data load.")

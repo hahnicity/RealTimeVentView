@@ -17,6 +17,7 @@ enum AlertAccessType {
 }
 
 class AlertSettingsTableViewController: UITableViewController {
+    
     var index = 0
     var patient = PatientModel()
     var alertSetting = AlertModel()
@@ -26,15 +27,19 @@ class AlertSettingsTableViewController: UITableViewController {
     var alertTimeFrame = ""
     
     @IBOutlet weak var notificationSwitch: UISwitch!
+    @IBOutlet weak var minutesBetweenAlertsText: UITextField!
+    
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         alertSetting = AlertModel(at: index)
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         notificationSwitch.isOn = alertSetting.notification
+        minutesBetweenAlertsText.text = "\(alertSetting.alertBSA.timeFrame)"
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
@@ -58,12 +63,12 @@ class AlertSettingsTableViewController: UITableViewController {
             default: ()
             }
         case 1:
-            if indexPath.row > 0 {
+            if indexPath.row > 1 {
                 let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "asyncAlertSettingsTableViewController") as! AsyncAlertSettingsTableViewController
                 viewController.alert = alertSetting
                 viewController.patient = patient
                 viewController.index = index
-                viewController.type = AsyncType(rawValue: indexPath.row - 1) ?? .bsa
+                viewController.type = AsyncType(rawValue: indexPath.row - 2) ?? .bsa
                 self.navigationController?.pushViewController(viewController, animated: true)
             }
         default: ()
@@ -74,6 +79,22 @@ class AlertSettingsTableViewController: UITableViewController {
     }
     
     @IBAction func submit(_ sender: UIBarButtonItem) {
+        guard let minutes = minutesBetweenAlertsText.text else {
+            return
+        }
+        
+        if hasFormError(withMinutesBetweenAlerts: minutes) {
+            return
+        }
+        
+        alertSetting.alertBSA.timeFrame = Int(minutes)!
+        alertSetting.alertDTA.timeFrame = Int(minutes)!
+        alertSetting.alertTVV.timeFrame = Int(minutes)!
+        alertSetting.alertRR.timeFrame = Int(minutes)!
+        alertSetting.alertMV.timeFrame = Int(minutes)!
+        alertSetting.alertMAW.timeFrame = Int(minutes)!
+        alertSetting.alertTVI.timeFrame = Int(minutes)!
+        
         let lock = NSLock()
         
         alertSetting.notification = notificationSwitch.isOn
@@ -98,6 +119,20 @@ class AlertSettingsTableViewController: UITableViewController {
                 }
             }
         }
+    }
+    
+    func hasFormError(withMinutesBetweenAlerts minutesBetweenAlerts: String) -> Bool {
+        if minutesBetweenAlerts.count == 0 {
+            showAlert(withTitle: "Alert Settings Error", message: "Please enter the minutes between alerts for the patient.")
+            return true
+        }
+        
+        guard let freq = Int(minutesBetweenAlerts), freq > 0 else {
+            showAlert(withTitle: "Alert Settings Error", message: "The minutes between alerts must be a positive number.")
+            return true
+        }
+        
+        return false
     }
     
     func showAlert(withTitle title: String, message: String) {
