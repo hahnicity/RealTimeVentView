@@ -44,10 +44,13 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
         switch type {
         case .bsa:
             alertType = alert.alertBSA
+            thresholdFrequencyLabel.text = "Events per Minute"
         case .dta:
             alertType = alert.alertDTA
+            thresholdFrequencyLabel.text = "Events per Minute"
         case .tvv:
             alertType = alert.alertTVV
+            thresholdFrequencyLabel.text = "Events per Minute"
         case .rr:
             alertType = alert.alertRR
         case .tvi:
