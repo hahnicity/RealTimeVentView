@@ -17,10 +17,11 @@ class AlertModel {
     var alertMV: AsynchronyAlertModel
     var alertTVI: AsynchronyAlertModel
     var alertMAW: AsynchronyAlertModel
+    var alertPIP: AsynchronyAlertModel
     
     var json: [String: Any] {
         get {
-            var json = alertBSA.json.merging(alertDTA.json) { a, b in a }.merging(alertTVV.json) { a, b in a }.merging(alertRR.json) { a, b in a }.merging(alertMV.json) {a, b in a}.merging(alertTVI.json) {a, b in a}.merging(alertMAW.json) {a, b in a}
+            var json = alertBSA.json.merging(alertDTA.json) { a, b in a }.merging(alertTVV.json) { a, b in a }.merging(alertRR.json) { a, b in a }.merging(alertMV.json) {a, b in a}.merging(alertTVI.json) {a, b in a}.merging(alertMAW.json) {a, b in a}.merging(alertPIP.json) {a, b in a}
             json["notification"] = notification
             return json
         }
@@ -35,6 +36,7 @@ class AlertModel {
         self.alertMV = AsynchronyAlertModel(forType: .mv)
         self.alertTVI = AsynchronyAlertModel(forType: .tvi)
         self.alertMAW = AsynchronyAlertModel(forType: .maw)
+        self.alertPIP = AsynchronyAlertModel(forType: .pip)
     }
     
     init(withJSON json: [String: Any]) {
@@ -46,6 +48,7 @@ class AlertModel {
         self.alertTVI = AsynchronyAlertModel(forType: .tvi, withJSON: json)
         self.alertMV = AsynchronyAlertModel(forType: .mv, withJSON: json)
         self.alertMAW = AsynchronyAlertModel(forType: .maw, withJSON: json)
+        self.alertPIP = AsynchronyAlertModel(forType: .pip, withJSON: json)
     }
     
     convenience init(at index: Int) {
@@ -81,6 +84,7 @@ enum AsyncType: Int {
     case mv = 4
     case tvi = 5
     case maw = 6
+    case pip = 7
     
     var string: String {
         get {
@@ -92,6 +96,7 @@ enum AsyncType: Int {
             case .mv: return "MV"
             case .tvi: return "TVI"
             case .maw: return "MAW"
+            case .pip: return "PIP"
             }
         }
     }
@@ -106,6 +111,7 @@ enum AsyncType: Int {
             case .mv: return "mv"
             case .tvi: return "tvi"
             case .maw: return "maw"
+            case .pip: return "pip"
             }
         }
     }
@@ -121,7 +127,7 @@ class AsynchronyAlertModel {
     var json: [String: Any] {
         get {
             var json: [String: Any] =  ["alert_for_\(type.packetString)": alert, "\(type.packetString)_alert_thresh": thresholdFrequency, "minutes_between_alerts": timeFrame, "\(type.packetString)_alert_time_frame": alertDuration]
-            if self.type.packetString == "mv" || self.type.packetString == "rr" || self.type.packetString == "tvi" || self.type.packetString == "maw" {
+            if self.type.packetString == "mv" || self.type.packetString == "rr" || self.type.packetString == "tvi" || self.type.packetString == "maw" || self.type.packetString == "pip" {
                 json["\(type.packetString)_alert_lower_thresh"] = lowerThreshold
             }
             return json
@@ -134,7 +140,7 @@ class AsynchronyAlertModel {
         self.thresholdFrequency = Storage.defaultAlert["\(type.packetString)_alert_thresh"] as! Int
         self.timeFrame = Storage.defaultAlert["minutes_between_alerts"] as! Int
         self.alertDuration = Storage.defaultAlert["\(type.packetString)_alert_time_frame"] as! Int
-        if type.packetString == "rr" || type.packetString == "mv" || type.packetString == "tvi" || type.packetString == "maw" {
+        if type.packetString == "rr" || type.packetString == "mv" || type.packetString == "tvi" || type.packetString == "maw" || type.packetString == "pip" {
             self.lowerThreshold = Storage.defaultAlert["\(type.packetString)_alert_lower_thresh"] as! Int
         } else {
             self.lowerThreshold = 0
@@ -147,7 +153,7 @@ class AsynchronyAlertModel {
         self.thresholdFrequency = json["\(type.packetString)_alert_thresh"] as! Int
         self.timeFrame = json["minutes_between_alerts"] as! Int
         self.alertDuration = json["\(type.packetString)_alert_time_frame"] as! Int
-        if type.packetString == "rr" || type.packetString == "mv" || type.packetString == "tvi" || type.packetString == "maw" {
+        if type.packetString == "rr" || type.packetString == "mv" || type.packetString == "tvi" || type.packetString == "maw" || type.packetString == "pip" {
             self.lowerThreshold = json["\(type.packetString)_alert_lower_thresh"] as! Int
         } else {
             self.lowerThreshold = 0

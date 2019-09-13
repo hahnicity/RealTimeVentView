@@ -29,7 +29,7 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
     var patient: PatientModel?
     var alert = AlertModel()
     
-    let alertDurationType: [AsyncType] = [ .rr , .tvi, .mv, .maw]
+    let alertDurationType: [AsyncType] = [ .rr , .tvi, .mv, .maw, .pip]
     
     
     override func viewDidLoad() {
@@ -59,6 +59,8 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
             alertType = alert.alertMAW
         case .mv:
             alertType = alert.alertMV
+        case .pip:
+            alertType = alert.alertPIP
         }
         
         alertSwitch.isOn = alertType.alert
@@ -122,6 +124,8 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
             alert.alertTVI = AsynchronyAlertModel(forType: .tvi, setTo: alertSwitch.isOn, withThresholdFrequencyOf: Int(thresholdFrequency)!, withLowerThresholFrequency: Int(lowerThresholdFrequency)!, withAlertDurationOf: Int(alertDuration)!)
         case .maw:
             alert.alertMAW = AsynchronyAlertModel(forType: .maw, setTo: alertSwitch.isOn, withThresholdFrequencyOf: Int(thresholdFrequency)!, withLowerThresholFrequency: Int(lowerThresholdFrequency)!, withAlertDurationOf: Int(alertDuration)!)
+        case .pip:
+            alert.alertPIP = AsynchronyAlertModel(forType: .pip, setTo: alertSwitch.isOn, withThresholdFrequencyOf: Int(thresholdFrequency)!, withLowerThresholFrequency: Int(lowerThresholdFrequency)!, withAlertDurationOf: Int(alertDuration)!)
         }
         
         // THIS IS ONLY HERE UNTIL WE IMPLEMENT A SEPERATE TIME FRAME FOR EACH ASYNCHRONY
@@ -132,6 +136,7 @@ class AsyncAlertSettingsTableViewController: UITableViewController {
         alert.alertMV.timeFrame = Storage.defaultAlert["minutes_between_alerts"] as! Int
         alert.alertMAW.timeFrame = Storage.defaultAlert["minutes_between_alerts"] as! Int
         alert.alertTVI.timeFrame = Storage.defaultAlert["minutes_between_alerts"] as! Int
+        alert.alertPIP.timeFrame = Storage.defaultAlert["minutes_between_alerts"] as! Int
         
         if let patient = patient, let index = index {
             let lock = NSLock()

@@ -94,6 +94,7 @@ class AlertSettingsTableViewController: UITableViewController {
         alertSetting.alertMV.timeFrame = Int(minutes)!
         alertSetting.alertMAW.timeFrame = Int(minutes)!
         alertSetting.alertTVI.timeFrame = Int(minutes)!
+        alertSetting.alertPIP.timeFrame = Int(minutes)!
         
         let lock = NSLock()
         
