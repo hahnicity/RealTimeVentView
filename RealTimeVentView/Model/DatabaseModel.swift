@@ -129,7 +129,7 @@ class DatabaseModel {
         }
     }
     
-    func getAlerts(for patient: String) -> [([(String, Int)], Date)] {
+    func getAlerts(for patient: String) -> [([(String, String)], Date)] {
         do {
             let alertlogs = Table(TABLE_ALERT_LOGS)
             let patientName = Expression<String>(COL_PATIENT_NAME)
@@ -139,18 +139,18 @@ class DatabaseModel {
             let old = alertlogs.filter(logDate < Date(timeIntervalSinceNow: -86400.0))
             let list = alertlogs.filter(patientName == patient && logDate > Date(timeIntervalSinceNow: -86400.0)).order(logDate.desc)
             
-            var alerts: [([(String, Int)], Date)] = []
+            var alerts: [([(String, String)], Date)] = []
             
             try db.prepare(list).forEach({ (alert) in
                 let l = alert[logType].split(separator: " ")
-                var al: [(String, Int)] = []
+                var al: [(String, String)] = []
                 l.forEach({ (t) in
-                    guard let t = t.split(separator: ":").first,
-                        let temp = t.split(separator: ":").last,
-                        let count = Int(String(temp)) else {
+                    guard let type = t.split(separator: ":").first,
+                        let count = t.split(separator: ":").last else {
                         return
                     }
-                    al.append((String(t), count))
+                    let temp = (String(type), String(count))
+                    al.append(temp)
                 })
                 alerts.append((al, alert[logDate]))
             })
