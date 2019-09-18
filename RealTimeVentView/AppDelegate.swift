@@ -130,7 +130,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 }
             }
             else if type == "threshold_push" {
-                if let name = userInfo["patient"] as? String {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = SERVER_DATE_FORMAT
+                dateFormatter.timeZone = SERVER_TIMEZONE
+                
+                if let name = userInfo["patient"] as? String,
+                    let dateString = userInfo["date"] as? String,
+                    let date = dateFormatter.date(from: dateString),
+                    let alerts = userInfo["alerts"] as? [[String: Any]] {
+                    logAsync(alerts, for: name, at: date)
                     let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "chartViewController") as! ChartViewController
                     viewController.patient = PatientModel.searchPatient(named: name)
                     viewController.accessType = .enroll

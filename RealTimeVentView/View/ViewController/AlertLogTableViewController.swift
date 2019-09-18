@@ -11,7 +11,7 @@ import UIKit
 class AlertLogTableViewController: UITableViewController {
 
     var patient = PatientModel()
-    var logs: [([(String, Int)], Date)] = []
+    var logs: [([(String, String)], Date)] = []
     let dateFormatter = DateFormatter()
     
     var expandedCell: IndexPath?
@@ -22,6 +22,7 @@ class AlertLogTableViewController: UITableViewController {
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         self.navigationItem.title = patient.name
         logs = DatabaseModel.shared.getAlerts(for: patient.name)
+        print(logs)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 44.0
         // Uncomment the following line to preserve selection between presentations

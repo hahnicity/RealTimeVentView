@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		028342BA9CA27D7690D2573C /* Pods_RealTimeVentView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFA4351A9C98CC2EC98494BC /* Pods_RealTimeVentView.framework */; };
-		2ADB23D2231DC793009F9CB7 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ADB23D1231DC793009F9CB7 /* SQLite.framework */; };
 		37AC9DB922012D3E0048469E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DB822012D3E0048469E /* AppDelegate.swift */; };
 		37AC9DBB22012D3E0048469E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AC9DBA22012D3E0048469E /* MainViewController.swift */; };
 		37AC9DBE22012D3E0048469E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37AC9DBC22012D3E0048469E /* Main.storyboard */; };
@@ -123,7 +122,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2ADB23D2231DC793009F9CB7 /* SQLite.framework in Frameworks */,
 				028342BA9CA27D7690D2573C /* Pods_RealTimeVentView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
